@@ -13,3 +13,5 @@ choose the size of the board
 choose the difficulty level
 use reel world map to figth the virus
 play sound simultaniously when i slash many virus
+configure auto updating of google app store from command line
+fix permission android issues
