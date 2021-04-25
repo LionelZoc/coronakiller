@@ -25,7 +25,7 @@ const Timeout = ({ timeout }) => {
       return () => clearInterval(interval);
     }
     if (countDown === 0) {
-      //dispatcher({ type: "TIMEOUT" });
+      dispatcher({ type: "TIMEOUT" });
     }
   }, [timeout, countDown, dispatcher, boardContext.finished]);
 
