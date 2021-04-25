@@ -1,21 +1,48 @@
-import React from "react";
-import { Text, StyleSheet, View, SafeAreaView, Platform } from "react-native";
-import PropTypes from "prop-types";
-import BoardCell from "components/BoardCell";
-import Colors from "constants/Colors";
+import React, { useState, useEffect } from "react";
+import {
+  Text,
+  StyleSheet,
+  View,
+  SafeAreaView,
+  useWindowDimensions,
+  Platform,
+} from "react-native";
 
+import BoardCell from "components/BoardCell";
+import BoardMeta from "components/BoardMeta";
+
+import { BoardContextProvider } from "containers/boardContext";
 const Board = () => {
-  const boxSize = 16;
+  const [boxSize, setBoxSize] = useState(16);
+  const window = useWindowDimensions();
+
   let cells = [];
   for (let i = 0; i < boxSize; i++) {
-    const cell = <BoardCell />;
+    const cell = <BoardCell key={i} position={i} />;
     cells.push(cell);
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.board}>{cells}</View>
-    </View>
+    <BoardContextProvider size={boxSize}>
+      <View style={styles.container}>
+        <View
+          style={{
+            flex: 1,
+            width: Platform.OS === "web" ? "50%" : window.width - 5,
+          }}
+        >
+          <BoardMeta />
+        </View>
+        <View
+          style={[
+            styles.board,
+            { width: Platform.OS === "web" ? "50%" : window.width - 5 },
+          ]}
+        >
+          {cells}
+        </View>
+      </View>
+    </BoardContextProvider>
   );
 };
 export default Board;
@@ -23,26 +50,21 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
-    backgroundColor: "blue",
 
     width: "100%",
     justifyContent: "center",
     alignItems: "center",
   },
   board: {
-    width: "50%",
-    maxWidth: "50%",
-    minHeight: "50%",
-    padding: 50,
-    height: "auto",
-    backgroundColor: "yellow",
-    borderWidth: 1,
-    borderColor: Colors.cellBorder,
-    display: "flex",
+    //width: Platform.OS === "web" ? "50%" : "100%",
+    //maxWidth: Platform.OS === "web" ? "50%" : "100%",
+    //minHeight: "50%",
+    //padding: 5,
+    height: "50%",
     flexDirection: "row",
     flexWrap: "wrap",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
   },
   statusBar: {
     //height: STATUSBAR_HEIGHT
