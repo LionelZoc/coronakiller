@@ -6,16 +6,24 @@ import {
 import Colors from "constants/Colors";
 import GameResult from "components/GameResult";
 import PropTypes from "prop-types";
-import { StyleSheet, View, Platform, Text } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Platform,
+  Text,
+  Modal,
+  useWindowDimensions,
+} from "react-native";
 import { Image } from "react-native-elements";
 import { Button, Overlay } from "react-native-elements";
 
-import Modal from "modal-react-native-web";
+import WebModal from "modal-react-native-web";
 
 const Timeout = ({ timeout }) => {
   const [countDown, setCountDown] = useState(timeout);
   const dispatcher = useBoardContextDispatcher();
   const boardContext = useBoardContextState();
+
   //let progressValue
   useEffect(() => {
     if (countDown > 0 && !boardContext.finished) {
@@ -36,39 +44,10 @@ const Timeout = ({ timeout }) => {
     }
   }, [boardContext.finished, timeout]);
 
-  // const infos = [
-  //   {
-  //     label: "hours",
-  //     value: countDown.hours.toLocaleString("fr-fr", {
-  //       minimumIntegerDigits: 2,
-  //       useGrouping: false,
-  //     }),
-  //     hide:
-  //       (countDown.days === 0 && countDown.hours === 0) || countDown.isExpired,
-  //   },
-  //   {
-  //     label: "minutes",
-  //     value: countDown.minutes.toLocaleString("fr-fr", {
-  //       minimumIntegerDigits: 2,
-  //       useGrouping: false,
-  //     }),
-  //     hide:
-  //       countDown.days === 0 &&
-  //       countDown.hours === 0 &&
-  //       countDown.minutes === 0,
-  //   },
-  //   {
-  //     label: "seconds",
-  //     value: countDown.seconds.toLocaleString("fr-fr", {
-  //       minimumIntegerDigits: 2,
-  //       useGrouping: false,
-  //     }),
-  //   },
-  // ];
-
   return (
-    <View>
-      <Text>{countDown}</Text>
+    <View style={{ alignItems: "center" }}>
+      <Text style={styles.countDownLabel}>remaining time</Text>
+      <Text style={styles.countDown}>{countDown}</Text>
     </View>
   );
 };
@@ -76,20 +55,26 @@ Timeout.propTypes = {};
 const BoardMeta = ({}) => {
   //score
   const boardContext = useBoardContextState();
+  const dimensions = useWindowDimensions();
   //timer
-  console.log("boardContext", boardContext);
+  //console.log("boardContext", boardContext);
   return (
     <View style={styles.container}>
       <View style={styles.score}>
-        <Text>score : {boardContext.score} </Text>
+        <Text style={styles.scoreLabel}>SCORE : </Text>
+        <Text style={styles.scoreValue}>{boardContext.score}</Text>
       </View>
       <View style={styles.timer}>
-        <Timeout timeout={120} />
+        <Timeout timeout={boardContext.timeout} />
       </View>
       <Overlay
-        ModalComponent={Modal}
+        ModalComponent={Platform.OS === "web" ? WebModal : Modal}
         fullscreen
         isVisible={boardContext.finished}
+        overlayStyle={[
+          styles.overlayStyle,
+          { height: dimensions.height - 50, width: dimensions.width - 50 },
+        ]}
       >
         <GameResult />
       </Overlay>
@@ -100,15 +85,35 @@ const BoardMeta = ({}) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    justifyContent: "space-beetwen",
+    justifyContent: "space-between",
     alignItems: "center",
     flex: 1,
   },
   score: {
     flex: 1,
+    alignItems: "center",
   },
   timer: {
     flex: 1,
+  },
+  scoreLabel: {
+    fontWeight: "bold",
+    textTransform: "uppercase",
+    textAlign: "left",
+    textAlignVertical: "center",
+    letterSpacing: 0.5,
+  },
+  scoreValue: {
+    fontWeight: "bold",
+    fontSize: 40,
+  },
+  countDown: {
+    fontWeight: "bold",
+    fontSize: 35,
+  },
+  countDownLabel: {
+    fontWeight: "normal",
+    fontSize: 20,
   },
 });
 

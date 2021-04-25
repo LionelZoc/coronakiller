@@ -15,10 +15,12 @@ const BoardCell = ({ position }) => {
   const dispatcher = useBoardContextDispatcher();
   const window = useWindowDimensions();
   const [show, setShow] = useState(false);
+
   const cellSize =
     Platform.OS === "web"
       ? window.width / 2 / Math.sqrt(boardContext.size)
       : (window.width - 5) / Math.sqrt(boardContext.size);
+
   const onClick = () => {
     //callback that send yes to parent from context
     if (!boardContext.finished) {
@@ -33,6 +35,7 @@ const BoardCell = ({ position }) => {
       setShow(false);
     }
   }, [boardContext.finished]);
+
   useEffect(() => {
     if (boardContext.next === position && show === false) {
       setShow(true);

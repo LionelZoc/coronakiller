@@ -1,7 +1,5 @@
 import React, { useReducer, useContext, useEffect } from "react";
 import PropTypes from "prop-types";
-import isEmpty from "lodash/isEmpty";
-import get from "lodash/get";
 import random from "lodash/random";
 
 const BoardContext = React.createContext({
@@ -68,20 +66,12 @@ const boardContextReducer = (state, action) => {
         playSound: action.playSound,
       };
     }
-    // case  "NEWCOVIDCASE" :{
-    //   return {
-    //     ...state,
-    //     next: action.position
-    //   }
-    // }
-    // case "PING": {
-    //   //// TODO: i think i should use js emitter system
-    //   const canShowVirus = action.position !== state.lastKilled
-    //   return {
-    //     ...state,
-    //
-    //   }
-    // }
+    case "UPDATE_TIMEOUT": {
+      return {
+        ...state,
+        timeout: action.timeout,
+      };
+    }
     case "INIT": {
       return {
         ...state,
@@ -95,10 +85,11 @@ const boardContextReducer = (state, action) => {
   }
 };
 
-const BoardContextProvider = ({ size, playSound, children }) => {
+const BoardContextProvider = ({ size, playSound, children, timeout }) => {
   const [boardContextState, dispatch] = useReducer(boardContextReducer, {
     size,
     playSound: playSound,
+    timeout,
   });
   //update sound effect
   useEffect(() => {
@@ -109,10 +100,17 @@ const BoardContextProvider = ({ size, playSound, children }) => {
   }, [playSound]);
   useEffect(() => {
     dispatch({
+      type: "UPDATE_TIMEOUT",
+      timeout,
+    });
+  }, [timeout]);
+  useEffect(() => {
+    dispatch({
       type: "INIT",
       size,
       visibleVirus: 0,
       finished: false,
+      timeout,
     });
   }, [size]);
 
@@ -149,9 +147,11 @@ BoardContextProvider.propTypes = {
   size: PropTypes.number.isRequired,
   children: PropTypes.node.isRequired,
   playSound: PropTypes.func,
+  timeout: PropTypes.number,
 };
 BoardContextProvider.defaultProps = {
   size: 16,
+  timeout: 60,
 };
 const useBoardContextState = () => {
   const boardContext = useContext(BoardContext);

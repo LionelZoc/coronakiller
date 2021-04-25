@@ -1,20 +1,16 @@
 import React, { useState, useEffect, useCallback } from "react";
-import {
-  Text,
-  StyleSheet,
-  View,
-  SafeAreaView,
-  useWindowDimensions,
-  Platform,
-} from "react-native";
+import { StyleSheet, View, useWindowDimensions, Platform } from "react-native";
 
 import BoardCell from "components/BoardCell";
 import BoardMeta from "components/BoardMeta";
 import { Audio } from "expo-av";
 import impactSound from "assets/impact.mp3";
 import { BoardContextProvider } from "containers/boardContext";
+
 const Board = () => {
   const [boxSize, setBoxSize] = useState(16);
+  const [timeout, setTimeout] = useState(60);
+  const [error, setError] = useState(false);
   const [sound, setSound] = useState();
   const window = useWindowDimensions();
 
@@ -24,18 +20,39 @@ const Board = () => {
     cells.push(cell);
   }
   useEffect(() => {
-    const load = async () => {
-      //init sound
-      console.log("Loading Sound");
-      const { sound } = await Audio.Sound.createAsync(impactSound);
-      setSound(sound);
-    };
-    load();
+    try {
+      const initAudio = async () =>
+        await Audio.setAudioModeAsync({
+          allowsRecordingIOS: false,
+          playsInSilentModeIOS: true,
+          staysActiveInBackground: true,
+          interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
+          interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DUCK_OTHERS,
+          shouldDuckAndroid: true,
+          playThroughEarpieceAndroid: true,
+        });
+      initAudio();
+      const load = async () => {
+        //init sound
+        console.log("Loading Sound");
+        const { sound } = await Audio.Sound.createAsync(impactSound, {
+          shouldPlay: false,
+        });
+        setSound(sound);
+      };
+      load();
+    } catch (e) {
+      console.log("unable to load sound", e);
+      setError(true);
+    }
   }, []);
 
   const playSoundMemo = useCallback(() => {
     const playSound = async () => {
       console.log("Playing Sound");
+      //await sound.replayAsync({positionMillis: 0, shouldPlay: true})
+      //await sound.setStatusAsync({positionMillis: 0, shouldPlay: true})
+      await sound.stopAsync();
       await sound.playAsync();
     };
     playSound();
@@ -51,11 +68,15 @@ const Board = () => {
   }, [sound]);
 
   return (
-    <BoardContextProvider size={boxSize} playSound={playSoundMemo}>
+    <BoardContextProvider
+      size={boxSize}
+      playSound={playSoundMemo}
+      timeout={timeout}
+    >
       <View style={styles.container}>
         <View
           style={{
-            flex: 1,
+            flex: 0.5,
             width: Platform.OS === "web" ? "50%" : window.width - 5,
           }}
         >
