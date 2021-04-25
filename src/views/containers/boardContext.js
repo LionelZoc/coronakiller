@@ -19,6 +19,7 @@ const BoardDispatcherContext = React.createContext({
 });
 
 const boardContextReducer = (state, action) => {
+  console.log("dispatch", action);
   switch (action.type) {
     case "INCREMENT": {
       return {
@@ -52,6 +53,21 @@ const boardContextReducer = (state, action) => {
         finished: true,
       };
     }
+    case "RESTART": {
+      return {
+        ...state,
+        score: 0,
+        visibleVirus: 0,
+        finished: false,
+        lastKilled: undefined,
+      };
+    }
+    case "UPDATE_SOUND": {
+      return {
+        ...state,
+        playSound: action.playSound,
+      };
+    }
     // case  "NEWCOVIDCASE" :{
     //   return {
     //     ...state,
@@ -73,16 +89,24 @@ const boardContextReducer = (state, action) => {
         score: 0,
         visibleVirus: action.visibleVirus,
         finished: action.finished,
+        playSound: action.playSound,
       };
     }
   }
 };
 
-const BoardContextProvider = ({ size, children }) => {
+const BoardContextProvider = ({ size, playSound, children }) => {
   const [boardContextState, dispatch] = useReducer(boardContextReducer, {
     size,
+    playSound: playSound,
   });
-
+  //update sound effect
+  useEffect(() => {
+    dispatch({
+      type: "UPDATE_SOUND",
+      playSound,
+    });
+  }, [playSound]);
   useEffect(() => {
     dispatch({
       type: "INIT",
@@ -91,17 +115,26 @@ const BoardContextProvider = ({ size, children }) => {
       finished: false,
     });
   }, [size]);
+
   //// TODO: create a dispatch virus function
   useEffect(() => {
-    if (boardContextState.visibleVirus < 4) {
+    if (boardContextState.visibleVirus < 4 && !boardContextState.finished) {
       //find next virus place
       let next;
       do {
         next = random(0, boardContextState.size - 1);
-      } while (next === boardContextState.lastKilled);
+      } while (
+        next === boardContextState.lastKilled ||
+        next === boardContextState.next
+      );
       dispatch({ type: "NEXT", position: next });
     }
-  }, [boardContextState.visibleVirus, boardContextState.lastKilled]);
+  }, [
+    boardContextState.visibleVirus,
+    boardContextState.lastKilled,
+    boardContextState.finished,
+    boardContextState.next,
+  ]);
 
   return (
     <BoardDispatcherContext.Provider value={dispatch}>
@@ -115,6 +148,7 @@ const BoardContextProvider = ({ size, children }) => {
 BoardContextProvider.propTypes = {
   size: PropTypes.number.isRequired,
   children: PropTypes.node.isRequired,
+  playSound: PropTypes.func,
 };
 BoardContextProvider.defaultProps = {
   size: 16,

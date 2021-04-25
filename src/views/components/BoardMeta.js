@@ -4,25 +4,37 @@ import {
   useBoardContextDispatcher,
 } from "containers/boardContext";
 import Colors from "constants/Colors";
+import GameResult from "components/GameResult";
 import PropTypes from "prop-types";
 import { StyleSheet, View, Platform, Text } from "react-native";
 import { Image } from "react-native-elements";
+import { Button, Overlay } from "react-native-elements";
+
+import Modal from "modal-react-native-web";
 
 const Timeout = ({ timeout }) => {
   const [countDown, setCountDown] = useState(timeout);
   const dispatcher = useBoardContextDispatcher();
+  const boardContext = useBoardContextState();
   //let progressValue
   useEffect(() => {
-    if (countDown > 0) {
+    if (countDown > 0 && !boardContext.finished) {
       const interval = setInterval(() => {
         setCountDown(countDown - 1);
       }, 1000);
       return () => clearInterval(interval);
     }
     if (countDown === 0) {
-      dispatcher({ type: "TIMEOUT" });
+      //dispatcher({ type: "TIMEOUT" });
     }
-  }, [timeout, countDown, dispatcher]);
+  }, [timeout, countDown, dispatcher, boardContext.finished]);
+
+  useEffect(() => {
+    //todo reset timer on restart
+    if (boardContext.finished) {
+      setCountDown(timeout);
+    }
+  }, [boardContext.finished, timeout]);
 
   // const infos = [
   //   {
@@ -65,6 +77,7 @@ const BoardMeta = ({}) => {
   //score
   const boardContext = useBoardContextState();
   //timer
+  console.log("boardContext", boardContext);
   return (
     <View style={styles.container}>
       <View style={styles.score}>
@@ -73,6 +86,13 @@ const BoardMeta = ({}) => {
       <View style={styles.timer}>
         <Timeout timeout={120} />
       </View>
+      <Overlay
+        ModalComponent={Modal}
+        fullscreen
+        isVisible={boardContext.finished}
+      >
+        <GameResult />
+      </Overlay>
     </View>
   );
 };

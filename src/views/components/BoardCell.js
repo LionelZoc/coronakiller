@@ -22,10 +22,17 @@ const BoardCell = ({ position }) => {
   const onClick = () => {
     //callback that send yes to parent from context
     if (!boardContext.finished) {
+      boardContext.playSound();
       setShow(false);
       dispatcher({ type: "INCREMENT", position });
     }
   };
+
+  useEffect(() => {
+    if (boardContext.finished) {
+      setShow(false);
+    }
+  }, [boardContext.finished]);
   useEffect(() => {
     if (boardContext.next === position && show === false) {
       setShow(true);

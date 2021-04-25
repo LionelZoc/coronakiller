@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Text,
   StyleSheet,
@@ -10,10 +10,12 @@ import {
 
 import BoardCell from "components/BoardCell";
 import BoardMeta from "components/BoardMeta";
-
+import { Audio } from "expo-av";
+import impactSound from "assets/impact.mp3";
 import { BoardContextProvider } from "containers/boardContext";
 const Board = () => {
   const [boxSize, setBoxSize] = useState(16);
+  const [sound, setSound] = useState();
   const window = useWindowDimensions();
 
   let cells = [];
@@ -21,9 +23,35 @@ const Board = () => {
     const cell = <BoardCell key={i} position={i} />;
     cells.push(cell);
   }
+  useEffect(() => {
+    const load = async () => {
+      //init sound
+      console.log("Loading Sound");
+      const { sound } = await Audio.Sound.createAsync(impactSound);
+      setSound(sound);
+    };
+    load();
+  }, []);
+
+  const playSoundMemo = useCallback(() => {
+    const playSound = async () => {
+      console.log("Playing Sound");
+      await sound.playAsync();
+    };
+    playSound();
+  }, [sound]);
+
+  useEffect(() => {
+    return sound
+      ? () => {
+          console.log("Unloading Sound");
+          sound.unloadAsync();
+        }
+      : undefined;
+  }, [sound]);
 
   return (
-    <BoardContextProvider size={boxSize}>
+    <BoardContextProvider size={boxSize} playSound={playSoundMemo}>
       <View style={styles.container}>
         <View
           style={{
