@@ -17,7 +17,6 @@ const BoardDispatcherContext = React.createContext({
 });
 
 const boardContextReducer = (state, action) => {
-  console.log("dispatch", action);
   switch (action.type) {
     case "INCREMENT": {
       return {
@@ -39,7 +38,7 @@ const boardContextReducer = (state, action) => {
       do {
         next = random(0, state.size - 1);
       } while (next === state.lastKilled || next === action.avoid);
-      console.log("new next", next);
+
       return {
         ...state,
         next,

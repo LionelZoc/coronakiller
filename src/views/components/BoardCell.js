@@ -42,7 +42,6 @@ const BoardCell = ({ position }) => {
       //dispatcher({type: "NEWCOVIDCASE", position  })
     }
     if (boardContext.next === position && show === true) {
-      console.log("RELOAD_NEXT", position);
       dispatcher({ type: "RELOAD_NEXT", avoid: position });
     }
   }, [boardContext.next, position, dispatcher]);

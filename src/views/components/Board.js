@@ -34,7 +34,7 @@ const Board = () => {
       initAudio();
       const load = async () => {
         //init sound
-        console.log("Loading Sound");
+
         const { sound } = await Audio.Sound.createAsync(impactSound, {
           shouldPlay: false,
         });
@@ -42,14 +42,12 @@ const Board = () => {
       };
       load();
     } catch (e) {
-      console.log("unable to load sound", e);
       setError(true);
     }
   }, []);
 
   const playSoundMemo = useCallback(() => {
     const playSound = async () => {
-      console.log("Playing Sound");
       //await sound.replayAsync({positionMillis: 0, shouldPlay: true})
       //await sound.setStatusAsync({positionMillis: 0, shouldPlay: true})
       await sound.stopAsync();
@@ -61,7 +59,6 @@ const Board = () => {
   useEffect(() => {
     return sound
       ? () => {
-          console.log("Unloading Sound");
           sound.unloadAsync();
         }
       : undefined;
