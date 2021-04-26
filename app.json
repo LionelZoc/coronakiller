@@ -2,7 +2,7 @@
   "expo": {
     "name": "covid-killer",
     "slug": "covid-killer",
-    "version": "1.0.0",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./src/assets/covidIcon.png",
     "splash": {
@@ -25,10 +25,8 @@
         "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "versionCode": 2,
-      "permissions": [
-        
-      ]
+      "versionCode": 3,
+      "permissions": []
     },
     "web": {
       "favicon": "./src/assets/covidIcon.png"
