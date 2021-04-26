@@ -3,7 +3,7 @@ import {
   useBoardContextState,
   useBoardContextDispatcher,
 } from "containers/boardContext";
-import Colors from "constants/Colors";
+
 import GameResult from "components/GameResult";
 import PropTypes from "prop-types";
 import {
@@ -14,8 +14,7 @@ import {
   Modal,
   useWindowDimensions,
 } from "react-native";
-import { Image } from "react-native-elements";
-import { Button, Overlay } from "react-native-elements";
+import { Overlay } from "react-native-elements";
 
 import WebModal from "modal-react-native-web";
 
@@ -51,8 +50,10 @@ const Timeout = ({ timeout }) => {
     </View>
   );
 };
-Timeout.propTypes = {};
-const BoardMeta = ({}) => {
+Timeout.propTypes = {
+  timeout: PropTypes.number,
+};
+const BoardMeta = () => {
   //score
   const boardContext = useBoardContextState();
   const dimensions = useWindowDimensions();

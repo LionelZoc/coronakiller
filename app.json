@@ -2,9 +2,9 @@
   "expo": {
     "name": "covid-killer",
     "slug": "covid-killer",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "orientation": "portrait",
-    "icon": "./src/assets/covidIcon.png",
+    "icon": "./src/assets/covidIcon1024.png",
     "splash": {
       "image": "./src/assets/splashTrans.png",
       "resizeMode": "contain",
@@ -17,15 +17,17 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.amirmuerte.covid-killer",
+      "icon": "./src/assets/covidIcon1024.png"
     },
     "android": {
       "package": "com.lazone.covid_killer",
       "adaptiveIcon": {
-        "foregroundImage": "./src/assets/adaptive-icon.png",
+        "foregroundImage": "./src/assets/covidIcon1024.png",
         "backgroundColor": "#FFFFFF"
       },
-      "versionCode": 3,
+      "versionCode": 4,
       "permissions": []
     },
     "web": {
