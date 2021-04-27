@@ -14,6 +14,15 @@ const Board = () => {
   const [sound, setSound] = useState();
   const window = useWindowDimensions();
 
+  //height should always be sup to width
+  const customWidthWeb =
+    window.width / 2 >= window.height / 2
+      ? window.height / 2 - 5
+      : window.width / 2;
+  const customWidthMobile =
+    window.width - 5 >= window.height / 2
+      ? window.height / 2 - 5
+      : window.width - 5;
   let cells = [];
   for (let i = 0; i < boxSize; i++) {
     const cell = <BoardCell key={i} position={i} />;
@@ -82,7 +91,9 @@ const Board = () => {
         <View
           style={[
             styles.board,
-            { width: Platform.OS === "web" ? "50%" : window.width - 5 },
+            {
+              width: Platform.OS === "web" ? customWidthWeb : customWidthMobile,
+            },
           ]}
         >
           {cells}

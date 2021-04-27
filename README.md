@@ -9,6 +9,7 @@ MVP
 [] not more than 6 virus at the time
 
 #improvement
+rendre anxiogene lorsqu'on se rapproche de la fin du chrono
 choose the size of the board
 choose the difficulty level
 use reel world map to figth the virus
@@ -17,3 +18,11 @@ configure auto updating of google app store from command line
 fix permission android issues
 
  https://docs.expo.io/distribution/uploading-apps/
+
+
+todo, build android bundle rebuil ios archive
+
+
+astuces
+
+in expo terminal open simulator ios and tap shitf i to choose on which simulator i want to test
