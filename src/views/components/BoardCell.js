@@ -16,10 +16,19 @@ const BoardCell = ({ position }) => {
   const window = useWindowDimensions();
   const [show, setShow] = useState(false);
 
+  //height should always be sup to width
+  const customWidthWeb =
+    window.width / 2 >= window.height / 2
+      ? window.height / 2 - 5
+      : window.width / 2;
+  const customWidthMobile =
+    window.width - 5 >= window.height / 2
+      ? window.height / 2 - 5
+      : window.width - 5;
   const cellSize =
     Platform.OS === "web"
-      ? window.width / 2 / Math.sqrt(boardContext.size)
-      : (window.width - 5) / Math.sqrt(boardContext.size);
+      ? customWidthWeb / Math.sqrt(boardContext.size)
+      : customWidthMobile / Math.sqrt(boardContext.size);
 
   const onClick = () => {
     //callback that send yes to parent from context
