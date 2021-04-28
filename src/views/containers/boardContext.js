@@ -151,6 +151,7 @@ BoardContextProvider.propTypes = {
 BoardContextProvider.defaultProps = {
   size: 16,
   timeout: 60,
+  playSound: () => {},
 };
 const useBoardContextState = () => {
   const boardContext = useContext(BoardContext);
