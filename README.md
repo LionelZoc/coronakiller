@@ -16,7 +16,7 @@ use reel world map to figth the virus
 play sound simultaniously when i slash many virus
 configure auto updating of google app store from command line
 fix permission android issues
-
+#change ios name (pandemic fighter)
  https://docs.expo.io/distribution/uploading-apps/
 
 
@@ -26,3 +26,6 @@ todo, build android bundle rebuil ios archive
 astuces
 
 in expo terminal open simulator ios and tap shitf i to choose on which simulator i want to test
+
+
+Jouez à ce jeux fun et relaxant qui vous fait combattre une pandemie, et challenger vos amis , depuis votre canapé ou dans le métro , juste avec vos doigts
