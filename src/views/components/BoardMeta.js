@@ -103,18 +103,22 @@ const styles = StyleSheet.create({
     textAlign: "left",
     textAlignVertical: "center",
     letterSpacing: 0.5,
+    color: "black",
   },
   scoreValue: {
     fontWeight: "bold",
     fontSize: 40,
+    color: "black",
   },
   countDown: {
     fontWeight: "bold",
     fontSize: 35,
+    color: "black",
   },
   countDownLabel: {
     fontWeight: "normal",
     fontSize: 20,
+    color: "black",
   },
 });
 

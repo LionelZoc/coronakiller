@@ -71,11 +71,13 @@ const styles = StyleSheet.create({
   scoreLabel: {
     fontWeight: "bold",
     fontSize: 35,
+    color: "black",
   },
   rankLabel: {
     marginTop: 10,
     fontWeight: "bold",
     fontSize: 35,
+    color: "black",
   },
   action: {
     paddingTop: 30,
