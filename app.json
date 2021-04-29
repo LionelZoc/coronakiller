@@ -20,7 +20,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.amirmuerte.viralert",
       "icon": "./src/assets/icon1024.png",
-      "buildNumber": 1
+      "buildNumber": "1"
     },
     "android": {
       "package": "com.lazone.covid_killer",

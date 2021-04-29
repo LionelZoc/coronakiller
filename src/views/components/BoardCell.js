@@ -1,8 +1,15 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { StyleSheet, View, Platform, useWindowDimensions } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Platform,
+  useWindowDimensions,
+  TouchableOpacity,
+} from "react-native";
 import { Image } from "react-native-elements";
 import virus from "assets/target.png";
+import mask from "assets/mask.png";
 import {
   useBoardContextState,
   useBoardContextDispatcher,
@@ -12,6 +19,7 @@ import Colors from "constants/Colors";
 //usecontext
 const BoardCell = ({ position }) => {
   const boardContext = useBoardContextState();
+
   const dispatcher = useBoardContextDispatcher();
   const window = useWindowDimensions();
   const [show, setShow] = useState(false);
@@ -32,18 +40,25 @@ const BoardCell = ({ position }) => {
 
   const onClick = () => {
     //callback that send yes to parent from context
-    if (!boardContext.finished) {
+    if (!boardContext.finished && boardContext.started) {
       boardContext.playSound();
       setShow(false);
       dispatcher({ type: "INCREMENT", position });
     }
   };
 
+  const onError = () => {
+    dispatcher({ type: "DECREMENT", position });
+  };
+  const onIncrementTimeoutBonus = () => {
+    dispatcher({ type: "INCREMENT_TIMEOUT", position });
+  };
   useEffect(() => {
-    if (boardContext.finished) {
+    if (boardContext.finished || boardContext.cleanBoard) {
+      console.log("will cleanBoard");
       setShow(false);
     }
-  }, [boardContext.finished]);
+  }, [boardContext.finished, boardContext.cleanBoard]);
 
   useEffect(() => {
     if (boardContext.next === position && show === false) {
@@ -65,6 +80,12 @@ const BoardCell = ({ position }) => {
         },
       ]}
     >
+      {!show && (
+        <TouchableOpacity
+          onPress={onError}
+          style={{ width: "100%", height: "100%" }}
+        />
+      )}
       {show && (
         <Image
           source={virus}
