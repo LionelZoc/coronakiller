@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "covid-killer",
-    "slug": "covid-killer",
-    "version": "1.0.5",
+    "name": "vira!ert",
+    "slug": "vira!ert",
+    "version": "1.0.6",
     "orientation": "portrait",
-    "icon": "./src/assets/covidIcon1024.png",
+    "icon": "./src/assets/icon1024.png",
     "splash": {
       "image": "./src/assets/SplashTransparent.png",
       "resizeMode": "contain",
@@ -18,20 +18,21 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.amirmuerte.covid-killer",
-      "icon": "./src/assets/covidIcon1024.png"
+      "bundleIdentifier": "com.amirmuerte.viralert",
+      "icon": "./src/assets/icon1024.png",
+      "buildNumber": 1
     },
     "android": {
       "package": "com.lazone.covid_killer",
       "adaptiveIcon": {
-        "foregroundImage": "./src/assets/covidIcon1024.png",
+        "foregroundImage": "./src/assets/icon1024.png",
         "backgroundColor": "#FFFFFF"
       },
-      "versionCode": 5,
+      "versionCode": 6,
       "permissions": []
     },
     "web": {
-      "favicon": "./src/assets/covidIcon.png"
+      "favicon": "./src/assets/icon.png"
     }
   }
 }

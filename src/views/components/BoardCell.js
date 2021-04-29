@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { StyleSheet, View, Platform, useWindowDimensions } from "react-native";
 import { Image } from "react-native-elements";
-import virus from "assets/coronavirus.png";
+import virus from "assets/target.png";
 import {
   useBoardContextState,
   useBoardContextDispatcher,
@@ -48,7 +48,7 @@ const BoardCell = ({ position }) => {
   useEffect(() => {
     if (boardContext.next === position && show === false) {
       setShow(true);
-      //dispatcher({type: "NEWCOVIDCASE", position  })
+      //dispatcher({type: "NEWVirusCASE", position  })
     }
     if (boardContext.next === position && show === true) {
       dispatcher({ type: "RELOAD_NEXT", avoid: position });
