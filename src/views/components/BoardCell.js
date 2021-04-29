@@ -55,7 +55,6 @@ const BoardCell = ({ position }) => {
   };
   useEffect(() => {
     if (boardContext.finished || boardContext.cleanBoard) {
-      console.log("will cleanBoard");
       setShow(false);
     }
   }, [boardContext.finished, boardContext.cleanBoard]);

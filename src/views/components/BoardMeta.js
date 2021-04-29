@@ -41,7 +41,6 @@ const Timeout = ({ timeout }) => {
       dispatcher({ type: "TIMEOUT" });
     }
     if (!boardContext.started) {
-      console.log("setCountDown to timeout");
       setCountDown(timeout);
     }
   }, [

@@ -17,7 +17,6 @@ const BoardDispatcherContext = React.createContext({
 });
 
 const boardContextReducer = (state, action) => {
-  console.log("context", action);
   switch (action.type) {
     case "DECREMENT": {
       return {
