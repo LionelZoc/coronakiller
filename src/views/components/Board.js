@@ -3,6 +3,7 @@ import { StyleSheet, View, useWindowDimensions, Platform } from "react-native";
 
 import BoardCell from "components/BoardCell";
 import BoardMeta from "components/BoardMeta";
+import BoardAction from "components/BoardAction";
 import { Audio } from "expo-av";
 import impactSound from "assets/impact.mp3";
 import { BoardContextProvider } from "containers/boardContext";
@@ -86,6 +87,7 @@ const Board = () => {
             width: Platform.OS === "web" ? "50%" : window.width - 5,
           }}
         >
+          <BoardAction />
           <BoardMeta />
         </View>
         <View

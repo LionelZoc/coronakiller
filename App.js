@@ -53,5 +53,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     textAlignVertical: "center",
     letterSpacing: 0.5,
+    color: "black",
   },
 });

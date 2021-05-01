@@ -18,6 +18,13 @@ const BoardDispatcherContext = React.createContext({
 
 const boardContextReducer = (state, action) => {
   switch (action.type) {
+    case "DECREMENT": {
+      return {
+        ...state,
+        score: state.score > 0 ? state.score - 1 : 0,
+        lastMissed: action.position,
+      };
+    }
     case "INCREMENT": {
       return {
         ...state,
@@ -48,6 +55,29 @@ const boardContextReducer = (state, action) => {
       return {
         ...state,
         finished: true,
+        started: false,
+        cleanBoard: true,
+        visibleVirus: 0,
+      };
+    }
+    case "STOP": {
+      return {
+        ...state,
+        finished: false,
+        started: false,
+        cleanBoard: true,
+        visibleVirus: 0,
+      };
+    }
+    case "START": {
+      return {
+        ...state,
+        score: 0,
+        finished: false,
+        lastKilled: undefined,
+        started: true,
+        incrementTimeout: false,
+        cleanBoard: false,
       };
     }
     case "RESTART": {
@@ -57,6 +87,9 @@ const boardContextReducer = (state, action) => {
         visibleVirus: 0,
         finished: false,
         lastKilled: undefined,
+        started: true,
+        incrementTimeout: false,
+        cleanBoard: false,
       };
     }
     case "UPDATE_SOUND": {
@@ -71,6 +104,18 @@ const boardContextReducer = (state, action) => {
         timeout: action.timeout,
       };
     }
+    case "INCREMENT_TIMEOUT": {
+      return {
+        ...state,
+        incrementTimeout: true,
+      };
+    }
+    case "TIMEOUT_INCREMENTED": {
+      return {
+        ...state,
+        incrementTimeout: false,
+      };
+    }
     case "INIT": {
       return {
         ...state,
@@ -79,6 +124,9 @@ const boardContextReducer = (state, action) => {
         visibleVirus: action.visibleVirus,
         finished: action.finished,
         playSound: action.playSound,
+        started: action.started,
+        incrementTimeout: false,
+        cleanBoard: action.cleanBoard,
       };
     }
   }
@@ -89,6 +137,8 @@ const BoardContextProvider = ({ size, playSound, children, timeout }) => {
     size,
     playSound: playSound,
     timeout,
+    incrementTimeout: false,
+    cleanBoard: false,
   });
   //update sound effect
   useEffect(() => {
@@ -110,12 +160,19 @@ const BoardContextProvider = ({ size, playSound, children, timeout }) => {
       visibleVirus: 0,
       finished: false,
       timeout,
+      incrementTimeout: false,
+      started: false,
+      cleanBoard: false,
     });
   }, [size]);
 
   //// TODO: create a dispatch virus function
   useEffect(() => {
-    if (boardContextState.visibleVirus < 4 && !boardContextState.finished) {
+    if (
+      boardContextState.visibleVirus < 4 &&
+      !boardContextState.finished &&
+      !boardContextState.cleanBoard
+    ) {
       //find next virus place
       let next;
       do {
@@ -131,6 +188,7 @@ const BoardContextProvider = ({ size, playSound, children, timeout }) => {
     boardContextState.lastKilled,
     boardContextState.finished,
     boardContextState.next,
+    boardContextState.cleanBoard,
   ]);
 
   return (
@@ -151,6 +209,7 @@ BoardContextProvider.propTypes = {
 BoardContextProvider.defaultProps = {
   size: 16,
   timeout: 60,
+  playSound: () => {},
 };
 const useBoardContextState = () => {
   const boardContext = useContext(BoardContext);

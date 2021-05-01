@@ -23,18 +23,33 @@ const Timeout = ({ timeout }) => {
   const dispatcher = useBoardContextDispatcher();
   const boardContext = useBoardContextState();
 
+  useEffect(() => {
+    if (boardContext.incrementTimeout && boardContext.started) {
+      setCountDown(countDown + 10);
+      dispatcher({ type: "TIMEOUT_INCREMENTED" });
+    }
+  }, [boardContext.incrementTimeout, dispatcher, boardContext.started]);
   //let progressValue
   useEffect(() => {
-    if (countDown > 0 && !boardContext.finished) {
+    if (countDown > 0 && !boardContext.finished && boardContext.started) {
       const interval = setInterval(() => {
         setCountDown(countDown - 1);
       }, 1000);
       return () => clearInterval(interval);
     }
-    if (countDown === 0) {
+    if (countDown === 0 && boardContext.started) {
       dispatcher({ type: "TIMEOUT" });
     }
-  }, [timeout, countDown, dispatcher, boardContext.finished]);
+    if (!boardContext.started) {
+      setCountDown(timeout);
+    }
+  }, [
+    timeout,
+    countDown,
+    dispatcher,
+    boardContext.finished,
+    boardContext.started,
+  ]);
 
   useEffect(() => {
     //todo reset timer on restart
@@ -103,18 +118,22 @@ const styles = StyleSheet.create({
     textAlign: "left",
     textAlignVertical: "center",
     letterSpacing: 0.5,
+    color: "black",
   },
   scoreValue: {
     fontWeight: "bold",
     fontSize: 40,
+    color: "black",
   },
   countDown: {
     fontWeight: "bold",
     fontSize: 35,
+    color: "black",
   },
   countDownLabel: {
     fontWeight: "normal",
     fontSize: 20,
+    color: "black",
   },
 });
 

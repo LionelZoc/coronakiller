@@ -24,7 +24,7 @@ const GameResult = () => {
   return (
     <View style={styles.container}>
       <View style={styles.score}>
-        <Text style={styles.scoreLabel}>score : {boardContext.score} </Text>
+        <Text style={styles.scoreLabel}>Score : {boardContext.score} </Text>
         <Text style={styles.rankLabel}>
           Rank : {getRank(boardContext.score)}{" "}
         </Text>
@@ -71,11 +71,13 @@ const styles = StyleSheet.create({
   scoreLabel: {
     fontWeight: "bold",
     fontSize: 35,
+    color: "black",
   },
   rankLabel: {
     marginTop: 10,
     fontWeight: "bold",
     fontSize: 35,
+    color: "black",
   },
   action: {
     paddingTop: 30,
