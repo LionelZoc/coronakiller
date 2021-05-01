@@ -58,7 +58,6 @@ const STATUSBAR_HEIGHT = Platform.OS === "ios" ? 20 : StatusBar.currentHeight;
 const App = () => {
   //const intl = useIntl();
   const locale = useSelector(getLocaleSelector);
-  console.log("locale", locale);
   const [ifLoadingComplete, setIfLoadingComplete] = useState(false);
   const isMounted = useRef(false);
   const loadAssetsAsync = async () => {
@@ -86,7 +85,6 @@ const App = () => {
     };
   }, []);
   const _handleLoadingError = (error) => {
-    console.log("loading error", error);
     // In this case, you might want to report the error to your error
     // reporting service, for example Sentry
     Platform.OS === "web"
@@ -96,7 +94,6 @@ const App = () => {
   };
 
   const _handleFinishLoading = () => {
-    console.log("loading finished");
     //don't update if component is unmounted
     //console.log("in handlefinishloading with current", isMounted.current);
     if (isMounted.current === true) {
@@ -105,7 +102,6 @@ const App = () => {
   };
 
   if (!ifLoadingComplete) {
-    console.log("not completed");
     return (
       <AppLoading
         startAsync={loadAssetsAsync}

@@ -14,7 +14,6 @@ const initialLocalState = {
   targetSelected: "bug",
 };
 const localeReducer = (state = initialLocalState, action) => {
-  console.log("reducer", action);
   switch (action.type) {
     case "SET_USER_LOCALE": {
       //("set user locale", action);
