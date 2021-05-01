@@ -17,17 +17,20 @@ import {
 import { Overlay } from "react-native-elements";
 
 import WebModal from "modal-react-native-web";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { getHighScoreSelector } from "state/redux/selectors";
+import { updateTimer } from "state/redux/actions";
 
 const Timeout = ({ timeout }) => {
   const [countDown, setCountDown] = useState(timeout);
   const dispatcher = useBoardContextDispatcher();
   const boardContext = useBoardContextState();
+  const reduxDispatch = useDispatch();
 
   useEffect(() => {
     if (boardContext.incrementTimeout && boardContext.started) {
       setCountDown(countDown + 10);
+      reduxDispatch(updateTimer(countDown + 10));
       dispatcher({ type: "TIMEOUT_INCREMENTED" });
     }
   }, [boardContext.incrementTimeout, dispatcher, boardContext.started]);
@@ -36,6 +39,7 @@ const Timeout = ({ timeout }) => {
     if (countDown > 0 && !boardContext.finished && boardContext.started) {
       const interval = setInterval(() => {
         setCountDown(countDown - 1);
+        reduxDispatch(updateTimer(countDown - 1));
       }, 1000);
       return () => clearInterval(interval);
     }

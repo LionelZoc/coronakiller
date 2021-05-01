@@ -1,4 +1,4 @@
-import React, { useReducer, useContext, useEffect } from "react";
+import React, { useReducer, useContext, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import random from "lodash/random";
 
@@ -11,6 +11,7 @@ const BoardContext = React.createContext({
   lastKilled: undefined,
   next: undefined,
   finished: false,
+  bonus: -1,
 });
 const BoardDispatcherContext = React.createContext({
   dispatch: () => {},
@@ -23,6 +24,7 @@ const boardContextReducer = (state, action) => {
         ...state,
         score: state.score > 0 ? state.score - 1 : 0,
         lastMissed: action.position,
+        bonus: -1,
       };
     }
     case "INCREMENT": {
@@ -49,6 +51,29 @@ const boardContextReducer = (state, action) => {
       return {
         ...state,
         next,
+      };
+    }
+    case "RELOAD_BONUS": {
+      let bonus;
+      do {
+        bonus = random(0, state.size - 1);
+      } while (bonus === state.next || bonus === action.avoid);
+
+      return {
+        ...state,
+        bonus,
+      };
+    }
+    case "CLEAR_BONUS": {
+      return {
+        ...state,
+        bonus: -1,
+      };
+    }
+    case "BONUS": {
+      return {
+        ...state,
+        bonus: action.position,
       };
     }
     case "TIMEOUT": {
@@ -90,6 +115,7 @@ const boardContextReducer = (state, action) => {
         started: true,
         incrementTimeout: false,
         cleanBoard: false,
+        bonus: -1,
       };
     }
     case "UPDATE_SOUND": {
@@ -127,12 +153,14 @@ const boardContextReducer = (state, action) => {
         started: action.started,
         incrementTimeout: false,
         cleanBoard: action.cleanBoard,
+        bonus: action.bonus,
       };
     }
   }
 };
 
 const BoardContextProvider = ({ size, playSound, children, timeout }) => {
+  const handlingBonus = useRef(false);
   const [boardContextState, dispatch] = useReducer(boardContextReducer, {
     size,
     playSound: playSound,
@@ -140,6 +168,12 @@ const BoardContextProvider = ({ size, playSound, children, timeout }) => {
     incrementTimeout: false,
     cleanBoard: false,
   });
+
+  useEffect(() => {
+    if (!boardContextState.started && handlingBonus.current === true) {
+      handlingBonus.current = false;
+    }
+  }, [boardContextState.started]);
   //update sound effect
   useEffect(() => {
     dispatch({
@@ -163,8 +197,44 @@ const BoardContextProvider = ({ size, playSound, children, timeout }) => {
       incrementTimeout: false,
       started: false,
       cleanBoard: false,
+      bonus: -1,
     });
   }, [size]);
+
+  //dispatch bonus
+
+  useEffect(() => {
+    if (
+      //boardContextState.visibleVirus < 4 &&
+      !boardContextState.finished &&
+      !boardContextState.cleanBoard &&
+      boardContextState.started &&
+      boardContextState.bonus === -1 &&
+      handlingBonus.current === false
+    ) {
+      handlingBonus.current = true;
+      //find next virus place
+      const interval = random(5, 30);
+
+      const timeout = setTimeout(() => {
+        let next;
+
+        next = random(0, boardContextState.size - 1);
+        dispatch({ type: "BONUS", position: next });
+        handlingBonus.current = false;
+      }, interval * 1000);
+
+      return () => {
+        clearTimeout(timeout);
+      };
+    }
+  }, [
+    //  boardContextState.visibleVirus,
+    boardContextState.bonus,
+    boardContextState.finished,
+    boardContextState.cleanBoard,
+    boardContextState.started,
+  ]);
 
   //// TODO: create a dispatch virus function
   useEffect(() => {
@@ -179,7 +249,8 @@ const BoardContextProvider = ({ size, playSound, children, timeout }) => {
         next = random(0, boardContextState.size - 1);
       } while (
         next === boardContextState.lastKilled ||
-        next === boardContextState.next
+        next === boardContextState.next ||
+        next === boardContextState.bonus
       );
       dispatch({ type: "NEXT", position: next });
     }

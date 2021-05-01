@@ -5,6 +5,7 @@ import { AsyncStorage } from "react-native";
 import {
   GAME_UPDATE_HIGH_SCORE,
   GAME_SET_TARGET,
+  GAME_SET_REMAINING_TIME,
 } from "state/redux/actionTypes";
 
 const initialLocalState = {
@@ -12,6 +13,7 @@ const initialLocalState = {
   highScore: 0,
   level: "",
   targetSelected: "bug",
+  restTime: 60,
 };
 const localeReducer = (state = initialLocalState, action) => {
   switch (action.type) {
@@ -22,7 +24,12 @@ const localeReducer = (state = initialLocalState, action) => {
         return Object.assign({}, state, { locale: action.locale });
       } else return state;
     }
-
+    case GAME_SET_REMAINING_TIME: {
+      return {
+        ...state,
+        restTime: action.payload,
+      };
+    }
     case GAME_UPDATE_HIGH_SCORE: {
       return {
         ...state,

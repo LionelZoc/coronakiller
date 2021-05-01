@@ -13,10 +13,10 @@ import {
   useBoardContextDispatcher,
 } from "containers/boardContext";
 const getRank = (score) => {
-  if (score > 200) return "S";
-  if (score > 160) return "A";
-  if (score > 150) return "B";
-  if (score > 100) return "C";
+  if (score > 250) return "S";
+  if (score > 200) return "A";
+  if (score > 160) return "B";
+  if (score > 150) return "C";
   return "D";
 };
 const GameResult = () => {

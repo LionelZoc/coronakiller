@@ -23,6 +23,7 @@ const BoardCell = ({ position }) => {
   const dispatcher = useBoardContextDispatcher();
   const window = useWindowDimensions();
   const [show, setShow] = useState(false);
+  const [showBonus, setShowBonus] = useState(false);
 
   //height should always be sup to width
   const customWidthWeb =
@@ -48,17 +49,29 @@ const BoardCell = ({ position }) => {
   };
 
   const onError = () => {
+    setShowBonus(false);
     dispatcher({ type: "DECREMENT", position });
   };
-  const onIncrementTimeoutBonus = () => {
+  const onClickBonus = () => {
+    //boardContext.playBonusSound();
+    setShowBonus(false);
     dispatcher({ type: "INCREMENT_TIMEOUT", position });
   };
   useEffect(() => {
     if (boardContext.finished || boardContext.cleanBoard) {
       setShow(false);
+      setShowBonus(false);
     }
   }, [boardContext.finished, boardContext.cleanBoard]);
 
+  useEffect(() => {
+    if (!showBonus) return () => false;
+    const timeout = setTimeout(() => {
+      setShowBonus(false);
+      dispatcher({ type: "CLEAR_BONUS", position });
+    }, 2000);
+    return () => clearTimeout(timeout);
+  }, [showBonus]);
   useEffect(() => {
     if (boardContext.next === position && show === false) {
       setShow(true);
@@ -68,6 +81,15 @@ const BoardCell = ({ position }) => {
       dispatcher({ type: "RELOAD_NEXT", avoid: position });
     }
   }, [boardContext.next, position, dispatcher]);
+  useEffect(() => {
+    if (boardContext.bonus === position && show === false) {
+      setShowBonus(true);
+      //dispatcher({type: "NEWVirusCASE", position  })
+    }
+    if (boardContext.bonus === position && show === true) {
+      dispatcher({ type: "RELOAD_BONUS", avoid: position });
+    }
+  }, [boardContext.bonus, position, show, dispatcher]);
 
   return (
     <View
@@ -79,7 +101,7 @@ const BoardCell = ({ position }) => {
         },
       ]}
     >
-      {!show && (
+      {!show && !showBonus && (
         <TouchableOpacity
           onPress={onError}
           style={{ width: "100%", height: "100%" }}
@@ -98,6 +120,19 @@ const BoardCell = ({ position }) => {
           onPress={onClick}
         />
       )}
+      {showBonus && (
+        <Image
+          source={mask}
+          containerStyle={[
+            styles.imageBonusContainer,
+            {
+              width: cellSize / 2,
+              height: cellSize / 2,
+            },
+          ]}
+          onPress={onClickBonus}
+        />
+      )}
     </View>
   );
 };
@@ -114,6 +149,10 @@ const styles = StyleSheet.create({
   imageContainer: {
     width: 100,
     height: 100,
+  },
+  imageBonusContainer: {
+    // width: 100,
+    // height: 100,
   },
 });
 
