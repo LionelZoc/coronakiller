@@ -4,6 +4,20 @@ module.exports = function (api) {
     presets: ["babel-preset-expo"],
     plugins: [
       [
+        "formatjs",
+        {
+          idInterpolationPattern: "[sha512:contenthash:base64:6]",
+          ast: true,
+        },
+      ],
+      [
+        "react-intl-auto",
+        {
+          filebase: false,
+          removePrefix: "app/",
+        },
+      ],
+      [
         "module-resolver",
         {
           root: ["./src"],
@@ -15,6 +29,9 @@ module.exports = function (api) {
             constants: "./src/constants",
             components: "./src/views/components",
             containers: "./src/views/containers",
+            utils: "./src/utils",
+            state: "./src/state",
+            translations: "./src/translations",
           },
         },
       ],

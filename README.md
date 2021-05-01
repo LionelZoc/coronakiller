@@ -1,4 +1,4 @@
-##instructions Figth the virus
+##Fun and relaxing board game
 
 
 #To do

@@ -5,16 +5,20 @@ import {
 } from "containers/boardContext";
 
 import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
+import { getHighScoreSelector } from "state/redux/selectors";
 import {
   StyleSheet,
   View,
   //Platform,
 } from "react-native";
 import { Button, Icon } from "react-native-elements";
+import { onShare } from "utils";
 
 const BoarAction = () => {
   const boardContext = useBoardContextState();
   const dispatcher = useBoardContextDispatcher();
+  const highScore = useSelector(getHighScoreSelector);
   const restart = () => {
     if (boardContext.started) {
       dispatcher({ type: "STOP" });
@@ -25,7 +29,7 @@ const BoarAction = () => {
   };
   //// TODO: fix restart
   return (
-    <View style={[styles.containerr]}>
+    <View style={[styles.container]}>
       {!boardContext.started && (
         <Button
           title={boardContext.started ? "Restart" : "Start"}
@@ -50,6 +54,27 @@ const BoarAction = () => {
           onPress={restart}
         />
       )}
+      <Button
+        buttonStyle={{
+          borderWidth: 0,
+          borderColor: "transparent",
+          borderRadius: 20,
+        }}
+        containerStyle={{
+          marginLeft: 10,
+          width: 70,
+          maxWidth: 100,
+        }}
+        icon={
+          <Icon
+            name="share-variant"
+            type="material-community"
+            size={30}
+            color="white"
+          />
+        }
+        onPress={() => onShare(highScore)}
+      />
     </View>
   );
 };
@@ -60,8 +85,6 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     flexDirection: "row",
     alignItems: "center",
-    borderWidth: 1,
-    borderColor: "black",
   },
 });
 
