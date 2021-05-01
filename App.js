@@ -25,7 +25,6 @@ import frMessages from "translations/fr.json";
 import ActivityIndicator from "components/ActivityIndicator";
 import { getLocaleSelector } from "state/redux/selectors";
 import { FormattedMessage, useIntl } from "react-intl";
-import componentsMessages from "components/messages";
 
 //sentry config
 Sentry.init({
