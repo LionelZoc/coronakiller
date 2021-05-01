@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "api-4878643913612630552-115990",
+  "private_key_id": "99c769faa7487dbfacb445885027565d6226fec0",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDsVqjG59xIaDyx\nX9QMzM1JU34GTYhVfaqGeJuUsNqRmvQigkUg9ndGrVha3Fqe1KD+3xPnV80+xc/A\njM0cFGcT2uY7pyJolN9CTZcdRsUZUUGFlYhtdlKrkgHVrib2r+KowlroNi5zPfRi\nT1cO1VPwd/30vwNrw/yrdJdNZOEfMwi8aa+gNK7jANMCVGoycn0bVAhX9yQAKFIO\nf377+bjO4W6Hdx1Vae0sL2Fy5aRd8PUdtrbcyMwHCa7XF2L/l+alodE7OYvSS+dK\nkqVDzyR1MPMUxJPuhOJQ821Mgr5YlwLDtjEuoj9vaGiHZRMSfnASDLnHI2n0/8fR\nTJ6jAfDdAgMBAAECggEAA/hsu3K3u6usoVo3yMNEC6BQdLCmwrDqxXmPO49BDMMq\nqM3BdY1OcayF2HjtOM/fqIh84B0UgKJ4HAcBhyA8nxPFXGkxZcpiec2t5TsEIqm/\nzQu3EAe12dYJG9riIrDPwQAK4O3QF/WJfoFQuBoTX+3UIWF4ID5Zp1O9Gvq/4XNE\nxDC4z2DMp9Obo8n+qqeD3PudjXCTM2ToM7Aa2lxuBCLGKOqQV15R9RefCkuMwfMq\nhYtk8Y18vMriC5MvkNEIS4hyfKjSXxyBuPgWvWpRlrsI5q1puiEoT8kmIf3WugOp\nuOzY6xu/VqFpW01Ceo4xdLggt67h1Iai/8b38wZXjQKBgQD+9PWrIL1xQ5mZSUAp\nDIHoajHGh+WXeLIYo+D5vAVbuS+SwiyL34LHq3wUDF+lNArlWO/SmiG4Qf0mD49T\nnMWvp66yXC6h/LsbdZG+gGXp0Auyh1UtlP5jUXxtItZxgGEWZqlE3RFufBSkrti+\nDYyvcTbf39LMvLIi04v4aYaBfwKBgQDtTjLpvD5EOFZgOnFjLVaI80ogFcsuIoZc\nnt0sjYyS5ZzdAVg6DOJroGuoGeN0s1VTuwfh8pEnPGr5New9437yu74aMjYnd2zL\nfSgIIN5qiCsmk99g4C3OEQdpdbZdJ6P27CXWtHZwItGPIaW6NOs9RvLQahT4gPji\n+gowG6cDowKBgHDjUauV8YunHOmMT4ZdbV/VNXjsTzJEVMcoOMMbB1xXoMLgiwzb\nyHJUcboGyIrDgleOi5G6gVeukEI7/YBOGBHwsx9yRYuf9dDwu7mX7IgcgDFqTsLC\nB+k9+VPxavYSm+ppRmWhZMiA1Dse2AU+xp4gCOYTmqjgnBdjh8RUJSRNAoGAKTEZ\nxVjXth/RXoLGi+Ci1MLmawtdaXS0vf8VhVZMwHL696H0Hp997hC6n0NfKDK47P/a\nLm5co+Lo7rldeKC0uI2+Qe3VWKRyTiA7gq2x7ewVEW05qSdAzDRIhRXZwfHPlF0J\ndGt+45gnqCC/E8N70fcuzt6bJUe97Cha/F7QbuECgYBEPtR99+douKAa8na6nUn8\n5ineKzU+5g/IC0RgmOJVW2h1YjFgTqnGJnehnYRqF/pj/VjueJKUjxt1aVe0DxoR\nTMftEIaAw1tPOm7qsuh2nuFYNrvVCNkpGimVb/iRpXLYWBIhKkPBLB6w18T+wqCV\nN4SYYK5f65c50egzr1UmRw==\n-----END PRIVATE KEY-----\n",
+  "client_email": "update-covid-killer@api-4878643913612630552-115990.iam.gserviceaccount.com",
+  "client_id": "104866556730253530034",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/update-covid-killer%40api-4878643913612630552-115990.iam.gserviceaccount.com"
+}

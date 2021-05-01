@@ -1,0 +1,21 @@
+{
+  "builds": {
+    "android": {
+      "release": {
+        "workflow": "managed",
+        "releaseChannel": "prod"
+      },
+      "preview": {
+        "workflow": "managed",
+        "releaseChannel": "dev",
+        "buildType": "apk"
+      }
+    },
+    "ios": {
+      "release": {
+        "workflow": "managed",
+          "releaseChannel": "prod"
+      }
+    }
+  }
+}
