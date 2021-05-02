@@ -111,20 +111,18 @@ const App = () => {
     );
   }
   return (
-    <Provider store={store}>
-      <PersistGate
-        loading={<ActivityIndicator debug="app.js" />}
-        persistor={persistor}
-      >
-          <SafeAreaView style={{ flex: 1 }}>
-            <View style={styles.container}>
-              <MyStatusBar />
+    <PersistGate
+      loading={<ActivityIndicator debug="app.js" />}
+      persistor={persistor}
+    >
+      <SafeAreaView style={{ flex: 1 }}>
+        <View style={styles.container}>
+          <MyStatusBar />
 
-              <Board />
-            </View>
-          </SafeAreaView>
-      </PersistGate>
-    </Provider>
+          <Board />
+        </View>
+      </SafeAreaView>
+    </PersistGate>
   );
 };
 
