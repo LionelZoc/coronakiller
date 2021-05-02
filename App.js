@@ -13,18 +13,18 @@ import * as Sentry from "sentry-expo";
 import { cacheImages } from "utils/assetsCaching";
 import ImageAsset, { Sounds } from "assets";
 import AppLoading from "expo-app-loading";
-import "intl";
-import "intl/locale-data/jsonp/en";
-import "intl/locale-data/jsonp/fr";
-import { IntlProvider } from "react-intl";
+// import "intl";
+// import "intl/locale-data/jsonp/en";
+// import "intl/locale-data/jsonp/fr";
+//import { IntlProvider } from "react-intl";
 import configureStore from "state/redux/configureStore";
 import { Provider, useSelector } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import enMessages from "translations/en.json";
-import frMessages from "translations/fr.json";
+// import enMessages from "translations/en.json";
+// import frMessages from "translations/fr.json";
 import ActivityIndicator from "components/ActivityIndicator";
 import { getLocaleSelector } from "state/redux/selectors";
-import { FormattedMessage, useIntl } from "react-intl";
+// import { FormattedMessage, useIntl } from "react-intl";
 
 //sentry config
 Sentry.init({
@@ -38,10 +38,10 @@ Sentry.init({
 //configure redux store
 let { store, persistor } = configureStore();
 
-const messages = {
-  en: enMessages,
-  fr: frMessages,
-};
+// const messages = {
+//   en: enMessages,
+//   fr: frMessages,
+// };
 
 const MyStatusBar = ({ backgroundColor, ...props }) => (
   <View style={[styles.statusBar, { backgroundColor }]}>
@@ -56,7 +56,7 @@ const STATUSBAR_HEIGHT = Platform.OS === "ios" ? 20 : StatusBar.currentHeight;
 
 const App = () => {
   //const intl = useIntl();
-  const locale = useSelector(getLocaleSelector);
+  //const locale = useSelector(getLocaleSelector);
   const [ifLoadingComplete, setIfLoadingComplete] = useState(false);
   const isMounted = useRef(false);
   const loadAssetsAsync = async () => {
@@ -106,7 +106,7 @@ const App = () => {
         startAsync={loadAssetsAsync}
         onError={_handleLoadingError}
         onFinish={_handleFinishLoading}
-        testID="AppLoading"
+        autoHideSplash={true}
       />
     );
   }
@@ -116,12 +116,6 @@ const App = () => {
         loading={<ActivityIndicator debug="app.js" />}
         persistor={persistor}
       >
-        <IntlProvider
-          locale={locale}
-          defaultLocale="fr"
-          messages={messages[locale]}
-          textComponent={Text}
-        >
           <SafeAreaView style={{ flex: 1 }}>
             <View style={styles.container}>
               <MyStatusBar />
@@ -129,7 +123,6 @@ const App = () => {
               <Board />
             </View>
           </SafeAreaView>
-        </IntlProvider>
       </PersistGate>
     </Provider>
   );

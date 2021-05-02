@@ -38,8 +38,6 @@
     "expo-app-loading": "^1.0.3",
     "expo-asset": "~8.3.1",
     "expo-av": "~9.1.2",
-    "expo-splash-screen": "~0.10.2",
-    "expo-status-bar": "~1.0.4",
     "extract-react-intl-messages": "^4.1.1",
     "intl": "^1.2.5",
     "lodash": "^4.17.21",
