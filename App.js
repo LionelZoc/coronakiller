@@ -95,7 +95,11 @@ const App = () => {
   const _handleFinishLoading = () => {
     //don't update if component is unmounted
     //console.log("in handlefinishloading with current", isMounted.current);
+    Sentry.Native.captureMessage("finish loading");
     if (isMounted.current === true) {
+      Sentry.Native.captureMessage(
+        "finish loading and will set loading complete to true"
+      );
       setIfLoadingComplete(true);
     }
   };
