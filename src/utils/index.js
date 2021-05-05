@@ -1,6 +1,8 @@
 import { Platform, Share } from "react-native";
 import * as Sentry from "sentry-expo";
-export const onShare = async (score) => {
+import { getLevelStatus } from "components/GameLevel";
+
+export const onShare = async (score, level) => {
   try {
     let link;
     if (Platform.OS === "android") {
@@ -11,7 +13,9 @@ export const onShare = async (score) => {
     }
     const result = await Share.share(
       {
-        message: `psss, i've just made a score of ${score} on this game can you do more than that ?. ${link}`,
+        message: `psss, i've just made a score of ${score} at level ${getLevelStatus(
+          level
+        )}  on this game can you do more than that ?. ${link}`,
         title: "Share Vira!ert",
       },
       { dialogTitle: "Share Vira!ert " }

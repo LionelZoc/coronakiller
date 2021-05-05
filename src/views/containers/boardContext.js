@@ -20,6 +20,7 @@ const BoardDispatcherContext = React.createContext({
 const boardContextReducer = (state, action) => {
   switch (action.type) {
     case "DECREMENT": {
+      console.log("DECREMENT");
       return {
         ...state,
         score: state.score > 0 ? state.score - 1 : 0,
@@ -28,6 +29,14 @@ const boardContextReducer = (state, action) => {
       };
     }
     case "INCREMENT": {
+      return {
+        ...state,
+        score: state.score + 1,
+        visibleVirus: state.visibleVirus >= 1 ? state.visibleVirus - 1 : 0,
+        lastKilled: action.position,
+      };
+    }
+    case "CHANGE_TARGET_POSITION": {
       return {
         ...state,
         score: state.score + 1,
@@ -65,6 +74,7 @@ const boardContextReducer = (state, action) => {
       };
     }
     case "CLEAR_BONUS": {
+      console.log("CLEAR_BONUS");
       return {
         ...state,
         bonus: -1,

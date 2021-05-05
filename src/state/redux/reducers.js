@@ -6,12 +6,16 @@ import {
   GAME_UPDATE_HIGH_SCORE,
   GAME_SET_TARGET,
   GAME_SET_REMAINING_TIME,
+  GAME_SET_LEVEL,
+  GAME_UPDGRADE_LEVEL,
 } from "state/redux/actionTypes";
+import toNumber from "lodash/toNumber";
 
 const initialLocalState = {
   locale: "en",
   highScore: 0,
-  level: "",
+  previousLevelHighScore: 0,
+  level: 1,
   targetSelected: "bug",
   restTime: 60,
 };
@@ -40,6 +44,21 @@ const localeReducer = (state = initialLocalState, action) => {
       return {
         ...state,
         target: action.payload,
+      };
+    }
+    case GAME_UPDGRADE_LEVEL: {
+      console.log("state before upgrade", state);
+      return {
+        ...state,
+        level: toNumber(state.level) ? toNumber(state.level) + 1 : 2,
+        previousLevelHighScore: state.highScore,
+        highScore: 0,
+      };
+    }
+    case GAME_SET_LEVEL: {
+      return {
+        ...state,
+        level: action.payload,
       };
     }
 

@@ -6,13 +6,17 @@ import BoardMeta from "components/BoardMeta";
 import BoardAction from "components/BoardAction";
 import { Audio } from "expo-av";
 import impactSound from "assets/impact.mp3";
+import failSound from "assets/fail.mp3";
 import { BoardContextProvider } from "containers/boardContext";
+import * as Sentry from "sentry-expo";
+import GameLevel from "components/GameLevel";
 
 const Board = () => {
   const [boxSize, setBoxSize] = useState(16);
   const [timeout, setTimeout] = useState(60);
   const [error, setError] = useState(false);
   const [sound, setSound] = useState();
+  const [missSound, setMissSound] = useState();
   const window = useWindowDimensions();
 
   //height should always be sup to width
@@ -48,23 +52,38 @@ const Board = () => {
         const { sound } = await Audio.Sound.createAsync(impactSound, {
           shouldPlay: false,
         });
+        const { missSound } = await Audio.Sound.createAsync(failSound, {
+          shouldPlay: false,
+        });
         setSound(sound);
+        setMissSound(missSound);
       };
       load();
     } catch (e) {
       setError(true);
+      Platform.OS === "web"
+        ? Sentry.Browser.captureException(e)
+        : Sentry.Native.captureException(e);
     }
   }, []);
 
-  const playSoundMemo = useCallback(() => {
-    const playSound = async () => {
-      //await sound.replayAsync({positionMillis: 0, shouldPlay: true})
-      //await sound.setStatusAsync({positionMillis: 0, shouldPlay: true})
-      await sound.stopAsync();
-      await sound.playAsync();
-    };
-    playSound();
-  }, [sound]);
+  const playSoundMemo = useCallback(
+    (type = "hit") => {
+      const playSound = async () => {
+        //await sound.replayAsync({positionMillis: 0, shouldPlay: true})
+        //await sound.setStatusAsync({positionMillis: 0, shouldPlay: true})
+        if (type === "hit") {
+          await sound.stopAsync();
+          await sound.playAsync();
+        } else {
+          await missSound.stopAsync();
+          await missSound.playAsync();
+        }
+      };
+      playSound(type);
+    },
+    [sound, missSound]
+  );
 
   useEffect(() => {
     return sound
@@ -85,8 +104,12 @@ const Board = () => {
           style={{
             flex: 0.5,
             width: Platform.OS === "web" ? "50%" : window.width - 5,
+            borderColor: "black",
+            borderWidth: 1,
+            justifyContent: "flex-start",
           }}
         >
+          <GameLevel />
           <BoardAction />
           <BoardMeta />
         </View>
@@ -111,7 +134,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
 
     width: "100%",
-    justifyContent: "center",
+    justifyContent: "space-around",
     alignItems: "center",
   },
   board: {

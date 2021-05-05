@@ -1,19 +1,20 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { Button } from "react-native-elements";
 //import PropTypes from "prop-types";
 import { StyleSheet, View, Text } from "react-native";
 import { Icon } from "react-native-elements";
 import { useDispatch, useSelector } from "react-redux";
-import { getHighScoreSelector } from "state/redux/selectors";
-import { updateGameHighScore } from "state/redux/actions";
+import { getHighScoreSelector, getLevelSelector } from "state/redux/selectors";
+import { updateGameHighScore, upgradeLevel } from "state/redux/actions";
 import { onShare } from "utils";
-
+import toNumber from "lodash/toNumber";
 import {
   useBoardContextState,
   useBoardContextDispatcher,
 } from "containers/boardContext";
+import { getLevelStatus } from "components/GameLevel";
 const getRank = (score) => {
-  if (score > 250) return "S";
+  if (score > 260) return "S";
   if (score > 200) return "A";
   if (score > 160) return "B";
   if (score > 150) return "C";
@@ -24,7 +25,11 @@ const GameResult = () => {
   const dispatcher = useBoardContextDispatcher();
   const reduxDispatch = useDispatch();
   const highScore = useSelector(getHighScoreSelector);
-
+  const level = useSelector(getLevelSelector);
+  const onUpgradeLevel = useCallback(() => {
+    reduxDispatch(upgradeLevel(level));
+    dispatcher({ type: "RESTART" });
+  }, [level]);
   useEffect(() => {
     if (boardContext.score > highScore) {
       reduxDispatch(updateGameHighScore(boardContext.score));
@@ -38,6 +43,7 @@ const GameResult = () => {
       <View style={styles.score}>
         <Text style={styles.highScoreLabel}>Highest Score : {highScore} </Text>
         <Text style={styles.scoreLabel}>Score : {boardContext.score} </Text>
+        <Text style={styles.scoreLabel}>Level : {getLevelStatus(level)} </Text>
 
         <Text style={styles.rankLabel}>
           Rank : {getRank(boardContext.score)}{" "}
@@ -87,7 +93,32 @@ const GameResult = () => {
               color="white"
             />
           }
-          onPress={() => onShare(highScore)}
+          onPress={() => onShare(highScore, level)}
+        />
+        <Button
+          title={`Go to Level ${toNumber(level) ? toNumber(level) + 1 : 2}`}
+          titleStyle={{ fontWeight: "bold", fontSize: 18, marginLeft: 10 }}
+          buttonStyle={{
+            borderWidth: 0,
+            borderColor: "transparent",
+            borderRadius: 20,
+            backgroundColor: "green",
+          }}
+          containerStyle={{
+            marginTop: 30,
+            width: "70%",
+            maxWidth: 300,
+            display: highScore > 260 ? "flex" : "none",
+          }}
+          icon={
+            <Icon
+              name="skip-next"
+              type="material-community"
+              size={30}
+              color="white"
+            />
+          }
+          onPress={() => onUpgradeLevel()}
         />
       </View>
     </View>
@@ -114,6 +145,12 @@ const styles = StyleSheet.create({
   scoreLabel: {
     fontWeight: "bold",
     fontSize: 30,
+    color: "black",
+    marginBottom: 10,
+  },
+  levelLabel: {
+    fontWeight: "bold",
+    fontSize: 20,
     color: "black",
     marginBottom: 10,
   },

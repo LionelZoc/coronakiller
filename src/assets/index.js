@@ -10,6 +10,7 @@ const Images = {
 };
 const Sounds = {
   impact: require("./impact.mp3"),
+  fail: require("./fail.mp3"),
 };
 export default Images;
 export { Sounds };

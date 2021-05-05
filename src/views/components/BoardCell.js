@@ -15,11 +15,13 @@ import {
   useBoardContextDispatcher,
 } from "containers/boardContext";
 import Colors from "constants/Colors";
+import { getLevelSelector } from "state/redux/selectors";
+import { useSelector } from "react-redux";
 
 //usecontext
 const BoardCell = ({ position }) => {
   const boardContext = useBoardContextState();
-
+  const level = useSelector(getLevelSelector);
   const dispatcher = useBoardContextDispatcher();
   const window = useWindowDimensions();
   const [show, setShow] = useState(false);
@@ -42,15 +44,16 @@ const BoardCell = ({ position }) => {
   const onClick = () => {
     //callback that send yes to parent from context
     if (!boardContext.finished && boardContext.started) {
-      boardContext.playSound();
+      boardContext.playSound("hit");
       setShow(false);
       dispatcher({ type: "INCREMENT", position });
     }
   };
 
   const onError = () => {
-    setShowBonus(false);
+    boardContext.playSound("fail");
     dispatcher({ type: "DECREMENT", position });
+    dispatcher({ type: "CLEAR_BONUS", position });
   };
   const onClickBonus = () => {
     //boardContext.playBonusSound();
@@ -63,6 +66,18 @@ const BoardCell = ({ position }) => {
       setShowBonus(false);
     }
   }, [boardContext.finished, boardContext.cleanBoard]);
+  useEffect(() => {
+    if (level > 1) {
+      console.log("level sup to 1");
+      const timeout = setTimeout(() => {
+        if (show) {
+          setShow(false);
+          dispatcher({ type: "RELOAD_NEXT", avoid: position });
+        }
+      }, 2000);
+      return () => clearTimeout(timeout);
+    }
+  }, [level, show, position]);
 
   useEffect(() => {
     if (!showBonus) return () => false;
@@ -80,7 +95,7 @@ const BoardCell = ({ position }) => {
     if (boardContext.next === position && show === true) {
       dispatcher({ type: "RELOAD_NEXT", avoid: position });
     }
-  }, [boardContext.next, position, dispatcher]);
+  }, [boardContext.next, position, dispatcher, show]);
   useEffect(() => {
     if (boardContext.bonus === position && show === false) {
       setShowBonus(true);
@@ -89,7 +104,10 @@ const BoardCell = ({ position }) => {
     if (boardContext.bonus === position && show === true) {
       dispatcher({ type: "RELOAD_BONUS", avoid: position });
     }
-  }, [boardContext.bonus, position, show, dispatcher]);
+    if (boardContext.bonus === -1 && showBonus === true) {
+      setShowBonus(false);
+    }
+  }, [boardContext.bonus, showBonus, position, show, dispatcher]);
 
   return (
     <View

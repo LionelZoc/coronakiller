@@ -8,6 +8,9 @@ const getRestTime = (state) => {
   return get(state, "core.restTime", 60);
 };
 const getHighScore = (state) => get(state, "core.highScore", "");
+const getLevel = (state) => {
+  return get(state, "core.level", 1);
+};
 
 export const getLocaleSelector = createSelector(getLocale, (locale) => {
   return locale;
@@ -19,4 +22,8 @@ export const getHighScoreSelector = createSelector(getHighScore, (score) => {
 
 export const getRestTimeSelector = createSelector(getRestTime, (time) => {
   return time;
+});
+
+export const getLevelSelector = createSelector(getLevel, (level) => {
+  return level;
 });

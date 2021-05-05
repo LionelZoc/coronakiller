@@ -70,6 +70,7 @@ const App = () => {
       ImageAsset.target,
       ImageAsset.targetBug,
       Sounds.impact,
+      Sounds.fail,
     ]);
 
     await Promise.all([...imageAssets]);
