@@ -47,7 +47,6 @@ const localeReducer = (state = initialLocalState, action) => {
       };
     }
     case GAME_UPDGRADE_LEVEL: {
-      console.log("state before upgrade", state);
       return {
         ...state,
         level: toNumber(state.level) ? toNumber(state.level) + 1 : 2,

@@ -67,8 +67,7 @@ const BoardCell = ({ position }) => {
     }
   }, [boardContext.finished, boardContext.cleanBoard]);
   useEffect(() => {
-    if (level > 1) {
-      console.log("level sup to 1");
+    if (level > 1 && show) {
       const timeout = setTimeout(() => {
         if (show) {
           setShow(false);
