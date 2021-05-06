@@ -30,7 +30,6 @@ const Board = () => {
       : window.width - 5;
   let cells = [];
   cells = useMemo(() => {
-    console.log("in cells memo");
     const localeCells = [];
     for (let i = 0; i < boxSize; i++) {
       const cell = <BoardCell key={i} position={i} />;
