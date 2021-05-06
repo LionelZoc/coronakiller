@@ -1,22 +1,5 @@
-import React, { useEffect, useState } from "react";
-import {
-  useBoardContextState,
-  useBoardContextDispatcher,
-} from "containers/boardContext";
-
-import GameResult from "components/GameResult";
-import PropTypes from "prop-types";
-import {
-  StyleSheet,
-  View,
-  Platform,
-  Text,
-  Modal,
-  useWindowDimensions,
-} from "react-native";
-import { Overlay } from "react-native-elements";
-
-import WebModal from "modal-react-native-web";
+import React from "react";
+import { StyleSheet, View, Text } from "react-native";
 import { useSelector } from "react-redux";
 import { getLevelSelector } from "state/redux/selectors";
 import toNumber from "lodash/toNumber";
@@ -37,6 +20,7 @@ export const getLevelStatus = (level) => {
     case 3:
       return LEVEL_2;
     default:
+      return LEVEL_0;
   }
 };
 const GAMELEVEL = () => {
@@ -44,7 +28,6 @@ const GAMELEVEL = () => {
   // const boardContext = useBoardContextState();
   // const dimensions = useWindowDimensions();
   const level = useSelector(getLevelSelector);
-  console.log("level", level);
   //timer
   //console.log("boardContext", boardContext);
   return (

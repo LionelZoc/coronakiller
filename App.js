@@ -8,7 +8,7 @@ import {
   StatusBar,
 } from "react-native";
 import PropTypes from "prop-types";
-import Board from "components/Board.js";
+import Board from "components/Board";
 import * as Sentry from "sentry-expo";
 import { cacheImages } from "utils/assetsCaching";
 import ImageAsset, { Sounds } from "assets";
@@ -70,10 +70,10 @@ const App = () => {
       ImageAsset.target,
       ImageAsset.targetBug,
       Sounds.impact,
-      Sounds.fail,
+      //Sounds.fail,
     ]);
 
-    await Promise.all([...imageAssets]);
+    return Promise.all([...imageAssets]);
   };
 
   useEffect(() => {
@@ -90,21 +90,19 @@ const App = () => {
     Platform.OS === "web"
       ? Sentry.Browser.captureException(error)
       : Sentry.Native.captureException(error);
-    //console.warn(error);
   };
 
   const _handleFinishLoading = () => {
     //don't update if component is unmounted
     //console.log("in handlefinishloading with current", isMounted.current);
-    Sentry.Native.captureMessage("finish loading");
     //if (isMounted.current === true) {
     Sentry.Native.captureMessage(
       "finish loading and will set loading complete to true"
     );
+
     setIfLoadingComplete(true);
     //}
   };
-
   if (!ifLoadingComplete) {
     return (
       <AppLoading
@@ -115,6 +113,7 @@ const App = () => {
       />
     );
   }
+
   return (
     <PersistGate
       loading={<ActivityIndicator debug="app.js" />}

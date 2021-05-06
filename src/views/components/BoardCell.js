@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import PropTypes from "prop-types";
 import {
   StyleSheet,
@@ -17,6 +17,7 @@ import {
 import Colors from "constants/Colors";
 import { getLevelSelector } from "state/redux/selectors";
 import { useSelector } from "react-redux";
+import toNumber from "lodash/toNumber";
 
 //usecontext
 const BoardCell = ({ position }) => {
@@ -41,33 +42,44 @@ const BoardCell = ({ position }) => {
       ? customWidthWeb / Math.sqrt(boardContext.size)
       : customWidthMobile / Math.sqrt(boardContext.size);
 
-  const onClick = () => {
-    //callback that send yes to parent from context
-    if (!boardContext.finished && boardContext.started) {
-      boardContext.playSound("hit");
-      setShow(false);
-      dispatcher({ type: "INCREMENT", position });
-    }
-  };
+  const onClick = useCallback(() => {
+    const callback = () => {
+      //callback that send yes to parent from context
+      if (!boardContext.finished && boardContext.started) {
+        boardContext.playSound("hit");
+        setShow(false);
+        dispatcher({ type: "INCREMENT", position });
+      }
+    };
+    callback();
+  }, [boardContext.finished, boardContext.started, position, dispatcher]);
 
-  const onError = () => {
-    boardContext.playSound("fail");
-    dispatcher({ type: "DECREMENT", position });
-    dispatcher({ type: "CLEAR_BONUS", position });
-  };
-  const onClickBonus = () => {
-    //boardContext.playBonusSound();
-    setShowBonus(false);
-    dispatcher({ type: "INCREMENT_TIMEOUT", position });
-  };
+  const onError = useCallback(() => {
+    const callback = () => {
+      //boardContext.playSound("fail");
+      dispatcher({ type: "DECREMENT", position });
+      dispatcher({ type: "CLEAR_BONUS", position });
+    };
+    callback();
+  }, [position, dispatcher]);
+  const onClickBonus = useCallback(() => {
+    const callback = () => {
+      //boardContext.playBonusSound();
+      setShowBonus(false);
+      dispatcher({ type: "INCREMENT_TIMEOUT", position });
+    };
+    callback();
+  }, [dispatcher, position]);
+
   useEffect(() => {
     if (boardContext.finished || boardContext.cleanBoard) {
       setShow(false);
       setShowBonus(false);
     }
   }, [boardContext.finished, boardContext.cleanBoard]);
+  //
   useEffect(() => {
-    if (level > 1 && show) {
+    if (toNumber(level) > 1 && show && boardContext.started) {
       const timeout = setTimeout(() => {
         if (show) {
           setShow(false);
@@ -76,16 +88,18 @@ const BoardCell = ({ position }) => {
       }, 2000);
       return () => clearTimeout(timeout);
     }
-  }, [level, show, position]);
-
+  }, [level, show, position, dispatcher, boardContext.started]);
+  //
   useEffect(() => {
-    if (!showBonus) return () => false;
+    //if (!showBonus) return () => false;
     const timeout = setTimeout(() => {
-      setShowBonus(false);
-      dispatcher({ type: "CLEAR_BONUS", position });
+      if (showBonus) {
+        setShowBonus(false);
+        dispatcher({ type: "CLEAR_BONUS", position });
+      }
     }, 2000);
     return () => clearTimeout(timeout);
-  }, [showBonus]);
+  }, [showBonus, dispatcher, position]);
   useEffect(() => {
     if (boardContext.next === position && show === false) {
       setShow(true);
@@ -94,7 +108,7 @@ const BoardCell = ({ position }) => {
     if (boardContext.next === position && show === true) {
       dispatcher({ type: "RELOAD_NEXT", avoid: position });
     }
-  }, [boardContext.next, position, dispatcher, show]);
+  }, [boardContext.next, position, dispatcher]);
   useEffect(() => {
     if (boardContext.bonus === position && show === false) {
       setShowBonus(true);
@@ -108,50 +122,52 @@ const BoardCell = ({ position }) => {
     }
   }, [boardContext.bonus, showBonus, position, show, dispatcher]);
 
-  return (
-    <View
-      style={[
-        styles.container,
-        {
-          width: cellSize,
-          height: cellSize,
-        },
-      ]}
-    >
-      {!show && !showBonus && (
-        <TouchableOpacity
-          onPress={onError}
-          style={{ width: "100%", height: "100%" }}
-        />
-      )}
-      {show && (
-        <Image
-          source={virus}
-          containerStyle={[
-            styles.imageContainer,
-            {
-              width: cellSize / 2,
-              height: cellSize / 2,
-            },
-          ]}
-          onPress={onClick}
-        />
-      )}
-      {showBonus && (
-        <Image
-          source={mask}
-          containerStyle={[
-            styles.imageBonusContainer,
-            {
-              width: cellSize / 2,
-              height: cellSize / 2,
-            },
-          ]}
-          onPress={onClickBonus}
-        />
-      )}
-    </View>
-  );
+  return useMemo(() => {
+    return (
+      <View
+        style={[
+          styles.container,
+          {
+            width: cellSize,
+            height: cellSize,
+          },
+        ]}
+      >
+        {!show && !showBonus && (
+          <TouchableOpacity
+            onPress={onError}
+            style={{ width: "100%", height: "100%" }}
+          />
+        )}
+        {show && (
+          <Image
+            source={virus}
+            containerStyle={[
+              styles.imageContainer,
+              {
+                width: cellSize / 2,
+                height: cellSize / 2,
+              },
+            ]}
+            onPress={onClick}
+          />
+        )}
+        {showBonus && (
+          <Image
+            source={mask}
+            containerStyle={[
+              styles.imageBonusContainer,
+              {
+                width: cellSize / 2,
+                height: cellSize / 2,
+              },
+            ]}
+            onPress={onClickBonus}
+          />
+        )}
+      </View>
+    );
+  }, [cellSize, show, showBonus, onClick, onClickBonus, onError, position]);
 };
 BoardCell.propTypes = {
   position: PropTypes.number,

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { StyleSheet, View, useWindowDimensions, Platform } from "react-native";
 
 import BoardCell from "components/BoardCell";
@@ -6,7 +6,7 @@ import BoardMeta from "components/BoardMeta";
 import BoardAction from "components/BoardAction";
 import { Audio } from "expo-av";
 import impactSound from "assets/impact.mp3";
-import failSound from "assets/fail.mp3";
+//import failSound from "assets/fail.mp3";
 import { BoardContextProvider } from "containers/boardContext";
 import * as Sentry from "sentry-expo";
 import GameLevel from "components/GameLevel";
@@ -16,7 +16,7 @@ const Board = () => {
   const [timeout, setTimeout] = useState(60);
   const [error, setError] = useState(false);
   const [sound, setSound] = useState();
-  const [missSound, setMissSound] = useState();
+  //const [missSound, setMissSound] = useState();
   const window = useWindowDimensions();
 
   //height should always be sup to width
@@ -29,10 +29,16 @@ const Board = () => {
       ? window.height / 2 - 5
       : window.width - 5;
   let cells = [];
-  for (let i = 0; i < boxSize; i++) {
-    const cell = <BoardCell key={i} position={i} />;
-    cells.push(cell);
-  }
+  cells = useMemo(() => {
+    console.log("in cells memo");
+    const localeCells = [];
+    for (let i = 0; i < boxSize; i++) {
+      const cell = <BoardCell key={i} position={i} />;
+      localeCells.push(cell);
+    }
+    return localeCells;
+  }, [boxSize]);
+
   useEffect(() => {
     try {
       const initAudio = async () =>
@@ -52,11 +58,11 @@ const Board = () => {
         const { sound } = await Audio.Sound.createAsync(impactSound, {
           shouldPlay: false,
         });
-        const { missSound } = await Audio.Sound.createAsync(failSound, {
-          shouldPlay: false,
-        });
+        // const { missSound } = await Audio.Sound.createAsync(failSound, {
+        //   shouldPlay: false,
+        // });
         setSound(sound);
-        setMissSound(missSound);
+        //setMissSound(missSound);
       };
       load();
     } catch (e) {
@@ -76,13 +82,13 @@ const Board = () => {
           await sound.stopAsync();
           await sound.playAsync();
         } else {
-          await missSound.stopAsync();
-          await missSound.playAsync();
+          //await missSound.stopAsync();
+          //await missSound.playAsync();
         }
       };
       playSound(type);
     },
-    [sound, missSound]
+    [sound]
   );
 
   useEffect(() => {
@@ -92,6 +98,14 @@ const Board = () => {
         }
       : undefined;
   }, [sound]);
+
+  // useEffect(() => {
+  //   return missSound
+  //     ? () => {
+  //         missSound.unloadAsync();
+  //       }
+  //     : undefined;
+  // }, [missSound]);
 
   return (
     <BoardContextProvider

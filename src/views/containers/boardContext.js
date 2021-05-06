@@ -73,6 +73,7 @@ const boardContextReducer = (state, action) => {
       };
     }
     case "CLEAR_BONUS": {
+      if (state.bonus === -1) return state;
       return {
         ...state,
         bonus: -1,
@@ -148,6 +149,7 @@ const boardContextReducer = (state, action) => {
       return {
         ...state,
         incrementTimeout: false,
+        bonus: -1,
       };
     }
     case "INIT": {
@@ -242,6 +244,7 @@ const BoardContextProvider = ({ size, playSound, children, timeout }) => {
     boardContextState.finished,
     boardContextState.cleanBoard,
     boardContextState.started,
+    boardContextState.size,
   ]);
 
   //// TODO: create a dispatch virus function
@@ -268,6 +271,8 @@ const BoardContextProvider = ({ size, playSound, children, timeout }) => {
     boardContextState.finished,
     boardContextState.next,
     boardContextState.cleanBoard,
+    boardContextState.bonus,
+    boardContextState.size,
   ]);
 
   return (

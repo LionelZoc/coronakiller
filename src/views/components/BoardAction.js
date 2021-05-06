@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   useBoardContextState,
   useBoardContextDispatcher,
 } from "containers/boardContext";
 
-import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 import { getHighScoreSelector } from "state/redux/selectors";
 import {
