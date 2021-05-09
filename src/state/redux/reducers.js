@@ -8,6 +8,7 @@ import {
   GAME_SET_REMAINING_TIME,
   GAME_SET_LEVEL,
   GAME_UPDGRADE_LEVEL,
+  GAME_TOOGLE_SOUND,
 } from "state/redux/actionTypes";
 import toNumber from "lodash/toNumber";
 
@@ -18,6 +19,7 @@ const initialLocalState = {
   level: 1,
   targetSelected: "bug",
   restTime: 60,
+  soundOn: true,
 };
 const localeReducer = (state = initialLocalState, action) => {
   switch (action.type) {
@@ -60,6 +62,12 @@ const localeReducer = (state = initialLocalState, action) => {
         level: action.payload,
       };
     }
+    case GAME_TOOGLE_SOUND: {
+      return {
+        ...state,
+        soundOn: !state.soundOn,
+      };
+    }
 
     default:
       //put the propertyCreaction reducer here
@@ -72,7 +80,14 @@ let localPersistConfig = {
   //debug: true,
   storage: AsyncStorage,
   stateReconciler: autoMergeLevel2,
-  whitelist: ["locale", "highScore", "target", "level"],
+  whitelist: [
+    "locale",
+    "highScore",
+    "target",
+    "level",
+    "soundOn",
+    "targetSelected",
+  ],
 };
 
 //the routerReducer must be under the routing key

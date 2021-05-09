@@ -10,12 +10,15 @@ import impactSound from "assets/impact.mp3";
 import { BoardContextProvider } from "containers/boardContext";
 import * as Sentry from "sentry-expo";
 import GameLevel from "components/GameLevel";
+import { getSoundOnSelector } from "state/redux/selectors";
+import { useSelector } from "react-redux";
 
 const Board = () => {
   const [boxSize, setBoxSize] = useState(16);
   const [timeout, setTimeout] = useState(60);
   const [error, setError] = useState(false);
   const [sound, setSound] = useState();
+  const soundOn = useSelector(getSoundOnSelector);
   //const [missSound, setMissSound] = useState();
   const window = useWindowDimensions();
 
@@ -85,9 +88,9 @@ const Board = () => {
           //await missSound.playAsync();
         }
       };
-      playSound(type);
+      if (soundOn) playSound(type);
     },
-    [sound]
+    [sound, soundOn]
   );
 
   useEffect(() => {

@@ -4,6 +4,7 @@ import {
   GAME_SET_REMAINING_TIME,
   GAME_SET_LEVEL,
   GAME_UPDGRADE_LEVEL,
+  GAME_TOOGLE_SOUND,
 } from "state/redux/actionTypes";
 
 export const updateGameHighScore = (score) => ({
@@ -26,4 +27,7 @@ export const setLevel = (level) => ({
 export const upgradeLevel = (current) => ({
   type: GAME_UPDGRADE_LEVEL,
   payload: current,
+});
+export const toggleSound = () => ({
+  type: GAME_TOOGLE_SOUND,
 });

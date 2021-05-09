@@ -1,6 +1,20 @@
-import React, { useReducer, useContext, useEffect, useRef } from "react";
+import React, {
+  useReducer,
+  useContext,
+  useEffect,
+  useRef,
+  useCallback,
+} from "react";
 import PropTypes from "prop-types";
 import random from "lodash/random";
+import map from "lodash/map";
+import filter from "lodash/filter";
+import get from "lodash/get";
+import set from "lodash/set";
+import { getLevelSelector } from "state/redux/selectors";
+import { useSelector } from "react-redux";
+import toNumber from "lodash/toNumber";
+import isEmpty from "lodash/isEmpty";
 
 const BoardContext = React.createContext({
   score: 0,
@@ -12,28 +26,63 @@ const BoardContext = React.createContext({
   next: undefined,
   finished: false,
   bonus: -1,
+  cases: {},
 });
 const BoardDispatcherContext = React.createContext({
   dispatch: () => {},
 });
-
+const createBoard = (size) => {
+  const cases = {};
+  for (let i = 0; i < size; i++) {
+    cases[`${i}`] = { index: i, show: false, showBonus: false };
+  }
+  return cases;
+};
+const cleanBoard = (board, size) => {
+  const cases = board;
+  for (let i = 0; i < size; i++) {
+    cases[`${i}`] = {
+      index: i,
+      show: false,
+      showBonus: cases[`${i}`].showBonus,
+    };
+  }
+  return cases;
+};
 const boardContextReducer = (state, action) => {
   switch (action.type) {
     case "DECREMENT": {
+      const cases = state.cases;
+      const list = getBonusPosition(cases);
+
+      for (let i = 0; i < list.length; i++) {
+        set(cases, `${list[i]}.showBonus`, false);
+      }
+
       return {
         ...state,
         score: state.score > 0 ? state.score - 1 : 0,
         lastMissed: action.position,
         bonus: -1,
+        cases,
       };
     }
     case "INCREMENT": {
-      return {
-        ...state,
-        score: state.score + 1,
-        visibleVirus: state.visibleVirus >= 1 ? state.visibleVirus - 1 : 0,
-        lastKilled: action.position,
-      };
+      if (!state.finished && state.started) {
+        state.playSound("hit");
+        const cases = state.cases;
+
+        set(cases, `${action.position}.show`, false);
+
+        return {
+          ...state,
+          score: state.score + 1,
+          //visibleVirus: state.visibleVirus >= 1 ? state.visibleVirus - 1 : 0,
+          cases,
+          lastKilled: action.position,
+        };
+      }
+      return state;
     }
     case "CHANGE_TARGET_POSITION": {
       return {
@@ -41,6 +90,13 @@ const boardContextReducer = (state, action) => {
         score: state.score + 1,
         visibleVirus: state.visibleVirus >= 1 ? state.visibleVirus - 1 : 0,
         lastKilled: action.position,
+      };
+    }
+    case "UPDATE_VIRUSES": {
+      return {
+        ...state,
+        cases: action.cases,
+        //visibleVirus: state.visibleVirus + 1,
       };
     }
     case "NEXT": {
@@ -51,6 +107,7 @@ const boardContextReducer = (state, action) => {
       };
     }
     case "RELOAD_NEXT": {
+      //avoid for now
       let next;
       do {
         next = random(0, state.size - 1);
@@ -62,45 +119,74 @@ const boardContextReducer = (state, action) => {
       };
     }
     case "RELOAD_BONUS": {
+      const cases = state.cases;
+
       let bonus;
       do {
         bonus = random(0, state.size - 1);
       } while (bonus === state.next || bonus === action.avoid);
+      set(cases, `${bonus}.showBonus`, true);
+      set(cases, `${bonus}.show`, false);
+      return {
+        ...state,
+        //bonus,
+        cases,
+      };
+    }
+
+    case "CLEAR_BONUS": {
+      //if (state.bonus === -1) return state;
+      const cases = state.cases;
+      const list = getBonusPosition(cases);
+
+      for (let i = 0; i < list.length; i++) {
+        set(cases, `${list[i]}.showBonus`, false);
+      }
+      //set(cases, `${state.bonus}.showBonus`, false);
+      return {
+        ...state,
+        //bonus: -1,
+        cases,
+      };
+    }
+
+    case "BONUS": {
+      const cases = state.cases;
+      if (action.position > -1) {
+        set(cases, `${action.position}.show`, false);
+        set(cases, `${action.position}.showBonus`, true);
+      }
+      //// TODO: remove
+      // if (state.bonus !== -1) {
+      //   set(cases, `${state.bonus}.showBonus`, false);
+      // }
 
       return {
         ...state,
-        bonus,
-      };
-    }
-    case "CLEAR_BONUS": {
-      if (state.bonus === -1) return state;
-      return {
-        ...state,
-        bonus: -1,
-      };
-    }
-    case "BONUS": {
-      return {
-        ...state,
-        bonus: action.position,
+        //bonus: action.position,
+        cases,
       };
     }
     case "TIMEOUT": {
+      const cases = createBoard(state.size);
       return {
         ...state,
         finished: true,
         started: false,
         cleanBoard: true,
         visibleVirus: 0,
+        cases,
       };
     }
     case "STOP": {
+      const cases = createBoard(state.size);
       return {
         ...state,
         finished: false,
         started: false,
         cleanBoard: true,
         visibleVirus: 0,
+        cases,
       };
     }
     case "START": {
@@ -124,7 +210,7 @@ const boardContextReducer = (state, action) => {
         started: true,
         incrementTimeout: false,
         cleanBoard: false,
-        bonus: -1,
+        //bonus: -1,
       };
     }
     case "UPDATE_SOUND": {
@@ -146,10 +232,18 @@ const boardContextReducer = (state, action) => {
       };
     }
     case "TIMEOUT_INCREMENTED": {
+      const cases = state.cases;
+      const list = getBonusPosition(cases);
+
+      for (let i = 0; i < list.length; i++) {
+        set(cases, `${list[i]}.showBonus`, false);
+      }
+      //set(cases, `${state.bonus}.showBonus`, false);
       return {
         ...state,
         incrementTimeout: false,
-        bonus: -1,
+        //bonus: -1,
+        cases,
       };
     }
     case "INIT": {
@@ -163,12 +257,20 @@ const boardContextReducer = (state, action) => {
         started: action.started,
         incrementTimeout: false,
         cleanBoard: action.cleanBoard,
-        bonus: action.bonus,
+        //bonus: action.bonus,
+        cases: action.cases,
       };
     }
   }
 };
-
+const getVirusPositions = (cases) => {
+  const list = filter(cases, (cell) => cell.show);
+  return map(list, (cell) => cell.index);
+};
+const getBonusPosition = (cases) => {
+  const list = filter(cases, (cell) => cell.showBonus);
+  return map(list, (cell) => cell.index);
+};
 const BoardContextProvider = ({ size, playSound, children, timeout }) => {
   const handlingBonus = useRef(false);
   const [boardContextState, dispatch] = useReducer(boardContextReducer, {
@@ -178,6 +280,7 @@ const BoardContextProvider = ({ size, playSound, children, timeout }) => {
     incrementTimeout: false,
     cleanBoard: false,
   });
+  const level = useSelector(getLevelSelector);
 
   useEffect(() => {
     if (!boardContextState.started && handlingBonus.current === true) {
@@ -197,7 +300,12 @@ const BoardContextProvider = ({ size, playSound, children, timeout }) => {
       timeout,
     });
   }, [timeout]);
+
   useEffect(() => {
+    let cases = {};
+    for (let i = 0; i < size; i++) {
+      cases[`${i}`] = { index: i, show: false, showBonus: false };
+    }
     dispatch({
       type: "INIT",
       size,
@@ -207,19 +315,23 @@ const BoardContextProvider = ({ size, playSound, children, timeout }) => {
       incrementTimeout: false,
       started: false,
       cleanBoard: false,
-      bonus: -1,
+      //bonus: -1,
+      cases,
     });
   }, [size]);
 
   //dispatch bonus
 
   useEffect(() => {
+    const cases = boardContextState.cases;
+    const bonusList = getBonusPosition(cases);
+
     if (
       //boardContextState.visibleVirus < 4 &&
       !boardContextState.finished &&
       !boardContextState.cleanBoard &&
       boardContextState.started &&
-      boardContextState.bonus === -1 &&
+      isEmpty(bonusList) &&
       handlingBonus.current === false
     ) {
       handlingBonus.current = true;
@@ -239,41 +351,92 @@ const BoardContextProvider = ({ size, playSound, children, timeout }) => {
       };
     }
   }, [
-    //  boardContextState.visibleVirus,
-    boardContextState.bonus,
+    boardContextState.cases,
     boardContextState.finished,
     boardContextState.cleanBoard,
     boardContextState.started,
     boardContextState.size,
   ]);
 
-  //// TODO: create a dispatch virus function
+  //dispatch target
   useEffect(() => {
+    let positions = getVirusPositions(boardContextState.cases);
+
+    let cases = boardContextState.cases;
+
+    const toCreate = 4 - positions.length;
+
     if (
-      boardContextState.visibleVirus < 4 &&
+      toCreate > 0 &&
+      !boardContextState.finished &&
+      !boardContextState.cleanBoard &&
+      !isEmpty(cases)
+    ) {
+      for (let i = 0; i < toCreate; i++) {
+        let next;
+        do {
+          next = random(0, boardContextState.size - 1);
+        } while (
+          positions.includes(next) ||
+          next === boardContextState.lastKilled
+          //  next === boardContextState.bonus
+        );
+        positions.push(next);
+        set(cases, `${next}.show`, true);
+      }
+
+      dispatch({ type: "UPDATE_VIRUSES", cases });
+    }
+  }, [
+    boardContextState.size,
+    boardContextState.cases,
+    boardContextState.finished,
+    boardContextState.cleanBoard,
+    boardContextState.lastKilled,
+  ]);
+
+  const mixBoard = useCallback(() => {
+    //let positions = getVirusPositions(boardContextState.cases);
+
+    let cases = boardContextState.cases;
+    let cleanCases = cleanBoard(cases, boardContextState.size);
+    const bonusPosition = getBonusPosition(cleanCases);
+    const toCreate = 4;
+    if (
+      toCreate > 0 &&
       !boardContextState.finished &&
       !boardContextState.cleanBoard
     ) {
-      //find next virus place
-      let next;
-      do {
-        next = random(0, boardContextState.size - 1);
-      } while (
-        next === boardContextState.lastKilled ||
-        next === boardContextState.next ||
-        next === boardContextState.bonus
-      );
-      dispatch({ type: "NEXT", position: next });
+      for (let i = 0; i < toCreate; i++) {
+        let next;
+        do {
+          next = random(0, boardContextState.size - 1);
+        } while (bonusPosition.includes(next));
+        //positions.push(next);
+        set(cleanCases, `${next}.show`, true);
+      }
+
+      dispatch({ type: "UPDATE_VIRUSES", cases: cleanCases });
     }
   }, [
-    boardContextState.visibleVirus,
-    boardContextState.lastKilled,
-    boardContextState.finished,
-    boardContextState.next,
-    boardContextState.cleanBoard,
-    boardContextState.bonus,
     boardContextState.size,
+    boardContextState.cases,
+    boardContextState.finished,
+    boardContextState.cleanBoard,
   ]);
+  //level 2 system
+  useEffect(() => {
+    if (toNumber(level) > 1 && boardContextState.started) {
+      const interval = setInterval(() => {
+        //if (show) {
+        //setShow(false);
+        //dispatcher({ type: "RELOAD_NEXT", avoid: position });
+        mixBoard();
+        //  }
+      }, 2000);
+      return () => clearInterval(interval);
+    }
+  }, [level, mixBoard, boardContextState.started]);
 
   return (
     <BoardDispatcherContext.Provider value={dispatch}>
@@ -313,9 +476,64 @@ const useBoardContextDispatcher = () => {
   }
   return boardContextDispatcher;
 };
+const useClickTarget = (position) => {
+  const dispatch = useContext(BoardDispatcherContext);
+  const clickTarget = useCallback(() => {
+    dispatch({ type: "INCREMENT", position });
+  }, [dispatch, position]);
+  if (dispatch === undefined) {
+    throw new Error(" dispatch must be used within a BoardDispatcherContext");
+  }
+  return clickTarget;
+};
+const useMissTarget = (position) => {
+  const dispatch = useContext(BoardDispatcherContext);
+  const clickTarget = useCallback(() => {
+    dispatch({ type: "DECREMENT", position });
+    //clear bonus
+  }, [dispatch, position]);
+  if (dispatch === undefined) {
+    throw new Error(" dispatch must be used within a BoardDispatcherContext");
+  }
+  return clickTarget;
+};
 
+const useClickBonus = (position) => {
+  const dispatch = useContext(BoardDispatcherContext);
+  const clickTarget = useCallback(() => {
+    dispatch({ type: "INCREMENT_TIMEOUT", position });
+    //clear bonus
+  }, [dispatch, position]);
+  if (dispatch === undefined) {
+    throw new Error(" dispatch must be used within a BoardDispatcherContext");
+  }
+  return clickTarget;
+};
+
+const useMissBonus = (position) => {
+  const dispatch = useContext(BoardDispatcherContext);
+  const clickTarget = useCallback(() => {
+    dispatch({ type: "CLEAR_BONUS", position });
+    //check if bonus was at this position
+    //clear bonus
+  }, [dispatch, position]);
+  if (dispatch === undefined) {
+    throw new Error(" dispatch must be used within a BoardDispatcherContext");
+  }
+  return clickTarget;
+};
+
+const useCellState = (index) => {
+  const boardContext = useBoardContextState();
+  return get(boardContext, `cases.${index}`, {});
+};
 export {
   useBoardContextState,
   BoardContextProvider,
   useBoardContextDispatcher,
+  useCellState,
+  useClickTarget,
+  useMissBonus,
+  useClickBonus,
+  useMissTarget,
 };

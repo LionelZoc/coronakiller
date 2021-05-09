@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useCallback } from "react";
 import {
   useBoardContextState,
   useBoardContextDispatcher,
 } from "containers/boardContext";
 
-import { useSelector } from "react-redux";
-import { getHighScoreSelector } from "state/redux/selectors";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  getHighScoreSelector,
+  getSoundOnSelector,
+} from "state/redux/selectors";
 import {
   StyleSheet,
   View,
@@ -13,11 +16,18 @@ import {
 } from "react-native";
 import { Button, Icon } from "react-native-elements";
 import { onShare } from "utils";
+import { toggleSound } from "state/redux/actions";
 
 const BoarAction = () => {
   const boardContext = useBoardContextState();
   const dispatcher = useBoardContextDispatcher();
   const highScore = useSelector(getHighScoreSelector);
+  const soundOn = useSelector(getSoundOnSelector);
+  const reduxDispatch = useDispatch();
+  const toggleSoundOn = useCallback(() => {
+    reduxDispatch(toggleSound());
+  }, [reduxDispatch]);
+
   const restart = () => {
     if (boardContext.started) {
       dispatcher({ type: "STOP" });
@@ -73,6 +83,27 @@ const BoarAction = () => {
           />
         }
         onPress={() => onShare(highScore)}
+      />
+      <Button
+        buttonStyle={{
+          borderWidth: 0,
+          borderColor: "transparent",
+          borderRadius: 20,
+        }}
+        containerStyle={{
+          marginLeft: 10,
+          width: 70,
+          maxWidth: 100,
+        }}
+        icon={
+          <Icon
+            name={soundOn ? "sound" : "sound-mute"}
+            type="entypo"
+            size={30}
+            color="white"
+          />
+        }
+        onPress={toggleSoundOn}
       />
     </View>
   );

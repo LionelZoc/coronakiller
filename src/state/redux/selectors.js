@@ -11,6 +11,7 @@ const getHighScore = (state) => get(state, "core.highScore", "");
 const getLevel = (state) => {
   return get(state, "core.level", 1);
 };
+const getSoundOn = (state) => get(state, "core.soundOn", false);
 
 export const getLocaleSelector = createSelector(getLocale, (locale) => {
   return locale;
@@ -26,4 +27,8 @@ export const getRestTimeSelector = createSelector(getRestTime, (time) => {
 
 export const getLevelSelector = createSelector(getLevel, (level) => {
   return level;
+});
+
+export const getSoundOnSelector = createSelector(getSoundOn, (state) => {
+  return state;
 });
