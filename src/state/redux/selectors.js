@@ -7,7 +7,7 @@ const getLocale = (state) => {
 const getRestTime = (state) => {
   return get(state, "core.restTime", 60);
 };
-const getHighScore = (state) => get(state, "core.highScore", "");
+const getHighScore = (state) => get(state, "core.highScore", 0);
 const getLevel = (state) => {
   return get(state, "core.level", 1);
 };

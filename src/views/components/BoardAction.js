@@ -17,13 +17,16 @@ import {
 import { Button, Icon } from "react-native-elements";
 import { onShare } from "utils";
 import { toggleSound } from "state/redux/actions";
+import { getLevelSelector } from "state/redux/selectors";
 
 const BoarAction = () => {
   const boardContext = useBoardContextState();
   const dispatcher = useBoardContextDispatcher();
   const highScore = useSelector(getHighScoreSelector);
   const soundOn = useSelector(getSoundOnSelector);
+  const level = useSelector(getLevelSelector);
   const reduxDispatch = useDispatch();
+
   const toggleSoundOn = useCallback(() => {
     reduxDispatch(toggleSound());
   }, [reduxDispatch]);
@@ -49,8 +52,8 @@ const BoarAction = () => {
             borderRadius: 20,
           }}
           containerStyle={{
-            width: 200,
-            maxWidth: 300,
+            width: 150,
+            maxWidth: 200,
           }}
           icon={
             <Icon
@@ -82,7 +85,7 @@ const BoarAction = () => {
             color="white"
           />
         }
-        onPress={() => onShare(highScore)}
+        onPress={() => onShare(highScore, level)}
       />
       <Button
         buttonStyle={{

@@ -20,6 +20,7 @@ const initialLocalState = {
   targetSelected: "bug",
   restTime: 60,
   soundOn: true,
+  totalPlayTime: 60,
 };
 const localeReducer = (state = initialLocalState, action) => {
   switch (action.type) {
@@ -34,6 +35,7 @@ const localeReducer = (state = initialLocalState, action) => {
       return {
         ...state,
         restTime: action.payload,
+        totalPlayTime: state.totalPlayTime + 10,
       };
     }
     case GAME_UPDATE_HIGH_SCORE: {
@@ -87,6 +89,7 @@ let localPersistConfig = {
     "level",
     "soundOn",
     "targetSelected",
+    "totalPlayTime",
   ],
 };
 

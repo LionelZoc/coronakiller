@@ -103,7 +103,7 @@ const BoardMeta = () => {
         isVisible={boardContext.finished}
         overlayStyle={[
           styles.overlayStyle,
-          { height: dimensions.height - 200, width: dimensions.width - 50 },
+          { height: dimensions.height - 150, width: dimensions.width - 50 },
         ]}
       >
         <GameResult />

@@ -13,11 +13,12 @@ import {
   useBoardContextDispatcher,
 } from "containers/boardContext";
 import { getLevelStatus } from "components/GameLevel";
-const getRank = (score) => {
-  if (score > 260) return "S";
-  if (score > 200) return "A";
-  if (score > 160) return "B";
-  if (score > 150) return "C";
+const getRank = (score, totalPlayTime) => {
+  const targetPerSecond = score / totalPlayTime;
+  if (targetPerSecond > 4.1) return "S";
+  if (targetPerSecond > 4) return "A";
+  if (targetPerSecond > 3) return "B";
+  if (targetPerSecond > 2) return "C";
   return "D";
 };
 const GameResult = () => {
@@ -46,7 +47,7 @@ const GameResult = () => {
         <Text style={styles.scoreLabel}>Level : {getLevelStatus(level)} </Text>
 
         <Text style={styles.rankLabel}>
-          Rank : {getRank(boardContext.score)}{" "}
+          Rank : {getRank(boardContext.score, boardContext.totalPlayTime)}{" "}
         </Text>
       </View>
       <View style={styles.action}>
@@ -127,7 +128,7 @@ const GameResult = () => {
 
 const styles = StyleSheet.create({
   container: {
-    height: "90%",
+    height: "94%",
     width: "100%",
     justifyContent: "center",
     alignItems: "center",

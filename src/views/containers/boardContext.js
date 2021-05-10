@@ -198,6 +198,7 @@ const boardContextReducer = (state, action) => {
         started: true,
         incrementTimeout: false,
         cleanBoard: false,
+        totalPlayTime: 60,
       };
     }
     case "RESTART": {
@@ -210,6 +211,7 @@ const boardContextReducer = (state, action) => {
         started: true,
         incrementTimeout: false,
         cleanBoard: false,
+        totalPlayTime: 60,
         //bonus: -1,
       };
     }
@@ -242,6 +244,7 @@ const boardContextReducer = (state, action) => {
       return {
         ...state,
         incrementTimeout: false,
+        totalPlayTime: state.totalPlayTime + 10,
         //bonus: -1,
         cases,
       };
@@ -258,6 +261,7 @@ const boardContextReducer = (state, action) => {
         incrementTimeout: false,
         cleanBoard: action.cleanBoard,
         //bonus: action.bonus,
+        totalPlayTime: 60,
         cases: action.cases,
       };
     }
