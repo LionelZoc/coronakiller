@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 import PropTypes from "prop-types";
 import {
   StyleSheet,
@@ -13,16 +13,24 @@ import mask from "assets/mask.png";
 import {
   useBoardContextState,
   useBoardContextDispatcher,
+  useCellState,
+  useClickTarget,
+  useMissBonus,
+  useClickBonus,
+  useMissTarget,
 } from "containers/boardContext";
 import Colors from "constants/Colors";
 
-//usecontext
 const BoardCell = ({ position }) => {
   const boardContext = useBoardContextState();
-
+  const boarCellState = useCellState(position);
   const dispatcher = useBoardContextDispatcher();
   const window = useWindowDimensions();
-  const [show, setShow] = useState(false);
+
+  const clickTarget = useClickTarget(position);
+  const missBonus = useMissBonus(position);
+  const clickBonus = useClickBonus(position);
+  const missTarget = useMissTarget(position);
 
   //height should always be sup to width
   const customWidthWeb =
@@ -38,72 +46,74 @@ const BoardCell = ({ position }) => {
       ? customWidthWeb / Math.sqrt(boardContext.size)
       : customWidthMobile / Math.sqrt(boardContext.size);
 
-  const onClick = () => {
-    //callback that send yes to parent from context
-    if (!boardContext.finished && boardContext.started) {
-      boardContext.playSound();
-      setShow(false);
-      dispatcher({ type: "INCREMENT", position });
-    }
-  };
-
-  const onError = () => {
-    dispatcher({ type: "DECREMENT", position });
-  };
-  const onIncrementTimeoutBonus = () => {
-    dispatcher({ type: "INCREMENT_TIMEOUT", position });
-  };
   useEffect(() => {
-    if (boardContext.finished || boardContext.cleanBoard) {
-      setShow(false);
-    }
-  }, [boardContext.finished, boardContext.cleanBoard]);
+    const timeout = setTimeout(() => {
+      if (boarCellState.showBonus) {
+        missBonus();
+      }
+    }, 2000);
+    return () => clearTimeout(timeout);
+  }, [boarCellState.showBonus, dispatcher, position, missBonus]);
 
-  useEffect(() => {
-    if (boardContext.next === position && show === false) {
-      setShow(true);
-      //dispatcher({type: "NEWVirusCASE", position  })
-    }
-    if (boardContext.next === position && show === true) {
-      dispatcher({ type: "RELOAD_NEXT", avoid: position });
-    }
-  }, [boardContext.next, position, dispatcher]);
-
-  return (
-    <View
-      style={[
-        styles.container,
-        {
-          width: cellSize,
-          height: cellSize,
-        },
-      ]}
-    >
-      {!show && (
-        <TouchableOpacity
-          onPress={onError}
-          style={{ width: "100%", height: "100%" }}
-        />
-      )}
-      {show && (
-        <Image
-          source={virus}
-          containerStyle={[
-            styles.imageContainer,
-            {
-              width: cellSize / 2,
-              height: cellSize / 2,
-            },
-          ]}
-          onPress={onClick}
-        />
-      )}
-    </View>
-  );
+  return useMemo(() => {
+    return (
+      <View
+        style={[
+          styles.container,
+          {
+            width: cellSize,
+            height: cellSize,
+          },
+        ]}
+      >
+        {!boarCellState.show && !boarCellState.showBonus && (
+          <TouchableOpacity
+            onPress={missTarget}
+            style={{ width: "100%", height: "100%" }}
+          />
+        )}
+        {boarCellState.show && (
+          <Image
+            source={virus}
+            containerStyle={[
+              styles.imageContainer,
+              {
+                width: cellSize / 2,
+                height: cellSize / 2,
+              },
+            ]}
+            onPress={clickTarget}
+          />
+        )}
+        {boarCellState.showBonus && (
+          <Image
+            source={mask}
+            containerStyle={[
+              styles.imageBonusContainer,
+              {
+                width: cellSize / 2,
+                height: cellSize / 2,
+              },
+            ]}
+            onPress={clickBonus}
+          />
+        )}
+      </View>
+    );
+  }, [
+    cellSize,
+    boarCellState.show,
+    boarCellState.showBonus,
+    clickTarget,
+    clickBonus,
+    missTarget,
+  ]);
 };
+
 BoardCell.propTypes = {
   position: PropTypes.number,
 };
+
 const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
@@ -114,6 +124,10 @@ const styles = StyleSheet.create({
   imageContainer: {
     width: 100,
     height: 100,
+  },
+  imageBonusContainer: {
+    // width: 100,
+    // height: 100,
   },
 });
 

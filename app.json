@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "vira!ert",
-    "slug": "vira!ert",
-    "version": "1.0.6",
+    "name": "viralert",
+    "slug": "viralert",
+    "version": "1.0.7",
     "orientation": "portrait",
     "icon": "./src/assets/icon1024.png",
     "splash": {
@@ -20,7 +20,12 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.amirmuerte.viralert",
       "icon": "./src/assets/icon1024.png",
-      "buildNumber": "1"
+      "buildNumber": "1",
+      "splash":{
+        "image": "./src/assets/SplashTransparentIos.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#231F20"
+      }
     },
     "android": {
       "package": "com.lazone.covid_killer",
@@ -28,7 +33,7 @@
         "foregroundImage": "./src/assets/icon1024.png",
         "backgroundColor": "#FFFFFF"
       },
-      "versionCode": 6,
+      "versionCode": 7,
       "permissions": []
     },
     "web": {

@@ -17,15 +17,20 @@ import {
 import { Overlay } from "react-native-elements";
 
 import WebModal from "modal-react-native-web";
+import { useSelector, useDispatch } from "react-redux";
+import { getHighScoreSelector } from "state/redux/selectors";
+import { updateTimer } from "state/redux/actions";
 
 const Timeout = ({ timeout }) => {
   const [countDown, setCountDown] = useState(timeout);
   const dispatcher = useBoardContextDispatcher();
   const boardContext = useBoardContextState();
+  const reduxDispatch = useDispatch();
 
   useEffect(() => {
     if (boardContext.incrementTimeout && boardContext.started) {
       setCountDown(countDown + 10);
+      reduxDispatch(updateTimer(countDown + 10));
       dispatcher({ type: "TIMEOUT_INCREMENTED" });
     }
   }, [boardContext.incrementTimeout, dispatcher, boardContext.started]);
@@ -34,6 +39,7 @@ const Timeout = ({ timeout }) => {
     if (countDown > 0 && !boardContext.finished && boardContext.started) {
       const interval = setInterval(() => {
         setCountDown(countDown - 1);
+        reduxDispatch(updateTimer(countDown - 1));
       }, 1000);
       return () => clearInterval(interval);
     }
@@ -72,13 +78,21 @@ const BoardMeta = () => {
   //score
   const boardContext = useBoardContextState();
   const dimensions = useWindowDimensions();
+  const highScore = useSelector(getHighScoreSelector);
+
   //timer
   //console.log("boardContext", boardContext);
   return (
     <View style={styles.container}>
-      <View style={styles.score}>
-        <Text style={styles.scoreLabel}>SCORE : </Text>
-        <Text style={styles.scoreValue}>{boardContext.score}</Text>
+      <View style={styles.scores}>
+        <View style={styles.score}>
+          <Text style={styles.scoreLabel}>SCORE : </Text>
+          <Text style={styles.scoreValue}>{boardContext.score}</Text>
+        </View>
+        <View style={styles.score}>
+          <Text style={styles.scoreLabel}>HIGH SCORE : </Text>
+          <Text style={styles.scoreValue}>{highScore}</Text>
+        </View>
       </View>
       <View style={styles.timer}>
         <Timeout timeout={boardContext.timeout} />
@@ -89,7 +103,7 @@ const BoardMeta = () => {
         isVisible={boardContext.finished}
         overlayStyle={[
           styles.overlayStyle,
-          { height: dimensions.height - 50, width: dimensions.width - 50 },
+          { height: dimensions.height - 150, width: dimensions.width - 50 },
         ]}
       >
         <GameResult />
@@ -105,6 +119,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flex: 1,
   },
+  scores: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "flex-start",
+  },
   score: {
     flex: 1,
     alignItems: "center",
@@ -113,16 +132,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scoreLabel: {
-    fontWeight: "bold",
+    fontWeight: "normal",
     textTransform: "uppercase",
     textAlign: "left",
     textAlignVertical: "center",
     letterSpacing: 0.5,
+    fontSize: 12,
     color: "black",
   },
   scoreValue: {
     fontWeight: "bold",
-    fontSize: 40,
+    fontSize: 30,
     color: "black",
   },
   countDown: {
