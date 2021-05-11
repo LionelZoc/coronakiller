@@ -52,28 +52,28 @@ const cleanBoard = (board, size) => {
 const boardContextReducer = (state, action) => {
   switch (action.type) {
     case "DECREMENT": {
-      const cases = state.cases;
+      let cases = state.cases;
       const list = getBonusPosition(cases);
 
       for (let i = 0; i < list.length; i++) {
         set(cases, `${list[i]}.showBonus`, false);
       }
-
+      cases = Object.assign({}, cases);
       return {
         ...state,
         score: state.score > 0 ? state.score - 1 : 0,
         lastMissed: action.position,
-        bonus: -1,
+        bonus: false,
         cases,
       };
     }
     case "INCREMENT": {
       if (!state.finished && state.started) {
         state.playSound("hit");
-        const cases = state.cases;
+        let cases = state.cases;
 
         set(cases, `${action.position}.show`, false);
-
+        cases = Object.assign({}, cases);
         return {
           ...state,
           score: state.score + 1,
@@ -95,7 +95,7 @@ const boardContextReducer = (state, action) => {
     case "UPDATE_VIRUSES": {
       return {
         ...state,
-        cases: action.cases,
+        cases: Object.assign({}, action.cases),
         //visibleVirus: state.visibleVirus + 1,
       };
     }
@@ -119,7 +119,7 @@ const boardContextReducer = (state, action) => {
       };
     }
     case "RELOAD_BONUS": {
-      const cases = state.cases;
+      let cases = state.cases;
 
       let bonus;
       do {
@@ -127,6 +127,7 @@ const boardContextReducer = (state, action) => {
       } while (bonus === state.next || bonus === action.avoid);
       set(cases, `${bonus}.showBonus`, true);
       set(cases, `${bonus}.show`, false);
+      cases = Object.assign({}, cases);
       return {
         ...state,
         //bonus,
@@ -136,25 +137,27 @@ const boardContextReducer = (state, action) => {
 
     case "CLEAR_BONUS": {
       //if (state.bonus === -1) return state;
-      const cases = state.cases;
+      let cases = state.cases;
       const list = getBonusPosition(cases);
 
       for (let i = 0; i < list.length; i++) {
         set(cases, `${list[i]}.showBonus`, false);
       }
+      cases = Object.assign({}, cases);
       //set(cases, `${state.bonus}.showBonus`, false);
       return {
         ...state,
-        //bonus: -1,
+        bonus: false,
         cases,
       };
     }
 
     case "BONUS": {
-      const cases = state.cases;
+      let cases = state.cases;
       if (action.position > -1) {
         set(cases, `${action.position}.show`, false);
         set(cases, `${action.position}.showBonus`, true);
+        cases = Object.assign({}, cases);
       }
       //// TODO: remove
       // if (state.bonus !== -1) {
@@ -163,7 +166,7 @@ const boardContextReducer = (state, action) => {
 
       return {
         ...state,
-        //bonus: action.position,
+        bonus: true,
         cases,
       };
     }
@@ -175,6 +178,7 @@ const boardContextReducer = (state, action) => {
         started: false,
         cleanBoard: true,
         visibleVirus: 0,
+        bonus: false,
         cases,
       };
     }
@@ -185,6 +189,7 @@ const boardContextReducer = (state, action) => {
         finished: false,
         started: false,
         cleanBoard: true,
+        bonus: false,
         visibleVirus: 0,
         cases,
       };
@@ -212,7 +217,7 @@ const boardContextReducer = (state, action) => {
         incrementTimeout: false,
         cleanBoard: false,
         totalPlayTime: 60,
-        //bonus: -1,
+        bonus: false,
       };
     }
     case "UPDATE_SOUND": {
@@ -234,18 +239,19 @@ const boardContextReducer = (state, action) => {
       };
     }
     case "TIMEOUT_INCREMENTED": {
-      const cases = state.cases;
+      let cases = state.cases;
       const list = getBonusPosition(cases);
 
       for (let i = 0; i < list.length; i++) {
         set(cases, `${list[i]}.showBonus`, false);
       }
+      cases = Object.assign({}, cases);
       //set(cases, `${state.bonus}.showBonus`, false);
       return {
         ...state,
         incrementTimeout: false,
         totalPlayTime: state.totalPlayTime + 10,
-        //bonus: -1,
+        bonus: false,
         cases,
       };
     }
@@ -325,8 +331,23 @@ const BoardContextProvider = ({ size, playSound, children, timeout }) => {
   }, [size]);
 
   //dispatch bonus
-
   useEffect(() => {
+    if (
+      !boardContextState.bonus &&
+      !boardContextState.finished &&
+      !boardContextState.cleanBoard &&
+      boardContextState.started
+    ) {
+      dispatchBonus();
+    }
+  }, [
+    boardContextState.bonus,
+    dispatchBonus,
+    boardContextState.finished,
+    boardContextState.cleanBoard,
+    boardContextState.started,
+  ]);
+  const dispatchBonus = useCallback(() => {
     const cases = boardContextState.cases;
     const bonusList = getBonusPosition(cases);
 
@@ -340,17 +361,19 @@ const BoardContextProvider = ({ size, playSound, children, timeout }) => {
     ) {
       handlingBonus.current = true;
       //find next virus place
-      const interval = random(5, 30);
+      const interval = random(10, 15);
 
       const timeout = setTimeout(() => {
         let next;
 
         next = random(0, boardContextState.size - 1);
+
         dispatch({ type: "BONUS", position: next });
         handlingBonus.current = false;
       }, interval * 1000);
 
       return () => {
+        handlingBonus.current = false;
         clearTimeout(timeout);
       };
     }
