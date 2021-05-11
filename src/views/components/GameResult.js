@@ -39,6 +39,8 @@ const GameResult = () => {
   const restart = () => {
     dispatcher({ type: "RESTART" });
   };
+  const targetPerSecond = boardContext.score / boardContext.totalPlayTime;
+
   return (
     <View style={styles.container}>
       <View style={styles.score}>
@@ -109,7 +111,7 @@ const GameResult = () => {
             marginTop: 30,
             width: "70%",
             maxWidth: 300,
-            display: highScore > 260 ? "flex" : "none",
+            display: targetPerSecond > 4 ? "flex" : "none",
           }}
           icon={
             <Icon
