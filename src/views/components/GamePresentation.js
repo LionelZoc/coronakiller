@@ -1,0 +1,127 @@
+import React, { useEffect, useCallback } from "react";
+import { Button, Image } from "react-native-elements";
+//import PropTypes from "prop-types";
+import { StyleSheet, View, Text } from "react-native";
+//import { Icon } from "react-native-elements";
+import { useDispatch, useSelector } from "react-redux";
+import { seePresentation } from "state/redux/actions";
+
+import virus from "assets/target.png";
+import mask from "assets/mask.png";
+import Colors from "constants/Colors";
+
+const GamePresentation = () => {
+  const dispatch = useDispatch();
+  const onSeePresentation = useCallback(() => {
+    dispatch(seePresentation());
+  }, [dispatch]);
+  return (
+    <View style={styles.container}>
+      <View></View>
+      <View style={styles.descriptionSection}>
+        <View style={styles.descriptionRow}>
+          <View style={styles.imageBlock}>
+            <Image source={virus} containerStyle={[styles.imageContainer]} />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.description}>
+              Ecrasez le plus de virus possible dans le temps imparti.
+            </Text>
+          </View>
+        </View>
+        <View style={styles.descriptionRow}>
+          <View style={styles.imageBlock}>
+            <Image source={mask} containerStyle={[styles.imageContainer]} />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.description}>
+              Tapez sur les masques pour débloquer un bonus qui offre 10
+              secondes de plus.
+            </Text>
+          </View>
+        </View>
+
+        <View style={styles.descriptionRow}>
+          <View style={styles.imageBlock}>
+            <View style={styles.emptyCase} />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.description}>
+              Quand vous tapez une case vide , vous perdez 1 point.
+            </Text>
+          </View>
+        </View>
+      </View>
+      <View style={styles.actionSection}>
+        <Button
+          title="Play"
+          onPress={onSeePresentation}
+          titleStyle={{ fontWeight: "bold", fontSize: 18 }}
+          buttonStyle={{
+            borderWidth: 0,
+            borderColor: "transparent",
+            borderRadius: 20,
+          }}
+          containerStyle={{
+            width: 150,
+            maxWidth: 200,
+          }}
+        ></Button>
+      </View>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    padding: 10,
+  },
+  descriptionSection: {
+    flex: 3,
+    justifyContent: "flex-end",
+    width: "100%",
+  },
+  description: {
+    fontWeight: "bold",
+    //textTransform: "uppercase",
+    textAlign: "left",
+    textAlignVertical: "center",
+    letterSpacing: 0.5,
+    fontSize: 18,
+    color: "black",
+  },
+  descriptionRow: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    marginBottom: 50,
+  },
+  imageBlock: {
+    width: 100,
+    height: 100,
+    display: "flex",
+  },
+  emptyCase: {
+    width: 90,
+    height: 90,
+    borderWidth: 1,
+    borderColor: Colors.cellBorder,
+    display: "flex",
+    padding: 1,
+  },
+  imageContainer: {
+    width: 90,
+    height: 90,
+  },
+  actionSection: {
+    flex: 1,
+    justifyContent: "center",
+  },
+});
+
+export default GamePresentation;
