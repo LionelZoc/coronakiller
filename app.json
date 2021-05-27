@@ -2,7 +2,7 @@
   "expo": {
     "name": "viralert",
     "slug": "viralert",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "orientation": "portrait",
     "icon": "./src/assets/icon1024.png",
     "splash": {
@@ -33,7 +33,7 @@
         "foregroundImage": "./src/assets/icon1024.png",
         "backgroundColor": "#FFFFFF"
       },
-      "versionCode": 7,
+      "versionCode": 8,
       "permissions": []
     },
     "web": {
