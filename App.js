@@ -26,8 +26,10 @@ import ActivityIndicator from "components/ActivityIndicator";
 import {
   getLocaleSelector,
   getSeePresentationSelector,
+  getIfUserSelectedTargetSelector,
 } from "state/redux/selectors";
 import GamePresentation from "components/GamePresentation";
+import BoardTargetSelection from "components/BoardTargetSelection";
 // import { FormattedMessage, useIntl } from "react-intl";
 
 //sentry config
@@ -63,6 +65,7 @@ const App = () => {
   //const locale = useSelector(getLocaleSelector);
   const [ifLoadingComplete, setIfLoadingComplete] = useState(false);
   const seePresentation = useSelector(getSeePresentationSelector);
+  const ifUserSelectTarget = useSelector(getIfUserSelectedTargetSelector);
   const isMounted = useRef(false);
   const loadAssetsAsync = async () => {
     const imageAssets = cacheImages([
@@ -129,7 +132,8 @@ const App = () => {
           <View style={styles.container}>
             <MyStatusBar />
             {!seePresentation && <GamePresentation />}
-            {seePresentation && <Board />}
+            {seePresentation && !ifUserSelectTarget && <BoardTargetSelection />}
+            {seePresentation && ifUserSelectTarget && <Board />}
           </View>
         </SafeAreaView>
       </View>

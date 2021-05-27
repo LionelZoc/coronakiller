@@ -18,11 +18,12 @@ const initialLocalState = {
   highScore: 0,
   previousLevelHighScore: 0,
   level: 1,
-  targetSelected: "bug",
+  target: "bug",
   restTime: 60,
   soundOn: true,
   totalPlayTime: 60,
   seePresentation: false,
+  userSelectedTarget: false,
 };
 const localeReducer = (state = initialLocalState, action) => {
   switch (action.type) {
@@ -50,6 +51,7 @@ const localeReducer = (state = initialLocalState, action) => {
       return {
         ...state,
         target: action.payload,
+        userSelectedTarget: true,
       };
     }
     case GAME_UPDGRADE_LEVEL: {
@@ -96,10 +98,10 @@ let localPersistConfig = {
     "target",
     "level",
     "soundOn",
-    "targetSelected",
     "totalPlayTime",
     "seeDemo",
     "seePresentation",
+    "userSelectedTarget",
   ],
 };
 

@@ -13,6 +13,9 @@ const getLevel = (state) => {
 };
 const getSeePresentation = (state) => get(state, "core.seePresentation", false);
 const getSoundOn = (state) => get(state, "core.soundOn", false);
+const getTargetSelected = (state) => get(state, "core.target", "bug");
+const getUserSelectedTarget = (state) =>
+  get(state, "core.userSelectedTarget", false);
 
 export const getLocaleSelector = createSelector(getLocale, (locale) => {
   return locale;
@@ -37,4 +40,13 @@ export const getSoundOnSelector = createSelector(getSoundOn, (state) => {
 export const getSeePresentationSelector = createSelector(
   getSeePresentation,
   (seeState) => seeState
+);
+
+export const getTargetSelectedSelector = createSelector(
+  getTargetSelected,
+  (target) => target
+);
+export const getIfUserSelectedTargetSelector = createSelector(
+  getUserSelectedTarget,
+  (selected) => selected
 );

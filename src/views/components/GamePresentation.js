@@ -6,7 +6,7 @@ import { StyleSheet, View, Text } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { seePresentation } from "state/redux/actions";
 
-import virus from "assets/target.png";
+import bug from "assets/targetBug.png";
 import mask from "assets/mask.png";
 import Colors from "constants/Colors";
 
@@ -21,11 +21,11 @@ const GamePresentation = () => {
       <View style={styles.descriptionSection}>
         <View style={styles.descriptionRow}>
           <View style={styles.imageBlock}>
-            <Image source={virus} containerStyle={[styles.imageContainer]} />
+            <Image source={bug} containerStyle={[styles.imageContainer]} />
           </View>
           <View style={{ flex: 1 }}>
             <Text style={styles.description}>
-              Ecrasez le plus de virus possible dans le temps imparti.
+              Ecrasez le plus de cible possible dans le temps imparti.
             </Text>
           </View>
         </View>
