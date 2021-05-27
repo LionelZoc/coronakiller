@@ -16,9 +16,9 @@ import { getLevelStatus } from "components/GameLevel";
 const getRank = (score, totalPlayTime) => {
   const targetPerSecond = score / totalPlayTime;
   if (targetPerSecond > 4.1) return "S";
-  if (targetPerSecond > 4) return "A";
-  if (targetPerSecond > 3) return "B";
-  if (targetPerSecond > 2) return "C";
+  if (targetPerSecond >= 4) return "A";
+  if (targetPerSecond >= 3) return "B";
+  if (targetPerSecond >= 2) return "C";
   return "D";
 };
 const GameResult = () => {

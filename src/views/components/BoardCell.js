@@ -10,6 +10,8 @@ import {
 import { Image } from "react-native-elements";
 import virus from "assets/target.png";
 import mask from "assets/mask.png";
+import bug from "assets/targetBug.png";
+
 import {
   useBoardContextState,
   useBoardContextDispatcher,
@@ -20,12 +22,33 @@ import {
   useMissTarget,
 } from "containers/boardContext";
 import Colors from "constants/Colors";
+import { useSelector } from "react-redux";
+import { getTargetSelectedSelector } from "state/redux/selectors";
 
+const getSource = (target) => {
+  switch (target) {
+    case "bug":
+      return bug;
+    case "virus":
+      return virus;
+    default:
+      return virus;
+  }
+};
+const getBonusSource = (target) => {
+  switch (target) {
+    case "bug":
+      return mask;
+    default:
+      return mask;
+  }
+};
 const BoardCell = ({ position }) => {
   const boardContext = useBoardContextState();
   const boarCellState = useCellState(position);
   const dispatcher = useBoardContextDispatcher();
   const window = useWindowDimensions();
+  const selectedTarget = useSelector(getTargetSelectedSelector);
 
   const clickTarget = useClickTarget(position);
   const missBonus = useMissBonus(position);
@@ -74,7 +97,7 @@ const BoardCell = ({ position }) => {
         )}
         {boarCellState.show && (
           <Image
-            source={virus}
+            source={getSource(selectedTarget)}
             containerStyle={[
               styles.imageContainer,
               {
@@ -87,7 +110,7 @@ const BoardCell = ({ position }) => {
         )}
         {boarCellState.showBonus && (
           <Image
-            source={mask}
+            source={getBonusSource(selectedTarget)}
             containerStyle={[
               styles.imageBonusContainer,
               {

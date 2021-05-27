@@ -23,7 +23,13 @@ import { PersistGate } from "redux-persist/integration/react";
 // import enMessages from "translations/en.json";
 // import frMessages from "translations/fr.json";
 import ActivityIndicator from "components/ActivityIndicator";
-import { getLocaleSelector } from "state/redux/selectors";
+import {
+  getLocaleSelector,
+  getSeePresentationSelector,
+  getIfUserSelectedTargetSelector,
+} from "state/redux/selectors";
+import GamePresentation from "components/GamePresentation";
+import BoardTargetSelection from "components/BoardTargetSelection";
 // import { FormattedMessage, useIntl } from "react-intl";
 
 //sentry config
@@ -58,6 +64,8 @@ const App = () => {
   //const intl = useIntl();
   //const locale = useSelector(getLocaleSelector);
   const [ifLoadingComplete, setIfLoadingComplete] = useState(false);
+  const seePresentation = useSelector(getSeePresentationSelector);
+  const ifUserSelectTarget = useSelector(getIfUserSelectedTargetSelector);
   const isMounted = useRef(false);
   const loadAssetsAsync = async () => {
     const imageAssets = cacheImages([
@@ -119,13 +127,16 @@ const App = () => {
       loading={<ActivityIndicator debug="app.js" />}
       persistor={persistor}
     >
-      <SafeAreaView style={{ flex: 1 }}>
-        <View style={styles.container}>
-          <MyStatusBar />
-
-          <Board />
-        </View>
-      </SafeAreaView>
+      <View style={styles.parent}>
+        <SafeAreaView style={{ flex: 1 }}>
+          <View style={styles.container}>
+            <MyStatusBar />
+            {!seePresentation && <GamePresentation />}
+            {seePresentation && !ifUserSelectTarget && <BoardTargetSelection />}
+            {seePresentation && ifUserSelectTarget && <Board />}
+          </View>
+        </SafeAreaView>
+      </View>
     </PersistGate>
   );
 };
@@ -139,9 +150,13 @@ const ConnectedApp = () => {
 };
 export default ConnectedApp;
 const styles = StyleSheet.create({
+  parent: {
+    flex: 1,
+    backgroundColor: "#231F20",
+  },
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",
   },

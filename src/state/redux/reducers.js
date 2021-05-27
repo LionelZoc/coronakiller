@@ -9,6 +9,7 @@ import {
   GAME_SET_LEVEL,
   GAME_UPDGRADE_LEVEL,
   GAME_TOOGLE_SOUND,
+  GAME_SEE_PRESENTATION,
 } from "state/redux/actionTypes";
 import toNumber from "lodash/toNumber";
 
@@ -17,10 +18,12 @@ const initialLocalState = {
   highScore: 0,
   previousLevelHighScore: 0,
   level: 1,
-  targetSelected: "bug",
+  target: "bug",
   restTime: 60,
   soundOn: true,
   totalPlayTime: 60,
+  seePresentation: false,
+  userSelectedTarget: false,
 };
 const localeReducer = (state = initialLocalState, action) => {
   switch (action.type) {
@@ -48,6 +51,7 @@ const localeReducer = (state = initialLocalState, action) => {
       return {
         ...state,
         target: action.payload,
+        userSelectedTarget: true,
       };
     }
     case GAME_UPDGRADE_LEVEL: {
@@ -70,6 +74,12 @@ const localeReducer = (state = initialLocalState, action) => {
         soundOn: !state.soundOn,
       };
     }
+    case GAME_SEE_PRESENTATION: {
+      return {
+        ...state,
+        seePresentation: true,
+      };
+    }
 
     default:
       //put the propertyCreaction reducer here
@@ -88,8 +98,10 @@ let localPersistConfig = {
     "target",
     "level",
     "soundOn",
-    "targetSelected",
     "totalPlayTime",
+    "seeDemo",
+    "seePresentation",
+    "userSelectedTarget",
   ],
 };
 
