@@ -9,8 +9,12 @@ import {
 } from "react-native";
 import { Image } from "react-native-elements";
 import virus from "assets/target.png";
+import bonus from "assets/insecticide.png";
 import mask from "assets/mask.png";
 import bug from "assets/targetBug.png";
+
+import insect from "assets/targetInsect.png";
+import spider from "assets/targetSpider.png";
 
 import {
   useBoardContextState,
@@ -31,6 +35,10 @@ const getSource = (target) => {
       return bug;
     case "virus":
       return virus;
+    case "insect":
+      return insect;
+    case "spider":
+      return spider;
     default:
       return virus;
   }
@@ -38,9 +46,11 @@ const getSource = (target) => {
 const getBonusSource = (target) => {
   switch (target) {
     case "bug":
+      return bonus;
+    case "virus":
       return mask;
     default:
-      return mask;
+      return bonus;
   }
 };
 const BoardCell = ({ position }) => {
