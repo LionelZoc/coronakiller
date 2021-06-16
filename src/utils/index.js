@@ -9,7 +9,7 @@ export const onShare = async (score, level) => {
       link =
         "https://play.google.com/store/apps/details?id=com.lazone.covid_killer";
     } else {
-      link = "";
+      link = "https://apps.apple.com/us/app/vira-ert/id1565445370";
     }
     const result = await Share.share(
       {

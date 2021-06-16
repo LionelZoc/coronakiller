@@ -39,6 +39,9 @@ const BoarAction = () => {
       dispatcher({ type: "START" });
     }
   };
+  const stop = () => {
+    dispatcher({ type: "STOP" });
+  };
   //// TODO: fix restart
   return (
     <View style={[styles.container]}>
@@ -64,6 +67,31 @@ const BoarAction = () => {
             />
           }
           onPress={restart}
+        />
+      )}
+      {boardContext.started && (
+        <Button
+          titleStyle={{ fontWeight: "bold", fontSize: 18 }}
+          buttonStyle={{
+            borderWidth: 0,
+            borderColor: "transparent",
+            borderRadius: 20,
+            backgroundColor: "transparent",
+          }}
+          containerStyle={{
+            width: "auto",
+            maxWidth: "auto",
+            backgroundColor: "transparent",
+          }}
+          icon={
+            <Icon
+              name={"stop-circle"}
+              type="font-awesome"
+              size={50}
+              color="red"
+            />
+          }
+          onPress={stop}
         />
       )}
       <Button

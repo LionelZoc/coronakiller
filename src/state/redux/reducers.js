@@ -20,7 +20,7 @@ const initialLocalState = {
   level: 1,
   target: "bug",
   restTime: 60,
-  soundOn: true,
+  soundOn: false,
   totalPlayTime: 60,
   seePresentation: false,
   userSelectedTarget: false,
