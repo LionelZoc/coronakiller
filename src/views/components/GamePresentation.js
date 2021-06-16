@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { seePresentation } from "state/redux/actions";
 
 import bug from "assets/targetBug.png";
-import mask from "assets/mask.png";
+import bonus from "assets/insecticide.png";
 import Colors from "constants/Colors";
 
 const GamePresentation = () => {
@@ -31,12 +31,12 @@ const GamePresentation = () => {
         </View>
         <View style={styles.descriptionRow}>
           <View style={styles.imageBlock}>
-            <Image source={mask} containerStyle={[styles.imageContainer]} />
+            <Image source={bonus} containerStyle={[styles.imageContainer]} />
           </View>
           <View style={{ flex: 1 }}>
             <Text style={styles.description}>
-              Tapez sur les masques pour débloquer un bonus qui offre 10
-              secondes de plus.
+              Tapez sur le spray pour débloquer un bonus qui offre 10 secondes
+              de plus.
             </Text>
           </View>
         </View>
