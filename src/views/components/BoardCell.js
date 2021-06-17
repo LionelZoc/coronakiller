@@ -88,6 +88,13 @@ const BoardCell = ({ position }) => {
     return () => clearTimeout(timeout);
   }, [boarCellState.showBonus, dispatcher, position, missBonus]);
 
+  const clickAction = () => {
+    if (!boarCellState.show && !boarCellState.showBonus) {
+      return missTarget();
+    }
+    if (boarCellState.show) return clickTarget();
+    if (boarCellState.showBonus) return clickBonus();
+  };
   return useMemo(() => {
     return (
       <View
@@ -99,38 +106,48 @@ const BoardCell = ({ position }) => {
           },
         ]}
       >
-        {!boarCellState.show && !boarCellState.showBonus && (
-          <TouchableOpacity
-            onPress={missTarget}
-            style={{ width: "100%", height: "100%" }}
-          />
-        )}
-        {boarCellState.show && (
-          <Image
-            source={getSource(selectedTarget)}
-            containerStyle={[
-              styles.imageContainer,
-              {
-                width: cellSize / 2,
-                height: cellSize / 2,
-              },
-            ]}
-            onPress={clickTarget}
-          />
-        )}
-        {boarCellState.showBonus && (
-          <Image
-            source={getBonusSource(selectedTarget)}
-            containerStyle={[
-              styles.imageBonusContainer,
-              {
-                width: cellSize / 2,
-                height: cellSize / 2,
-              },
-            ]}
-            onPress={clickBonus}
-          />
-        )}
+        <TouchableOpacity
+          style={{
+            width: "100%",
+            height: "100%",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          onPress={clickAction}
+        >
+          {!boarCellState.show && !boarCellState.showBonus && (
+            <TouchableOpacity
+              onPress={missTarget}
+              style={{ width: "100%", height: "100%" }}
+            />
+          )}
+          {boarCellState.show && (
+            <Image
+              source={getSource(selectedTarget)}
+              containerStyle={[
+                styles.imageContainer,
+                {
+                  width: cellSize / 2,
+                  height: cellSize / 2,
+                },
+              ]}
+              onPress={clickTarget}
+            />
+          )}
+          {boarCellState.showBonus && (
+            <Image
+              source={getBonusSource(selectedTarget)}
+              containerStyle={[
+                styles.imageBonusContainer,
+                {
+                  width: cellSize / 2,
+                  height: cellSize / 2,
+                },
+              ]}
+              onPress={clickBonus}
+            />
+          )}
+        </TouchableOpacity>
       </View>
     );
   }, [

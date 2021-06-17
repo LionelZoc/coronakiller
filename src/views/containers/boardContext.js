@@ -447,7 +447,6 @@ const BoardContextProvider = ({ size, playSound, children, timeout }) => {
     }
   }, [
     boardContextState.size,
-    boardContextState.cases,
     boardContextState.finished,
     boardContextState.cleanBoard,
   ]);

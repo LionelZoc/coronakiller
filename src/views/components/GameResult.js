@@ -111,7 +111,7 @@ const GameResult = () => {
             marginTop: 30,
             width: "70%",
             maxWidth: 300,
-            display: targetPerSecond > 4 ? "flex" : "none",
+            display: targetPerSecond >= 0 ? "flex" : "none",
           }}
           icon={
             <Icon

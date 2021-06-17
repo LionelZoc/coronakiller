@@ -8,6 +8,7 @@ import toNumber from "lodash/toNumber";
 const LEVEL_0 = "FANTASSIN";
 const LEVEL_1 = "CAPITAINE";
 const LEVEL_2 = "GENERAL";
+const LEVEL_BOSS = "BOSS";
 
 export const getLevelStatus = (level) => {
   switch (level) {
@@ -20,7 +21,7 @@ export const getLevelStatus = (level) => {
     case 3:
       return LEVEL_2;
     default:
-      return LEVEL_0;
+      return LEVEL_BOSS;
   }
 };
 const GAMELEVEL = () => {
