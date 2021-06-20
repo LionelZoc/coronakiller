@@ -31,6 +31,8 @@ import {
 import GamePresentation from "components/GamePresentation";
 import BoardTargetSelection from "components/BoardTargetSelection";
 // import { FormattedMessage, useIntl } from "react-intl";
+import { NavigationContainer } from "@react-navigation/native";
+import AppNavigator from "navigation/AppNavigator";
 
 //sentry config
 Sentry.init({
@@ -121,22 +123,23 @@ const App = () => {
       />
     );
   }
-
+  //
+  // <View style={styles.parent}>
+  //   <SafeAreaView style={{ flex: 1 }}>
+  //     <MyStatusBar />
+  //     <View style={styles.container}>
+  //
+  //     </View>
+  //   </SafeAreaView>
+  // </View>
   return (
     <PersistGate
       loading={<ActivityIndicator debug="app.js" />}
       persistor={persistor}
     >
-      <View style={styles.parent}>
-        <SafeAreaView style={{ flex: 1 }}>
-          <View style={styles.container}>
-            <MyStatusBar />
-            {!seePresentation && <GamePresentation />}
-            {seePresentation && !ifUserSelectTarget && <BoardTargetSelection />}
-            {seePresentation && ifUserSelectTarget && <Board />}
-          </View>
-        </SafeAreaView>
-      </View>
+      <NavigationContainer>
+        <AppNavigator />
+      </NavigationContainer>
     </PersistGate>
   );
 };
@@ -156,7 +159,8 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: "white",
+    width: "100%",
+    height: "100%",
     alignItems: "center",
     justifyContent: "center",
   },

@@ -18,6 +18,7 @@ module.exports = function (api) {
             utils: "./src/utils",
             state: "./src/state",
             translations: "./src/translations",
+            navigation: "./src/navigation",
           },
         },
       ],

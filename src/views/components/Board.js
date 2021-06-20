@@ -14,6 +14,7 @@ import { getSoundOnSelector } from "state/redux/selectors";
 import { useSelector } from "react-redux";
 
 const Board = () => {
+  console.log("in board");
   const [boxSize, setBoxSize] = useState(16);
   const [timeout, setTimeout] = useState(60);
   const [error, setError] = useState(false);
@@ -148,7 +149,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "column",
-
+    backgroundColor: "green",
     width: "100%",
     justifyContent: "space-around",
     alignItems: "center",
