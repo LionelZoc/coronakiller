@@ -26,11 +26,12 @@ const targets = [
   { key: "spider", value: spider, platform: ["android", "ios"] },
   { key: "virus", value: virus, platform: ["android"] },
 ];
-const BoardTargetSelection = () => {
+const BoardTargetSelection = ({ onSkip }) => {
   const dispatch = useDispatch();
   const selectedTarget = useSelector(getTargetSelectedSelector);
   const chooseTarget = (key) => {
     dispatch(updateGameTarget(key));
+    if (onSkip) onSkip();
   };
   return (
     <View style={styles.container}>
@@ -63,6 +64,7 @@ const BoardTargetSelection = () => {
 
 BoardTargetSelection.propTypes = {
   position: PropTypes.number,
+  onSkip: PropTypes.func,
 };
 
 const styles = StyleSheet.create({
