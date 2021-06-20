@@ -188,7 +188,7 @@ const boardContextReducer = (state, action) => {
         ...state,
         finished: false,
         started: false,
-        cleanBoard: true,
+        cleanBoard: false,
         bonus: false,
         visibleVirus: 0,
         cases,

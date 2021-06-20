@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import {
   useBoardContextState,
   useBoardContextDispatcher,
@@ -12,12 +12,16 @@ import {
 import {
   StyleSheet,
   View,
-  //Platform,
+  Platform,
+  useWindowDimensions,
+  Modal,
 } from "react-native";
-import { Button, Icon } from "react-native-elements";
+import { Button, Icon, Overlay } from "react-native-elements";
 import { onShare } from "utils";
 import { toggleSound } from "state/redux/actions";
 import { getLevelSelector } from "state/redux/selectors";
+import WebModal from "modal-react-native-web";
+import BoardTargetSelection from "components/BoardTargetSelection";
 
 const BoarAction = () => {
   const boardContext = useBoardContextState();
@@ -26,6 +30,8 @@ const BoarAction = () => {
   const soundOn = useSelector(getSoundOnSelector);
   const level = useSelector(getLevelSelector);
   const reduxDispatch = useDispatch();
+  const dimensions = useWindowDimensions();
+  const [showSetting, setShowSetting] = useState(false);
 
   const toggleSoundOn = useCallback(() => {
     reduxDispatch(toggleSound());
@@ -41,6 +47,11 @@ const BoarAction = () => {
   };
   const stop = () => {
     dispatcher({ type: "STOP" });
+  };
+  const onTargetSelection = () => {
+    setShowSetting(false);
+    dispatcher({ type: "STOP" });
+    //restart();
   };
   //// TODO: fix restart
   return (
@@ -136,6 +147,31 @@ const BoarAction = () => {
         }
         onPress={toggleSoundOn}
       />
+      <Button
+        buttonStyle={{
+          borderWidth: 0,
+          borderColor: "transparent",
+          borderRadius: 20,
+        }}
+        containerStyle={{
+          marginLeft: 10,
+          width: 70,
+          maxWidth: 100,
+        }}
+        icon={<Icon name={"settings"} size={30} color="white" />}
+        onPress={() => setShowSetting(true)}
+      />
+      <Overlay
+        ModalComponent={Platform.OS === "web" ? WebModal : Modal}
+        fullscreen
+        isVisible={showSetting}
+        overlayStyle={[
+          styles.overlayStyle,
+          { height: dimensions.height - 150, width: dimensions.width - 50 },
+        ]}
+      >
+        <BoardTargetSelection onSkip={onTargetSelection} />
+      </Overlay>
     </View>
   );
 };
