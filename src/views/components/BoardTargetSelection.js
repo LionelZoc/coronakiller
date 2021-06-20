@@ -18,6 +18,10 @@ import map from "lodash/map";
 import { useSelector, useDispatch } from "react-redux";
 import { getTargetSelectedSelector } from "state/redux/selectors";
 import { updateGameTarget } from "state/redux/actions";
+import Parent from "components/ParentView";
+import { useNavigation } from "@react-navigation/native";
+import { DrawerActions } from "@react-navigation/native";
+import { useBoardContextDispatcher } from "containers/boardContext";
 
 //  { key: "virus", value: virus, platform: "android" },
 const targets = [
@@ -26,39 +30,47 @@ const targets = [
   { key: "spider", value: spider, platform: ["android", "ios"] },
   { key: "virus", value: virus, platform: ["android"] },
 ];
-const BoardTargetSelection = ({ onSkip }) => {
+const BoardTargetSelection = () => {
   const dispatch = useDispatch();
   const selectedTarget = useSelector(getTargetSelectedSelector);
+  const navigation = useNavigation();
+  const dispatcher = useBoardContextDispatcher();
+
   const chooseTarget = (key) => {
     dispatch(updateGameTarget(key));
-    if (onSkip) onSkip();
+    dispatcher({ type: "STOP" });
+    navigation.dispatch(DrawerActions.jumpTo("Board"));
+
+    //if (onSkip) onSkip();
   };
   return (
-    <View style={styles.container}>
-      <View style={styles.textContent}>
-        <Text style={styles.label}> Choisissez une cible</Text>
+    <Parent>
+      <View style={styles.container}>
+        <View style={styles.textContent}>
+          <Text style={styles.label}> Choisissez une cible</Text>
+        </View>
+        <View style={styles.images}>
+          {map(targets, (target) => {
+            if (target.platform.includes(Platform.OS)) {
+              return (
+                <TouchableOpacity style={styles.block} key={target.key}>
+                  <Image
+                    source={target.value}
+                    containerStyle={[styles.imageContainer]}
+                    onPress={() => chooseTarget(target.key)}
+                  />
+                  {selectedTarget === target && (
+                    <View style={styles.selected}>
+                      <Icon name="check" type="entypo" color="#517fa4" />
+                    </View>
+                  )}
+                </TouchableOpacity>
+              );
+            } else return null;
+          })}
+        </View>
       </View>
-      <View style={styles.images}>
-        {map(targets, (target) => {
-          if (target.platform.includes(Platform.OS)) {
-            return (
-              <TouchableOpacity style={styles.block} key={target.key}>
-                <Image
-                  source={target.value}
-                  containerStyle={[styles.imageContainer]}
-                  onPress={() => chooseTarget(target.key)}
-                />
-                {selectedTarget === target && (
-                  <View style={styles.selected}>
-                    <Icon name="check" type="entypo" color="#517fa4" />
-                  </View>
-                )}
-              </TouchableOpacity>
-            );
-          } else return null;
-        })}
-      </View>
-    </View>
+    </Parent>
   );
 };
 

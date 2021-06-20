@@ -39,7 +39,6 @@ export default function configureStore(preloadedState) {
   //persistStore(store, [config, callback])
   const persistor = persistStore(store);
   //persistor.purge();
-  //persistStore.purge();
   //https://github.com/prescottprue/react-redux-firebase/issues/254
 
   return { store, persistor };
