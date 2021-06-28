@@ -1,0 +1,108 @@
+rules_version = '2';
+service cloud.firestore {
+match /databases/{database}/documents {
+// True if the user is signed in and the requested data is 'published'
+function signedIn() {
+return request.auth != null && "uid" in request.auth && request.auth.uid != null && request.auth.uid.trim().size() != 0;
+}
+
+function dataPublished(){
+return resource != null && resource.data != null && "published" in resource.data && resource.data.published == true;
+}
+
+function signedInAndPublished() {
+return signedIn() && dataPublished();
+}
+
+function signedInAuthor() {
+//if get(/databases/$(database)/documents/users/$(resource.data.publisher)).id == request.auth.uid
+return signedIn() && resource != null && resource.data != null && (( 'publisher_ref' in resource.data && resource.data.publisher_ref.split('/')[1] == request.auth.uid ) || ( 'publisher' in resource.data && resource.data.publisher == request.auth.uid ) || ( 'author' in resource.data && resource.data.author == request.auth.uid ));
+}
+function signedInRecipient() {
+//if get(/databases/$(database)/documents/users/$(resource.data.publisher)).id == request.auth.uid
+return signedIn() && resource != null && resource.data != null && 'recipient' in resource.data && resource.data.recipient == request.auth.uid ;
+}
+
+function isChatMember() {
+//if get(/databases/$(database)/documents/users/$(resource.data.publisher)).id == request.auth.uid
+return signedIn() && resource != null && resource.data != null && 'members' in resource.data && request.auth.uid in resource.data.members  ;
+}
+
+//request.resource availagle only on write type only
+//check to not create something that already exist
+function signedInRequestResourceAuthor(){
+return signedIn() && "resource" in  request  && (("publisher" in request.resource.data && request.resource.data.publisher == request.auth.uid) || ("author" in request.resource.data && request.resource.data.author == request.auth.uid) )
+}
+
+function isPropertyValid() {
+	return "resource" in  request && "publisher" in request.resource.data && "location" in request.resource.data;
+}
+//two get, it's expansive optimise it by setting admin only if user is admin so that i could check only with admin in get
+//when uid is fake there is an error
+function signedInAdmin() {
+
+return signedIn() && 'admin' in request.auth.token &&  request.auth.token.admin == true;
+}
+function isUserAccount(userId){
+return signedIn() && request.auth.uid == userId;
+}
+
+// condition to read properties
+//test open
+match /properties/{propertyId} {
+allow read : if signedIn() || signedInAndPublished() || signedInAuthor();
+allow create : if isPropertyValid() && (signedInRequestResourceAuthor() || signedInAdmin());
+allow update : if isPropertyValid() && ( signedInAdmin() || signedInAuthor() );
+allow delete : if signedInAdmin() || signedInAuthor() ;
+}
+match /users/{userId} {
+//make sure i can not set another user data
+allow list:  if signedInAdmin();
+allow create : if true;
+allow update: if signedInAdmin() || isUserAccount(userId);
+allow delete: if signedInAdmin() || isUserAccount(userId);
+
+//for now i let anyone connected get the user data
+allow get : if signedIn();
+
+}
+function signedInReportAuthor() {
+//if get(/databases/$(database)/documents/users/$(resource.data.publisher)).id == request.auth.uid
+return signedIn() && request.resource != null && request.resource.data != null && "author" in request.resource.data && request.resource.data.author == request.auth.uid;
+}
+match /reports/{reportId}{
+allow read: if true;
+allow create : if signedInReportAuthor();
+allow delete : if signedInAdmin() || signedInReportAuthor() ;
+}
+match /user_metas/{userId}{
+allow read,write : if true
+}
+match /property_metas/{propertyId}{
+allow read,write : if true
+}
+match /property_reports/{propertyId}{
+allow read,write : if true
+}
+match /user_demands/{propertyId}{
+allow read : if signedInAdmin() || signedInAuthor() || signedInRecipient()
+allow create : if signedInRequestResourceAuthor() ;
+allow delete : if signedInAdmin() || signedInAuthor() ;
+}
+match /notifications/{nofitificationId}{
+allow read,write: if true
+}
+match /property_requests/{requestId}{
+allow read,write : if true
+}
+match /chatRoom/{chatId}{
+allow read : if isChatMember();
+allow create : if signedIn()
+}
+match /messages/{msgId}{
+allow read : if true;
+allow create : if signedIn();
+allow update : if signedIn();
+}
+}
+}

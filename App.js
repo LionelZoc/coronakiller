@@ -30,6 +30,7 @@ import { getSoundOnSelector } from "state/redux/selectors";
 // import { FormattedMessage, useIntl } from "react-intl";
 import { NavigationContainer } from "@react-navigation/native";
 import AppNavigator from "navigation/AppNavigator";
+import { ReactReduxFirebaseProvider } from "react-redux-firebase";
 
 //sentry config
 Sentry.init({
@@ -41,7 +42,7 @@ Sentry.init({
 });
 
 //configure redux store
-let { store, persistor } = configureStore();
+let { store, persistor, rrfProps } = configureStore();
 
 // const messages = {
 //   en: enMessages,
@@ -180,15 +181,17 @@ const App = () => {
       loading={<ActivityIndicator debug="app.js" />}
       persistor={persistor}
     >
-      <BoardContextProvider
-        size={boxSize}
-        playSound={playSoundMemo}
-        timeout={timeout}
-      >
-        <NavigationContainer>
-          <AppNavigator />
-        </NavigationContainer>
-      </BoardContextProvider>
+      <ReactReduxFirebaseProvider {...rrfProps}>
+        <BoardContextProvider
+          size={boxSize}
+          playSound={playSoundMemo}
+          timeout={timeout}
+        >
+          <NavigationContainer>
+            <AppNavigator />
+          </NavigationContainer>
+        </BoardContextProvider>
+      </ReactReduxFirebaseProvider>
     </PersistGate>
   );
 };

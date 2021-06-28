@@ -12,6 +12,8 @@ import {
   GAME_SEE_PRESENTATION,
 } from "state/redux/actionTypes";
 import toNumber from "lodash/toNumber";
+import { firebaseReducer } from "react-redux-firebase";
+import { firestoreReducer } from "redux-firestore";
 
 const initialLocalState = {
   locale: "en",
@@ -104,10 +106,25 @@ let localPersistConfig = {
     "userSelectedTarget",
   ],
 };
-
+let firestorePersistConfig = {
+  key: "firestoreState",
+  //debug: true,
+  storage: AsyncStorage,
+  stateReconciler: autoMergeLevel2,
+  //version: 0
+  blacklist: ["queries"],
+};
+let firebasePersistConfig = {
+  key: "firebaseState",
+  //debug: true,
+  storage: AsyncStorage,
+  stateReconciler: autoMergeLevel2,
+};
 //the routerReducer must be under the routing key
 const rootReducer = combineReducers({
   core: persistReducer(localPersistConfig, localeReducer),
+  firebase: persistReducer(firebasePersistConfig, firebaseReducer),
+  firestore: persistReducer(firestorePersistConfig, firestoreReducer),
 });
 
 //export default persistedReducer;
