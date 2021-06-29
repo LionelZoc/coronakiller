@@ -9,6 +9,7 @@ import {
 import Board from "components/Board";
 import GamePresentation from "components/GamePresentation";
 import BoardTargetSelection from "components/BoardTargetSelection";
+import GameLeaderBoard from "containers/GameLeaderBoard";
 const Drawer = createDrawerNavigator();
 const AppContainer = () => {
   const seePresentation = useSelector(getSeePresentationSelector);
@@ -28,6 +29,7 @@ const AppContainer = () => {
       <Drawer.Screen name="Board" component={Board} />
       <Drawer.Screen name="GamePresentation" component={GamePresentation} />
       <Drawer.Screen name="TargetSelection" component={BoardTargetSelection} />
+      <Drawer.Screen name="LeaderBoard" component={GameLeaderBoard} />
     </Drawer.Navigator>
   );
 };

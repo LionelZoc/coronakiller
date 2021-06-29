@@ -5,6 +5,7 @@ import {
   View,
   Text,
   Platform,
+  ScrollView,
   // useWindowDimensions,
   TouchableOpacity,
 } from "react-native";
@@ -49,26 +50,32 @@ const BoardTargetSelection = () => {
         <View style={styles.textContent}>
           <Text style={styles.label}> Choisissez une cible</Text>
         </View>
-        <View style={styles.images}>
-          {map(targets, (target) => {
-            if (target.platform.includes(Platform.OS)) {
-              return (
-                <TouchableOpacity style={styles.block} key={target.key}>
-                  <Image
-                    source={target.value}
-                    containerStyle={[styles.imageContainer]}
-                    onPress={() => chooseTarget(target.key)}
-                  />
-                  {selectedTarget === target && (
-                    <View style={styles.selected}>
-                      <Icon name="check" type="entypo" color="#517fa4" />
-                    </View>
-                  )}
-                </TouchableOpacity>
-              );
-            } else return null;
-          })}
-        </View>
+        <ScrollView
+          style={{ flex: 1 }}
+          keyboardShouldPersistTaps="handled"
+          scrollEventThrottle={16}
+        >
+          <View style={styles.images}>
+            {map(targets, (target) => {
+              if (target.platform.includes(Platform.OS)) {
+                return (
+                  <TouchableOpacity style={styles.block} key={target.key}>
+                    <Image
+                      source={target.value}
+                      containerStyle={[styles.imageContainer]}
+                      onPress={() => chooseTarget(target.key)}
+                    />
+                    {selectedTarget === target && (
+                      <View style={styles.selected}>
+                        <Icon name="check" type="entypo" color="#517fa4" />
+                      </View>
+                    )}
+                  </TouchableOpacity>
+                );
+              } else return null;
+            })}
+          </View>
+        </ScrollView>
       </View>
     </Parent>
   );

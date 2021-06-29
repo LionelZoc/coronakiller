@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { Button, Image } from "react-native-elements";
 //import PropTypes from "prop-types";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, ScrollView } from "react-native";
 //import { Icon } from "react-native-elements";
 import { useDispatch, useSelector } from "react-redux";
 import { seePresentation } from "state/redux/actions";
@@ -25,59 +25,64 @@ const GamePresentation = () => {
   }, [dispatch, ifUserSelectTarget, navigation]);
   return (
     <Parent>
-      <View style={styles.container}>
-        <View></View>
-        <View style={styles.descriptionSection}>
-          <View style={styles.descriptionRow}>
-            <View style={styles.imageBlock}>
-              <Image source={bug} containerStyle={[styles.imageContainer]} />
+      <ScrollView style={{ flex: 1, width: "100%", height: "100%" }}>
+        <View style={styles.container}>
+          <View></View>
+          <View style={styles.descriptionSection}>
+            <View style={styles.descriptionRow}>
+              <View style={styles.imageBlock}>
+                <Image source={bug} containerStyle={[styles.imageContainer]} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.description}>
+                  Ecrasez le plus de cible possible dans le temps imparti.
+                </Text>
+              </View>
             </View>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.description}>
-                Ecrasez le plus de cible possible dans le temps imparti.
-              </Text>
+            <View style={styles.descriptionRow}>
+              <View style={styles.imageBlock}>
+                <Image
+                  source={bonus}
+                  containerStyle={[styles.imageContainer]}
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.description}>
+                  Tapez sur le spray pour débloquer un bonus qui offre 10
+                  secondes de plus.
+                </Text>
+              </View>
             </View>
-          </View>
-          <View style={styles.descriptionRow}>
-            <View style={styles.imageBlock}>
-              <Image source={bonus} containerStyle={[styles.imageContainer]} />
-            </View>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.description}>
-                Tapez sur le spray pour débloquer un bonus qui offre 10 secondes
-                de plus.
-              </Text>
-            </View>
-          </View>
 
-          <View style={styles.descriptionRow}>
-            <View style={styles.imageBlock}>
-              <View style={styles.emptyCase} />
-            </View>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.description}>
-                Quand vous tapez une case vide , vous perdez 1 point.
-              </Text>
+            <View style={styles.descriptionRow}>
+              <View style={styles.imageBlock}>
+                <View style={styles.emptyCase} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.description}>
+                  Quand vous tapez une case vide , vous perdez 1 point.
+                </Text>
+              </View>
             </View>
           </View>
+          <View style={styles.actionSection}>
+            <Button
+              title="Play"
+              onPress={onSeePresentation}
+              titleStyle={{ fontWeight: "bold", fontSize: 18 }}
+              buttonStyle={{
+                borderWidth: 0,
+                borderColor: "transparent",
+                borderRadius: 20,
+              }}
+              containerStyle={{
+                width: 150,
+                maxWidth: 200,
+              }}
+            ></Button>
+          </View>
         </View>
-        <View style={styles.actionSection}>
-          <Button
-            title="Play"
-            onPress={onSeePresentation}
-            titleStyle={{ fontWeight: "bold", fontSize: 18 }}
-            buttonStyle={{
-              borderWidth: 0,
-              borderColor: "transparent",
-              borderRadius: 20,
-            }}
-            containerStyle={{
-              width: 150,
-              maxWidth: 200,
-            }}
-          ></Button>
-        </View>
-      </View>
+      </ScrollView>
     </Parent>
   );
 };

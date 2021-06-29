@@ -26,6 +26,7 @@ import GameHelp from "components/GameHelp";
 import WebModal from "modal-react-native-web";
 
 const NEXT_LEVEL_THRESHOLD = 4;
+//S=> 5, A=>4, B=>3, C=>2, D=>1
 const getRank = (score, totalPlayTime) => {
   const targetPerSecond = score / totalPlayTime;
   if (targetPerSecond > 4.1) return "S";

@@ -7,35 +7,7 @@ import BoardAction from "components/BoardAction";
 import GameLevel from "components/GameLevel";
 import Parent from "components/ParentView";
 
-import { useSelector } from "react-redux";
-import { useFirestoreConnect } from "react-redux-firebase";
-//import PropTypes from "prop-types";
-// useFirestoreConnect(() => [
-//    { collection: 'todos', doc: todoId } // or `todos/${props.todoId}`
-//  ])
-//  const todo = useSelector(
-//    ({ firestore: { data } }) => data.todos && data.todos[todoId]
-//  )
-
-// {
-//   collection: "user_demands",
-//   where: [["author", "==", `${author}`]],
-//   orderBy: [["created_at", "desc"]],
-//   limit: 10,
-//   populates,
-//   type: "once"
-// }
 const Board = () => {
-  useFirestoreConnect(() => [
-    {
-      collection: "scores",
-      orderBy: [["value", "desc"]],
-      limit: 15,
-      type: "once",
-    }, // or `todos/${props.todoId}`
-  ]);
-  const scores = useSelector(({ firestore: { data } }) => data.scores);
-  console.log("scores", scores);
   const boxSize = 16;
   //const [missSound, setMissSound] = useState();
   const window = useWindowDimensions();
