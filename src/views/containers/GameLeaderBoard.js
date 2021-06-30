@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { Button, Image } from "react-native-elements";
+import { Button, Image, Avatar } from "react-native-elements";
 //import PropTypes from "prop-types";
 import {
   StyleSheet,
@@ -19,8 +19,13 @@ import Colors from "constants/Colors";
 import Parent from "components/ParentView";
 import { useNavigation } from "@react-navigation/native";
 import { DrawerActions } from "@react-navigation/native";
+import { getInitials } from "utils";
 
-import { useFirestoreConnect } from "react-redux-firebase";
+import { useFirestoreConnect, populate } from "react-redux-firebase";
+import isEmpty from "lodash/isEmpty";
+import map from "lodash/map";
+import forIn from "lodash/forIn";
+import set from "lodash/set";
 
 //import PropTypes from "prop-types";
 // useFirestoreConnect(() => [
@@ -38,16 +43,17 @@ import { useFirestoreConnect } from "react-redux-firebase";
 //   populates,
 //   type: "once"
 // }
+const populates = [{ child: "owner", root: "users" }];
 const renderItem = ({ item }) => {
-  // if (
-  //   _.isEmpty(auth) ||
-  //   _.isEmpty(item) ||
-  //   !_.has(item, "members") ||
-  //   !_.has(item, "id")
-  // ) {
-  //   return null;
-  // }
-
+  if (
+    //_.isEmpty(auth) ||
+    isEmpty(item)
+    // !_.has(item, "members") ||
+    // !_.has(item, "id")
+  ) {
+    return null;
+  }
+  console.log("initials", getInitials(item.username || "undefined"));
   return (
     <TouchableHighlight
       underlayColor="white"
@@ -56,6 +62,13 @@ const renderItem = ({ item }) => {
       testID="chatElement"
     >
       <View style={styles.row}>
+        <Avatar
+          rounded
+          size="small"
+          title={getInitials(item.username || "undefined")}
+          titleStyle={{ color: "black" }}
+          containerStyle={{ backgroundColor: "red" }}
+        />
         <Text>{`Value  ${item.value} `}</Text>
         <Text>{`Level  ${item.level}`}</Text>
       </View>
@@ -63,7 +76,7 @@ const renderItem = ({ item }) => {
   );
 };
 const _keyExtractor = (item) => {
-  return item.id;
+  return item && item.id;
 };
 const GameLeaderBoard = () => {
   // const navigation = useNavigation();
@@ -85,12 +98,20 @@ const GameLeaderBoard = () => {
         ["value", "desc"],
       ],
       limit: 100,
+      populates,
       //type: "once",
     }, // or `todos/${props.todoId}`
   ]);
-  const scores = useSelector(({ firestore: { ordered } }) => ordered.scores);
-  console.log("scores", scores);
+  //const scores = useSelector(({ firestore: { ordered } }) => ordered.scores);
+  let scores = useSelector(({ firestore }) =>
+    populate(firestore, "scores", populates)
+  );
+  forIn(scores, (item, key, bigChunk) => {
+    set(bigChunk, `${key}.id`, key);
+  });
+  scores = map(scores, (score) => score);
 
+  console.log("scores", isEmpty(scores), scores);
   return (
     <Parent>
       <View style={styles.container}>
@@ -113,13 +134,14 @@ const GameLeaderBoard = () => {
 const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
-    justifyContent: "flex-start",
+    justifyContent: "space-around",
+    alignItems: "center",
     flex: 1,
     borderColor: "black",
     borderStyle: "solid",
     borderWidth: 1,
     width: "100%",
-    paddingVertical: 30,
+    paddingVertical: 5,
     marginBottom: 10,
   },
   container: {

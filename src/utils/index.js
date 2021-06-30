@@ -1,7 +1,8 @@
 import { Platform, Share } from "react-native";
 import * as Sentry from "sentry-expo";
 import { getLevelStatus } from "components/GameLevel";
-
+import isEmpty from "lodash/isEmpty";
+import isString from "lodash/isString";
 export const onShare = async (score, level) => {
   try {
     let link;
@@ -33,4 +34,17 @@ export const onShare = async (score, level) => {
   } catch (error) {
     Sentry.captureException(error);
   }
+};
+
+export const getInitials = (string) => {
+  if (isEmpty(string) || !isString(string)) return "";
+
+  let names = string.split(" "),
+    initials = names[0].substring(0, 1).toUpperCase();
+
+  if (names.length > 1) {
+    initials += names[names.length - 1].substring(0, 1).toUpperCase();
+  }
+
+  return initials;
 };
