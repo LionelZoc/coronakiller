@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { Button, Image, Avatar } from "react-native-elements";
+import { Button, Image, Avatar, Badge, ListItem } from "react-native-elements";
 //import PropTypes from "prop-types";
 import {
   StyleSheet,
@@ -19,7 +19,7 @@ import Colors from "constants/Colors";
 import Parent from "components/ParentView";
 import { useNavigation } from "@react-navigation/native";
 import { DrawerActions } from "@react-navigation/native";
-import { getInitials } from "utils";
+import { getInitials, getParsedNumber } from "utils";
 
 import { useFirestoreConnect, populate } from "react-redux-firebase";
 import isEmpty from "lodash/isEmpty";
@@ -44,7 +44,7 @@ import set from "lodash/set";
 //   type: "once"
 // }
 const populates = [{ child: "owner", root: "users" }];
-const renderItem = ({ item }) => {
+const renderItem = ({ item, index }) => {
   if (
     //_.isEmpty(auth) ||
     isEmpty(item)
@@ -53,26 +53,60 @@ const renderItem = ({ item }) => {
   ) {
     return null;
   }
+  // <TouchableHighlight
+  //   underlayColor="white"
+  //   key={`${item.id}`}
+  //   onPress={() => {}}
+  //   testID="chatElement"
+  // >
   console.log("initials", getInitials(item.username || "undefined"));
   return (
-    <TouchableHighlight
-      underlayColor="white"
-      key={`${item.id}`}
+    <ListItem
       onPress={() => {}}
-      testID="chatElement"
+      key={`${item.id}`}
+      bottomDivider
+      containerStyle={{}}
     >
-      <View style={styles.row}>
-        <Avatar
-          rounded
-          size="small"
-          title={getInitials(item.username || "undefined")}
-          titleStyle={{ color: "black" }}
-          containerStyle={{ backgroundColor: "red" }}
-        />
-        <Text>{`Value  ${item.value} `}</Text>
-        <Text>{`Level  ${item.level}`}</Text>
-      </View>
-    </TouchableHighlight>
+      <ListItem.Content>
+        <View style={styles.row}>
+          <View style={styles.rankNumber}>
+            <Text style={styles.rank}>{`${index + 1} .`}</Text>
+          </View>
+          <View style={styles.rankContent}>
+            <View style={styles.userAvatar}>
+              <Avatar
+                rounded
+                size="small"
+                title={getInitials(item.username || "undefined")}
+                titleStyle={{ color: "black" }}
+                containerStyle={{ backgroundColor: Colors.grey }}
+              />
+              <View style={styles.user}>
+                <Text style={styles.username}>{item.username}</Text>
+                <Text style={styles.scoreLabel}>
+                  Level: <Text style={styles.scoreValue}>{item.level}</Text>
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.playScore}>
+              <Text style={styles.scoreLabelSection}>
+                Score :{" "}
+                <Text style={[styles.scoreValue, styles.userStatScore]}>
+                  {item.value}
+                </Text>
+              </Text>
+              <Text style={styles.scoreLabel}>
+                KPS :{" "}
+                <Text style={styles.kpsValue}>
+                  {`${getParsedNumber(item.value / item.playTime)} /s`}
+                </Text>
+              </Text>
+            </View>
+          </View>
+        </View>
+      </ListItem.Content>
+    </ListItem>
   );
 };
 const _keyExtractor = (item) => {
@@ -115,17 +149,24 @@ const GameLeaderBoard = () => {
   return (
     <Parent>
       <View style={styles.container}>
-        <FlatList
-          ListEmptyComponent={
-            <Text testID="emptyMessageList">empty board</Text>
-          }
-          data={scores}
-          renderItem={renderItem}
-          keyExtractor={_keyExtractor}
-          onEndReachedThreshold={0.9}
-          initialNumToRender={6}
-          testID="leaderboardList"
-        />
+        <View style={styles.header}>
+          <View style={styles.headerContent}>
+            <Text>my rank and connection</Text>
+          </View>
+        </View>
+        <View style={styles.list}>
+          <FlatList
+            ListEmptyComponent={
+              <Text testID="emptyMessageList">empty board</Text>
+            }
+            data={scores}
+            renderItem={renderItem}
+            keyExtractor={_keyExtractor}
+            onEndReachedThreshold={0.9}
+            initialNumToRender={6}
+            testID="leaderboardList"
+          />
+        </View>
       </View>
     </Parent>
   );
@@ -134,28 +175,103 @@ const GameLeaderBoard = () => {
 const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "flex-start",
     alignItems: "center",
     flex: 1,
-    borderColor: "black",
-    borderStyle: "solid",
-    borderWidth: 1,
+    // borderColor: "black",
+    // borderStyle: "solid",
+    // borderWidth: 1,
     width: "100%",
-    paddingVertical: 5,
-    marginBottom: 10,
+    //paddingVertical: 5,
+    //  marginBottom: 10,
+  },
+  rankNumber: {
+    paddingRight: 10,
+    paddingLeft: 20,
+  },
+  rank: {
+    fontSize: 18,
+  },
+  rankContent: {
+    flex: 1,
+    flexDirection: "row",
+    // borderColor: "blue",
+    // borderStyle: "solid",
+    // borderWidth: 1,
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  userAvatar: {
+    //borderColor: "yellow",
+    flexDirection: "row",
+    // borderStyle: "solid",
+    // borderWidth: 1,
+  },
+  user: {
+    // borderColor: "purple",
+    // borderStyle: "solid",
+    // borderWidth: 1,
+    marginLeft: 10,
+  },
+  playScore: {
+    // borderColor: "red",
+    // borderStyle: "solid",
+    // borderWidth: 1,
+    flexDirection: "column",
+    justifyContent: "space-between",
+    minWidth: 120,
+  },
+  username: {
+    color: Colors.black,
+    fontWeight: "bold",
+  },
+  scoreLabel: {
+    color: Colors.grey,
+    letterSpacing: 0.5,
+  },
+  scoreLabelSection: {
+    color: Colors.black,
+    fontWeight: "bold",
+    marginBottom: 2,
+  },
+  userStatScore: {
+    color: Colors.tintColor,
+    letterSpacing: 0.5,
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  scoreValue: {
+    marginLeft: 10,
+    color: Colors.black,
+    fontWeight: "bold",
+  },
+  kpsValue: {
+    color: Colors.darkBlue,
+    letterSpacing: 0.5,
+    fontWeight: "bold",
   },
   container: {
     flex: 1,
     flexDirection: "column",
-    justifyContent: "flex-end",
+    justifyContent: "flex-start",
     width: "100%",
     //alignItems: "center",
-    padding: 10,
+    //padding: 10,
   },
-  descriptionSection: {
+  list: {
     flex: 3,
+    flexDirection: "column",
     justifyContent: "flex-end",
     width: "100%",
+  },
+  headerContent: {},
+  header: {
+    flex: 1,
+    justifyContent: "flex-end",
+    width: "100%",
+    borderWidth: 1,
+    borderColor: "black",
+    borderStyle: "solid",
   },
   description: {
     fontWeight: "bold",

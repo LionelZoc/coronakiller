@@ -3,6 +3,9 @@ import * as Sentry from "sentry-expo";
 import { getLevelStatus } from "components/GameLevel";
 import isEmpty from "lodash/isEmpty";
 import isString from "lodash/isString";
+import isNumber from "lodash/isNumber";
+import isInteger from "lodash/isInteger";
+
 export const onShare = async (score, level) => {
   try {
     let link;
@@ -47,4 +50,11 @@ export const getInitials = (string) => {
   }
 
   return initials;
+};
+
+export const getParsedNumber = (value) => {
+  if (!isNumber(value)) return 0;
+
+  let finalValue = isInteger(value) ? value : value.toFixed(3);
+  return finalValue;
 };
