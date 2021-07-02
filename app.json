@@ -5,6 +5,9 @@
     "version": "1.0.10",
     "orientation": "portrait",
     "icon": "./src/assets/icon1024.png",
+    "facebookScheme":"fb1256149281508808",
+    "facebookAppId":"1256149281508808",
+    "facebookDisplayName":"viralert",
     "splash": {
       "image": "./src/assets/SplashTransparent.png",
       "resizeMode": "contain",

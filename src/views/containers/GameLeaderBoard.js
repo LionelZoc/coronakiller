@@ -26,6 +26,7 @@ import isEmpty from "lodash/isEmpty";
 import map from "lodash/map";
 import forIn from "lodash/forIn";
 import set from "lodash/set";
+import Auth from "./Auth";
 
 //import PropTypes from "prop-types";
 // useFirestoreConnect(() => [
@@ -152,6 +153,7 @@ const GameLeaderBoard = () => {
         <View style={styles.header}>
           <View style={styles.headerContent}>
             <Text>my rank and connection</Text>
+            <Auth />
           </View>
         </View>
         <View style={styles.list}>
