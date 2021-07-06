@@ -36,24 +36,28 @@ const Auth = () => {
   // }
   const firebase = useFirebase();
   const loginWithFacebook = async () => {
-    await Facebook.initializeAsync({
-      appId: "1256149281508808",
-    });
-    const data = await Facebook.logInWithReadPermissionsAsync(
-      "fb1256149281508808",
-      { permissions: ["public_profile", "email"] }
-    );
-
-    if (data.type === "success") {
-      try {
-        const credential = firebase.auth.FacebookAuthProvider.credential(
-          data.token
-        );
-        await firebase.login({ credential });
-      } catch (e) {
-        console.log("error", e);
-        Sentry.Native.captureException(e);
+    try {
+      await Facebook.initializeAsync({
+        appId: "1256149281508808",
+      });
+      const data = await Facebook.logInWithReadPermissionsAsync({
+        permissions: ["public_profile", "email"],
+      });
+      //console.log("data from facebook", data);
+      if (data.type === "success") {
+        try {
+          const credential = firebase.auth.FacebookAuthProvider.credential(
+            data.token
+          );
+          await firebase.login({ credential });
+        } catch (e) {
+          //console.log("error", e);
+          Sentry.Native.captureException(e);
+        }
       }
+    } catch (e) {
+      //console.log("error", e);
+      Sentry.Native.captureException(e);
     }
   };
   return (
