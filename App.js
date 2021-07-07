@@ -30,7 +30,14 @@ import { getSoundOnSelector } from "state/redux/selectors";
 // import { FormattedMessage, useIntl } from "react-intl";
 import { NavigationContainer } from "@react-navigation/native";
 import AppNavigator from "navigation/AppNavigator";
-import { ReactReduxFirebaseProvider } from "react-redux-firebase";
+import { ReactReduxFirebaseProvider, isLoaded } from "react-redux-firebase";
+
+const AuthIsLoaded = ({ children }) => {
+  const auth = useSelector((state) => state.firebase.auth);
+  if (!isLoaded(auth))
+    return <ActivityIndicator debug="app_firebase_loading.js" />;
+  return children;
+};
 
 //sentry config
 Sentry.init({
@@ -187,9 +194,11 @@ const App = () => {
           playSound={playSoundMemo}
           timeout={timeout}
         >
-          <NavigationContainer>
-            <AppNavigator />
-          </NavigationContainer>
+          <AuthIsLoaded>
+            <NavigationContainer>
+              <AppNavigator />
+            </NavigationContainer>
+          </AuthIsLoaded>
         </BoardContextProvider>
       </ReactReduxFirebaseProvider>
     </PersistGate>

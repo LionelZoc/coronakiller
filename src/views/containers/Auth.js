@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   Button,
   Image,
@@ -27,31 +27,52 @@ import Colors from "constants/Colors";
 import Parent from "components/ParentView";
 import { useNavigation } from "@react-navigation/native";
 import { DrawerActions } from "@react-navigation/native";
-import { useFirebase } from "react-redux-firebase";
+import { useFirebase, isLoaded, isEmpty } from "react-redux-firebase";
 import * as Sentry from "sentry-expo";
-
+import get from "lodash/get";
 const Auth = () => {
   // loginWithFb() {
   //   this.props.firebase.login({ provider: "facebook", type: "popup" });
   // }
   const firebase = useFirebase();
+  const auth = useSelector((state) => state.firebase.auth);
+  const profile = useSelector((state) => state.firebase.profile);
+  //const [connected, setConnected] = useState(null);
+  useEffect(() => {
+    const toggleAuthAsync = async () => {
+      const auth = await Facebook.getAuthenticationCredentialAsync();
+
+      if (!auth) {
+        // Log in
+        console.log("not connected");
+        //setConnected(false)
+      } else {
+        // Log out
+        console.log("user connected");
+        //setConnected(true)
+      }
+    };
+    toggleAuthAsync();
+  }, []);
   const loginWithFacebook = async () => {
     try {
-      await Facebook.initializeAsync({
-        appId: "1256149281508808",
-      });
+      await Facebook.initializeAsync();
       const data = await Facebook.logInWithReadPermissionsAsync({
         permissions: ["public_profile", "email"],
       });
-      //console.log("data from facebook", data);
+      console.log("data from facebook", data);
       if (data.type === "success") {
         try {
           const credential = firebase.auth.FacebookAuthProvider.credential(
             data.token
           );
-          await firebase.login({ credential });
+          console.log("ill log firebase after get credential");
+          // Sign in with credential from the Facebook user.
+          await firebase.auth().signInWithCredential(credential);
+
+          //await firebase.login({ credential });
         } catch (e) {
-          //console.log("error", e);
+          console.log("error", e);
           Sentry.Native.captureException(e);
         }
       }
@@ -62,27 +83,31 @@ const Auth = () => {
   };
   return (
     <View style={styles.facebook}>
-      <Button
-        title="Login"
-        type="outline"
-        raised
-        fullWidth={false}
-        buttonStyle={{
-          backgroundColor: "#4267B2",
-        }}
-        containerStyle={{
-          width: 150,
-          maxWidth: 200,
-        }}
-        titleStyle={{
-          color: "white",
-          marginLeft: 4,
-        }}
-        icon={
-          <Icon name="facebook" size={30} color="white" type="fontAwesome" />
-        }
-        onPress={loginWithFacebook}
-      />
+      {isLoaded(auth) && !isEmpty(auth) ? (
+        <Text>{get(profile.name)}</Text>
+      ) : (
+        <Button
+          title="Login"
+          type="outline"
+          raised
+          fullWidth={false}
+          buttonStyle={{
+            backgroundColor: "#4267B2",
+          }}
+          containerStyle={{
+            width: 150,
+            maxWidth: 200,
+          }}
+          titleStyle={{
+            color: "white",
+            marginLeft: 4,
+          }}
+          icon={
+            <Icon name="facebook" size={30} color="white" type="fontAwesome" />
+          }
+          onPress={loginWithFacebook}
+        />
+      )}
     </View>
   );
 };

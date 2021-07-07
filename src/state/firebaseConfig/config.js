@@ -81,11 +81,12 @@ export const getEnvVars = (env = Constants.manifest.releaseChannel) => {
   } else if (env === "staging") {
     return ENV.staging;
   } else if (env === "prod") {
-    return ENV.prod;
+    return ENV.dev;
   } else if (env === "dev") {
     return ENV.dev;
   } else {
-    return ENV.prod;
+    //to update later
+    return ENV.dev;
   }
 };
 

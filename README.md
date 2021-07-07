@@ -40,3 +40,13 @@ Jouez à ce jeux fun et relaxant qui vous fait combattre une pandemie, et challe
 #privacy policy
 https://vira-ert.flycricket.io/privacy.html
 https://vira-ert.flycricket.io/terms.html
+
+
+#to lunch app in simulator
+https://forums.expo.io/t/how-do-i-run-my-standalone-app-on-my-phone/3143
+#facebook redirect url
+https://viralert-dev.firebaseapp.com/__/auth/handler
+
+
+firebase init
+https://firebase.google.com/docs/cli#mac-linux-npm

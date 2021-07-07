@@ -1,6 +1,18 @@
 import { createSelector } from "reselect";
+import { isLoaded, isEmpty } from "react-redux-firebase";
+import createCachedSelector from "re-reselect";
 //import createCachedSelector from "re-reselect";
+
 import get from "lodash/get";
+// FIREBASE STATE SELECTOR
+export const getFirebaseAuth = (state) => get(state, "firebase.auth", {});
+export const getAuthError = (state) => get(state, "firebase.authError", {});
+// export const getProfile = state => {
+//   return state.core.cachedProfile;
+// };
+export const getProfile = (state) => {
+  return state.firebase.profile;
+};
 const getLocale = (state) => {
   return get(state, "core.locale", "");
 };
@@ -16,6 +28,16 @@ const getSoundOn = (state) => get(state, "core.soundOn", false);
 const getTargetSelected = (state) => get(state, "core.target", "bug");
 const getUserSelectedTarget = (state) =>
   get(state, "core.userSelectedTarget", false);
+
+export const firebaseAuthSelector = createSelector(
+  getFirebaseAuth,
+  (auth) => auth
+);
+
+export const firebaseUidSelector = createSelector(
+  getFirebaseAuth,
+  (auth) => auth.uid
+);
 
 export const getLocaleSelector = createSelector(getLocale, (locale) => {
   return locale;
@@ -50,3 +72,21 @@ export const getIfUserSelectedTargetSelector = createSelector(
   getUserSelectedTarget,
   (selected) => selected
 );
+
+export const getCachedProfileSelector = createCachedSelector(
+  getProfile,
+  getFirebaseAuth,
+  (state, id) => id,
+  (profile, auth, id) => {
+    if (
+      isLoaded(profile) &&
+      isLoaded(auth) &&
+      !isEmpty(profile) &&
+      !isEmpty(auth)
+    ) {
+      return { profile: profile, auth: auth, id: id };
+    }
+
+    return {};
+  }
+)((state, id) => `profile_${id}`);
