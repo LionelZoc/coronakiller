@@ -43,6 +43,7 @@ https://vira-ert.flycricket.io/terms.html
 
 
 #to lunch app in simulator
+expo build:ios -t simulator
 https://forums.expo.io/t/how-do-i-run-my-standalone-app-on-my-phone/3143
 #facebook redirect url
 https://viralert-dev.firebaseapp.com/__/auth/handler
