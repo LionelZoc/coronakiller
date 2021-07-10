@@ -12,7 +12,11 @@ import {
 
 import { useDispatch, useSelector } from "react-redux";
 import { getHighScoreSelector, getLevelSelector } from "state/redux/selectors";
-import { updateGameHighScore, upgradeLevel } from "state/redux/actions";
+import {
+  updateGameHighScore,
+  upgradeLevel,
+  updateBestScore,
+} from "state/redux/actions";
 import { onShare } from "utils";
 import toNumber from "lodash/toNumber";
 import {
@@ -36,6 +40,7 @@ const getRank = (score, totalPlayTime) => {
   return "D";
 };
 const GameResult = () => {
+  const auth = useSelector((state) => state.firebase.auth);
   const boardContext = useBoardContextState();
   const dispatcher = useBoardContextDispatcher();
   const reduxDispatch = useDispatch();
@@ -43,6 +48,10 @@ const GameResult = () => {
   const level = useSelector(getLevelSelector);
   const dimensions = useWindowDimensions();
   const [showHelp, setShowHelp] = useState(false);
+
+  const targetPerSecond = boardContext.score / boardContext.totalPlayTime;
+  const duration = getHumanizeTime(boardContext.totalPlayTime);
+
   const onUpgradeLevel = useCallback(() => {
     reduxDispatch(upgradeLevel(level));
     dispatcher({ type: "RESTART" });
@@ -50,39 +59,20 @@ const GameResult = () => {
   useEffect(() => {
     if (boardContext.score > highScore) {
       reduxDispatch(updateGameHighScore(boardContext.score));
+      reduxDispatch(
+        updateBestScore({
+          level,
+          score: boardContext.score,
+          kps: targetPerSecond,
+          userId: auth.id,
+        })
+      );
     }
   }, [highScore, boardContext.score, reduxDispatch]);
   const restart = () => {
     dispatcher({ type: "RESTART" });
   };
-  const targetPerSecond = boardContext.score / boardContext.totalPlayTime;
-  const duration = getHumanizeTime(boardContext.totalPlayTime);
-  const infos = [
-    {
-      label: "hours",
-      value: duration.hours.toLocaleString("fr-fr", {
-        minimumIntegerDigits: 2,
-        useGrouping: false,
-      }),
-      hide: (duration.days === 0 && duration.hours === 0) || duration.isExpired,
-    },
-    {
-      label: "minutes",
-      value: duration.minutes.toLocaleString("fr-fr", {
-        minimumIntegerDigits: 2,
-        useGrouping: false,
-      }),
-      hide:
-        duration.days === 0 && duration.hours === 0 && duration.minutes === 0,
-    },
-    {
-      label: "seconds",
-      value: duration.seconds.toLocaleString("fr-fr", {
-        minimumIntegerDigits: 2,
-        useGrouping: false,
-      }),
-    },
-  ];
+
   return (
     <View style={styles.container}>
       <View style={styles.score}>

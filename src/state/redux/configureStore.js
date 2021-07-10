@@ -1,6 +1,6 @@
 import { applyMiddleware, createStore, compose } from "redux";
 import createSagaMiddleware from "redux-saga";
-//import rootSaga from "./sagas";
+import rootSaga from "./sagas";
 
 import rootReducer from "./reducers";
 import { persistStore } from "redux-persist";
@@ -60,7 +60,7 @@ export default function configureStore(preloadedState) {
   //   : createStore(rootReducer, preloadedState, composedEnhancers);
   const store = createStore(rootReducer, preloadedState, composedEnhancers);
   // then run the saga
-  //sagaMiddleware.run(rootSaga);
+  sagaMiddleware.run(rootSaga);
   if (process.env.NODE_ENV !== "production" && module.hot) {
     module.hot.accept("./reducers", () => store.replaceReducer(rootReducer));
   }

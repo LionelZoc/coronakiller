@@ -6,6 +6,9 @@ import {
   GAME_UPDGRADE_LEVEL,
   GAME_TOOGLE_SOUND,
   GAME_SEE_PRESENTATION,
+  UPDATE_REQUEST_STATUS,
+  CREATE_PROFILE,
+  UPDATE_BEST_SCORE,
 } from "state/redux/actionTypes";
 
 export const updateGameHighScore = (score) => ({
@@ -35,4 +38,20 @@ export const toggleSound = () => ({
 
 export const seePresentation = () => ({
   type: GAME_SEE_PRESENTATION,
+});
+
+//action
+export const setRequestStatus = ({ id, status }) => ({
+  type: UPDATE_REQUEST_STATUS,
+  payload: { id: id, status: status },
+});
+
+export const createProfile = (payload) => ({
+  type: CREATE_PROFILE,
+  payload,
+});
+
+export const updateBestScore = (payload) => ({
+  type: UPDATE_BEST_SCORE,
+  payload,
 });

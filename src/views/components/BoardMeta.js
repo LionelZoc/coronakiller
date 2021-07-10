@@ -18,8 +18,16 @@ import { Overlay } from "react-native-elements";
 
 import WebModal from "modal-react-native-web";
 import { useSelector, useDispatch } from "react-redux";
-import { getHighScoreSelector } from "state/redux/selectors";
-import { updateTimer } from "state/redux/actions";
+import { getHighScoreSelector, getLevelSelector } from "state/redux/selectors";
+import { updateTimer, updateBestScore } from "state/redux/actions";
+import {
+  useFirebase,
+  isLoaded,
+  isEmpty,
+  useFirestoreConnect,
+} from "react-redux-firebase";
+import * as services from "utils/firestoreHelpers";
+import toNumber from "lodash/toNumber";
 
 const Timeout = ({ timeout }) => {
   const [countDown, setCountDown] = useState(timeout);
@@ -79,6 +87,55 @@ const BoardMeta = () => {
   const boardContext = useBoardContextState();
   const dimensions = useWindowDimensions();
   const highScore = useSelector(getHighScoreSelector);
+  const reduxDispatch = useDispatch();
+  const level = useSelector(getLevelSelector);
+
+  const auth = useSelector((state) => state.firebase.auth);
+
+  const userCloudScore = useSelector(
+    (state) => state.firestore.data.user_score
+  );
+  const connectedHighScore =
+    userCloudScore &&
+    userCloudScore.level === boardContext.level &&
+    userCloudScore.value > boardContext.score
+      ? userCloudScore.value
+      : highScore;
+  useFirestoreConnect([
+    {
+      collection: "scores",
+      doc: (auth && auth.id) || "empty",
+      //where: [["author", "==", `${author}`]],
+      //populates,
+      storeAs: "user_score",
+      type: "once",
+    },
+  ]);
+  useEffect(() => {
+    const getFbauth = async () => {
+      const fcbkAuth = await services.getFacebookAuth();
+      //extract later
+      if (isLoaded(userCloudScore) && isEmpty(userCloudScore)) {
+        console.log("boardContext", boardContext);
+        console.log("fcbkAuth", fcbkAuth);
+        reduxDispatch(
+          updateBestScore({
+            level: toNumber(level) ? toNumber(level) : 1,
+            score: highScore,
+            kps: highScore / 80,
+            userId: fcbkAuth.userId,
+          })
+        );
+      }
+      return fcbkAuth;
+    };
+    getFbauth();
+  }, [userCloudScore]);
+
+  //get auth
+  //if connected get firestoreScore
+  //if localScore > firestoreScore update firestoreScore
+  // if firestoreScore > localScore update localScore
 
   //timer
   //console.log("boardContext", boardContext);
@@ -91,7 +148,7 @@ const BoardMeta = () => {
         </View>
         <View style={styles.score}>
           <Text style={styles.scoreLabel}>HIGH SCORE : </Text>
-          <Text style={styles.scoreValue}>{highScore}</Text>
+          <Text style={styles.scoreValue}>{connectedHighScore}</Text>
         </View>
       </View>
       <View style={styles.timer}>

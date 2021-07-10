@@ -30,16 +30,21 @@ import { DrawerActions } from "@react-navigation/native";
 import { useFirebase, isLoaded, isEmpty } from "react-redux-firebase";
 import * as Sentry from "sentry-expo";
 import get from "lodash/get";
+import { createProfile } from "state/redux/actions";
 const Auth = () => {
   // loginWithFb() {
   //   this.props.firebase.login({ provider: "facebook", type: "popup" });
   // }
+  const dispatch = useDispatch();
   const firebase = useFirebase();
   const auth = useSelector((state) => state.firebase.auth);
   const profile = useSelector((state) => state.firebase.profile);
   //const [connected, setConnected] = useState(null);
   useEffect(() => {
     const toggleAuthAsync = async () => {
+      await Facebook.initializeAsync({
+        appId: "1256149281508808",
+      });
       const auth = await Facebook.getAuthenticationCredentialAsync();
 
       if (!auth) {
@@ -48,8 +53,13 @@ const Auth = () => {
         //setConnected(false)
       } else {
         // Log out
-        console.log("user connected");
+        console.log("user connected", auth);
+        const response = await fetch(
+          `https://graph.facebook.com/${auth.userId}?access_token=${auth.token}&fields=id,name,picture.type(large)`
+        );
+        const responseJson = await response.json();
         //setConnected(true)
+        console.log("response json", responseJson);
       }
     };
     toggleAuthAsync();
@@ -63,6 +73,7 @@ const Auth = () => {
         permissions: ["public_profile", "email"],
       });
       console.log("data from facebook", data);
+      Sentry.Native.captureMessage(`connect to appId_${data.appId}`);
       if (data.type === "success") {
         try {
           const credential = firebase.auth.FacebookAuthProvider.credential(
@@ -70,13 +81,24 @@ const Auth = () => {
           );
           console.log("ill log firebase after get credential");
           // Sign in with credential from the Facebook user.
-          await firebase.auth().signInWithCredential(credential);
-
+          const userCredentials = await firebase
+            .auth()
+            .signInWithCredential(credential);
+          console.log("credentials", userCredentials);
+          dispatch(
+            createProfile({
+              firebaseUserId: userCredentials.user.uid,
+              force: false,
+            })
+          );
+          //userCredentials.user.uid
           //await firebase.login({ credential });
         } catch (e) {
           console.log("error", e);
           Sentry.Native.captureException(e);
         }
+      } else {
+        Sentry.Native.captureMessage("Facebook data failed");
       }
     } catch (e) {
       //console.log("error", e);
@@ -89,7 +111,7 @@ const Auth = () => {
         <Text>{get(profile.name)}</Text>
       ) : (
         <Button
-          title="Login"
+          title="Login with facebook"
           type="outline"
           raised
           fullWidth={false}
