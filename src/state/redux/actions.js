@@ -11,9 +11,9 @@ import {
   UPDATE_BEST_SCORE,
 } from "state/redux/actionTypes";
 
-export const updateGameHighScore = (score) => ({
+export const updateGameHighScore = ({ score, level, playTime }) => ({
   type: GAME_UPDATE_HIGH_SCORE,
-  payload: score,
+  payload: { score, level, playTime },
 });
 
 export const updateGameTarget = (target) => ({

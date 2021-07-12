@@ -37,8 +37,46 @@ export const getFacebookAuth = async () => {
   //   //setConnected(true)
   // }
 };
-export const updateScore = async ({ level, score, kps, userId }) => {
+export const getFacebookUser = async (auth) => {
+  if (!auth) return {};
+  const { token, userId } = auth;
+  const response = await fetch(
+    `https://graph.facebook.com/${userId}?access_token=${token}&fields=id,name,picture.type(large)`
+  );
+  const { picture, name, id } = await response.json();
+  return { picture, name, id };
+};
+export const updateScore = async ({
+  level,
+  value,
+  playTime,
+  username,
+  userId,
+  rank,
+  force,
+}) => {
   console.log("should update score");
+  // {
+  //   level,value, owner, username,playtime,rank,
+  // }
+  try {
+    const firestore = getFirestore();
+    const scoreData = {
+      level,
+      value,
+      playTime,
+      username,
+      rank,
+      id: userId,
+    };
+    if (force) {
+      firestore.set({ collection: "scores", doc: userId }, scoreData);
+    } else {
+      firestore.update({ collection: "scores", doc: userId }, scoreData);
+    }
+  } catch (e) {
+    Sentry.Native.captureException(e);
+  }
 };
 
 export const createProfile = async ({
@@ -54,11 +92,7 @@ export const createProfile = async ({
       // console.log("user fbck not connected");
       return null;
     }
-    const { token, userId } = fcbkAuth;
-    const response = await fetch(
-      `https://graph.facebook.com/${userId}?access_token=${token}&fields=id,name,picture.type(large)`
-    );
-    const { picture, name, id } = await response.json();
+    const { picture, name, id } = getFacebookUser(fcbkAuth);
     const firestore = getFirestore();
     //firestore.get({ collection: "users", doc: firebaseUserId })
     try {

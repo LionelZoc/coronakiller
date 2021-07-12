@@ -58,3 +58,37 @@ export const getParsedNumber = (value) => {
   let finalValue = isInteger(value) ? value : value.toFixed(3);
   return finalValue;
 };
+//S=> 5, A=>4, B=>3, C=>2, D=>1
+export const getRankValue = ({ score, totalPlayTime }) => {
+  const targetPerSecond = score / totalPlayTime;
+  if (targetPerSecond > 4.1) return 5;
+  if (targetPerSecond >= 4) return 4;
+  if (targetPerSecond >= 3) return 3;
+  if (targetPerSecond >= 2) return 2;
+  return 1;
+};
+
+export const NEXT_LEVEL_THRESHOLD = 4;
+//S=> 5, A=>4, B=>3, C=>2, D=>1
+export const getRank = ({ score, totalPlayTime }) => {
+  const targetPerSecond = score / totalPlayTime;
+  if (targetPerSecond > 4.1) return "S";
+  if (targetPerSecond >= NEXT_LEVEL_THRESHOLD) return "A";
+  if (targetPerSecond >= 3) return "B";
+  if (targetPerSecond >= 2) return "C";
+  return "D";
+};
+
+export const isScoreBetter = ({ newScore, oldScore }) => {
+  if (newScore.level > oldScore.level) return true;
+  const scoreRank = getRankValue({
+    score: newScore.score,
+    totalPlayTime: newScore.playTime,
+  });
+  const oldScoreRank = getRankValue({
+    score: oldScore.score,
+    totalPlayTime: oldScore.playTime,
+  });
+
+  return scoreRank > oldScoreRank;
+};

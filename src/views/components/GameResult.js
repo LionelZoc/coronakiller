@@ -11,13 +11,24 @@ import {
 } from "react-native";
 
 import { useDispatch, useSelector } from "react-redux";
-import { getHighScoreSelector, getLevelSelector } from "state/redux/selectors";
+import {
+  getHighScoreSelector,
+  getLevelSelector,
+  getHighestLevelSelector,
+  getHighestScorePlaytimeSelector,
+} from "state/redux/selectors";
 import {
   updateGameHighScore,
   upgradeLevel,
   updateBestScore,
 } from "state/redux/actions";
-import { onShare } from "utils";
+import {
+  onShare,
+  getRank,
+  getRankValue,
+  NEXT_LEVEL_THRESHOLD,
+  isScoreBetter,
+} from "utils";
 import toNumber from "lodash/toNumber";
 import {
   useBoardContextState,
@@ -25,27 +36,20 @@ import {
 } from "containers/boardContext";
 import { getLevelStatus } from "components/GameLevel";
 import { getHumanizeTime } from "utils/date";
-
 import GameHelp from "components/GameHelp";
 import WebModal from "modal-react-native-web";
+import { isLoaded, isEmpty } from "react-redux-firebase";
 
-const NEXT_LEVEL_THRESHOLD = 4;
-//S=> 5, A=>4, B=>3, C=>2, D=>1
-const getRank = (score, totalPlayTime) => {
-  const targetPerSecond = score / totalPlayTime;
-  if (targetPerSecond > 4.1) return "S";
-  if (targetPerSecond >= NEXT_LEVEL_THRESHOLD) return "A";
-  if (targetPerSecond >= 3) return "B";
-  if (targetPerSecond >= 2) return "C";
-  return "D";
-};
 const GameResult = () => {
   const auth = useSelector((state) => state.firebase.auth);
+  const profile = useSelector((state) => state.firestore.profile);
   const boardContext = useBoardContextState();
   const dispatcher = useBoardContextDispatcher();
   const reduxDispatch = useDispatch();
   const highScore = useSelector(getHighScoreSelector);
   const level = useSelector(getLevelSelector);
+  const highScoreLevel = useSelector(getHighestLevelSelector);
+  const highScorePlaytime = useSelector(getHighestScorePlaytimeSelector);
   const dimensions = useWindowDimensions();
   const [showHelp, setShowHelp] = useState(false);
 
@@ -57,18 +61,43 @@ const GameResult = () => {
     dispatcher({ type: "RESTART" });
   }, [level]);
   useEffect(() => {
-    if (boardContext.score > highScore) {
-      reduxDispatch(updateGameHighScore(boardContext.score));
+    const newScore = {
+      score: boardContext.score,
+      playtime: boardContext.totalPlayTime,
+      level,
+    };
+    const oldScore = {
+      score: highScore,
+      playtime: highScorePlaytime,
+      level: highScoreLevel,
+    };
+    //boardContext.score > highScore
+    if (isScoreBetter({ newScore, oldScore })) {
       reduxDispatch(
-        updateBestScore({
-          level,
+        updateGameHighScore({
           score: boardContext.score,
-          kps: targetPerSecond,
-          userId: auth.id,
+          playTime: boardContext.totalPlayTime,
+          level,
         })
       );
+      if (!isEmpty(auth) && !isEmpty(profile))
+        reduxDispatch(
+          updateBestScore({
+            level,
+            value: boardContext.score,
+            kps: targetPerSecond,
+            userId: auth.id,
+            force: true,
+            username: profile.name,
+            rank: getRankValue({
+              score: highScore,
+              totalPlayTime: boardContext.totalPlayTime,
+            }),
+            playTime: boardContext.totalPlayTime,
+          })
+        );
     }
-  }, [highScore, boardContext.score, reduxDispatch]);
+  }, [highScore, boardContext.score, reduxDispatch, auth, profile]);
   const restart = () => {
     dispatcher({ type: "RESTART" });
   };
@@ -84,7 +113,11 @@ const GameResult = () => {
         <Text style={styles.scoreLabel}>Level : {getLevelStatus(level)} </Text>
 
         <Text style={styles.rankLabel}>
-          Rank : {getRank(boardContext.score, boardContext.totalPlayTime)}{" "}
+          Rank :{" "}
+          {getRank({
+            score: boardContext.score,
+            totalPlayTime: boardContext.totalPlayTime,
+          })}{" "}
         </Text>
       </View>
       <View style={styles.action}>

@@ -20,6 +20,8 @@ const getRestTime = (state) => {
   return get(state, "core.restTime", 60);
 };
 const getHighScore = (state) => get(state, "core.highScore", 0);
+const getHighScoreLevel = (state) => get(state, "core.highScoreLevel");
+const getHighScorePlaytime = (state) => get(state, "core.highScorePlaytime");
 const getLevel = (state) => {
   return get(state, "core.level", 1);
 };
@@ -47,6 +49,19 @@ export const getHighScoreSelector = createSelector(getHighScore, (score) => {
   return score;
 });
 
+export const getHighestLevelSelector = createSelector(
+  getHighScoreLevel,
+  (level) => {
+    return level;
+  }
+);
+export const getHighestScorePlaytimeSelector = createSelector(
+  getHighScorePlaytime,
+  (playTime) => {
+    return playTime || 80;
+  }
+);
+getHighScorePlaytime;
 export const getRestTimeSelector = createSelector(getRestTime, (time) => {
   return time;
 });
@@ -90,3 +105,5 @@ export const getCachedProfileSelector = createCachedSelector(
     return {};
   }
 )((state, id) => `profile_${id}`);
+
+// getHighestLevelSelector,  create those selectors

@@ -18,6 +18,8 @@ import { firestoreReducer } from "redux-firestore";
 const initialLocalState = {
   locale: "en",
   highScore: 0,
+  highScoreLevel: 1,
+  highScorePlaytime: 80,
   previousLevelHighScore: 0,
   level: 1,
   target: "bug",
@@ -46,7 +48,9 @@ const localeReducer = (state = initialLocalState, action) => {
     case GAME_UPDATE_HIGH_SCORE: {
       return {
         ...state,
-        highScore: action.payload,
+        highScore: action.payload.score,
+        highScoreLevel: action.payload.level,
+        highScorePlaytime: action.payload.playTime,
       };
     }
     case GAME_SET_TARGET: {

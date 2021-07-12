@@ -151,10 +151,7 @@ const GameLeaderBoard = () => {
     <Parent>
       <View style={styles.container}>
         <View style={styles.header}>
-          <View style={styles.headerContent}>
-            <Text>my rank and connection</Text>
-            <Auth />
-          </View>
+          <Auth />
         </View>
         <View style={styles.list}>
           <FlatList
@@ -269,7 +266,7 @@ const styles = StyleSheet.create({
   headerContent: {},
   header: {
     flex: 1,
-    justifyContent: "flex-end",
+    justifyContent: "center",
     width: "100%",
     borderWidth: 1,
     borderColor: "black",

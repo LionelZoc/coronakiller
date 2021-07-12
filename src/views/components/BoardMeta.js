@@ -27,6 +27,7 @@ import {
   useFirestoreConnect,
 } from "react-redux-firebase";
 import * as services from "utils/firestoreHelpers";
+import { getRankValue } from "utils";
 import toNumber from "lodash/toNumber";
 
 const Timeout = ({ timeout }) => {
@@ -114,6 +115,7 @@ const BoardMeta = () => {
   useEffect(() => {
     const getFbauth = async () => {
       const fcbkAuth = await services.getFacebookAuth();
+      const fbUser = await services.getFacebookUser(fcbkAuth);
       //extract later
       if (isLoaded(userCloudScore) && isEmpty(userCloudScore)) {
         console.log("boardContext", boardContext);
@@ -121,9 +123,13 @@ const BoardMeta = () => {
         reduxDispatch(
           updateBestScore({
             level: toNumber(level) ? toNumber(level) : 1,
-            score: highScore,
+            value: highScore,
             kps: highScore / 80,
+            playTime: 80,
             userId: fcbkAuth.userId,
+            username: fbUser.name,
+            rank: getRankValue({ score: highScore, totalPlayTime: 80 }),
+            force: true,
           })
         );
       }
