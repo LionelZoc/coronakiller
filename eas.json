@@ -5,6 +5,10 @@
         "workflow": "managed",
         "releaseChannel": "prod"
       },
+      "release11": {
+        "workflow": "managed",
+        "releaseChannel": "release11"
+      },
       "preview": {
         "workflow": "managed",
         "releaseChannel": "dev",
@@ -15,6 +19,10 @@
       "release": {
         "workflow": "managed",
           "releaseChannel": "prod"
+      },
+      "release11": {
+        "workflow": "managed",
+        "releaseChannel": "release11"
       }
     }
   }

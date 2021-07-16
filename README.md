@@ -51,3 +51,9 @@ https://viralert-dev.firebaseapp.com/__/auth/handler
 
 firebase init
 https://firebase.google.com/docs/cli#mac-linux-npm
+
+
+firebase projects:list
+Run firebase firestore:indexes to save indexes
+
+save rules https://stackoverflow.com/questions/52778542/how-to-export-security-and-index-rules-from-firestore

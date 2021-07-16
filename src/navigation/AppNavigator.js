@@ -27,9 +27,9 @@ const AppContainer = () => {
   return (
     <Drawer.Navigator initialRouteName={initialRouteName}>
       <Drawer.Screen name="Board" component={Board} />
-      <Drawer.Screen name="GamePresentation" component={GamePresentation} />
-      <Drawer.Screen name="TargetSelection" component={BoardTargetSelection} />
-      <Drawer.Screen name="LeaderBoard" component={GameLeaderBoard} />
+      <Drawer.Screen name="Game Presentation" component={GamePresentation} />
+      <Drawer.Screen name="Target Selection" component={BoardTargetSelection} />
+      <Drawer.Screen name="LeaderBoard (Beta)" component={GameLeaderBoard} />
     </Drawer.Navigator>
   );
 };

@@ -20,7 +20,7 @@ const GamePresentation = () => {
   const onSeePresentation = useCallback(() => {
     dispatch(seePresentation());
     navigation.dispatch(
-      DrawerActions.jumpTo(ifUserSelectTarget ? "Board" : "TargetSelection")
+      DrawerActions.jumpTo(ifUserSelectTarget ? "Board" : "Target Selection")
     );
   }, [dispatch, ifUserSelectTarget, navigation]);
   return (

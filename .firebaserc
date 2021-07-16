@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "default": "viralert-dev",
+    "prod": "viralert-prod"
+  }
+}
