@@ -31,6 +31,7 @@ import { getSoundOnSelector } from "state/redux/selectors";
 import { NavigationContainer } from "@react-navigation/native";
 import AppNavigator from "navigation/AppNavigator";
 import { ReactReduxFirebaseProvider, isLoaded } from "react-redux-firebase";
+import { requestTrackingPermissionsAsync } from "expo-tracking-transparency";
 
 const AuthIsLoaded = ({ children }) => {
   const auth = useSelector((state) => state.firebase.auth);
@@ -68,7 +69,14 @@ const App = () => {
   const [error, setError] = useState(false);
   const [sound, setSound] = useState();
   const soundOn = useSelector(getSoundOnSelector);
-
+  useEffect(() => {
+    (async () => {
+      const { status } = await requestTrackingPermissionsAsync();
+      if (status === "granted") {
+        //        console.log("Yay! I have user permission to track data");
+      }
+    })();
+  }, []);
   useEffect(() => {
     try {
       const initAudio = async () =>

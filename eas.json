@@ -20,9 +20,9 @@
         "workflow": "managed",
           "releaseChannel": "prod"
       },
-      "release11": {
+      "release12": {
         "workflow": "managed",
-        "releaseChannel": "release11"
+        "releaseChannel": "release12"
       }
     }
   }
