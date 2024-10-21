@@ -1,29 +1,28 @@
 {
-  "builds": {
-    "android": {
-      "release": {
-        "workflow": "managed",
-        "releaseChannel": "prod"
-      },
-      "release11": {
-        "workflow": "managed",
-        "releaseChannel": "release11"
-      },
-      "preview": {
-        "workflow": "managed",
-        "releaseChannel": "dev",
-        "buildType": "apk"
-      }
+  "cli": {
+    "version": ">= 12.5.1",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
     },
-    "ios": {
-      "release": {
-        "workflow": "managed",
-          "releaseChannel": "prod"
-      },
-      "release12": {
-        "workflow": "managed",
-        "releaseChannel": "release12"
+    "preview": {
+      "distribution": "internal"
+    },
+    "production": {
+      "autoIncrement": true
+    },
+    "development-simulator": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "ios": {
+        "simulator": true
       }
     }
+  },
+  "submit": {
+    "production": {}
   }
 }
