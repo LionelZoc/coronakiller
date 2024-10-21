@@ -1,17 +1,16 @@
-import React, { useCallback } from "react";
-import { Button, Image } from "react-native-elements";
-//import PropTypes from "prop-types";
-import { StyleSheet, View, Text, ScrollView } from "react-native";
-//import { Icon } from "react-native-elements";
+import { useCallback } from "react";
+import { Button } from "react-native-elements";
+import { Image } from "expo-image";
+import { StyleSheet, View, Text, ScrollView, SafeAreaView } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { seePresentation } from "state/redux/actions";
 import { getIfUserSelectedTargetSelector } from "state/redux/selectors";
-import bug from "assets/targetBug.png";
-import bonus from "assets/insecticide.png";
 import Colors from "constants/Colors";
-import Parent from "components/ParentView";
-import { useNavigation } from "@react-navigation/native";
+
 import { DrawerActions } from "@react-navigation/native";
+import { useNavigation } from "expo-router";
+import { IMPORTED_IMAGES_NAMES } from "@/assets/index";
+import ROUTES from "constants/routes";
 
 const GamePresentation = () => {
   const navigation = useNavigation();
@@ -20,18 +19,26 @@ const GamePresentation = () => {
   const onSeePresentation = useCallback(() => {
     dispatch(seePresentation());
     navigation.dispatch(
-      DrawerActions.jumpTo(ifUserSelectTarget ? "Board" : "Target Selection")
+      DrawerActions.jumpTo(
+        ifUserSelectTarget
+          ? ROUTES.BOARD.relativePath
+          : ROUTES.TARGET_SELECTION.relativePath,
+      ),
     );
   }, [dispatch, ifUserSelectTarget, navigation]);
+
   return (
-    <Parent>
+    <SafeAreaView style={{ flex: 1 }}>
       <ScrollView style={{ flex: 1, width: "100%", height: "100%" }}>
         <View style={styles.container}>
           <View></View>
           <View style={styles.descriptionSection}>
             <View style={styles.descriptionRow}>
               <View style={styles.imageBlock}>
-                <Image source={bug} containerStyle={[styles.imageContainer]} />
+                <Image
+                  source={IMPORTED_IMAGES_NAMES.targetBug}
+                  style={styles.imageContainer}
+                />
               </View>
               <View style={{ flex: 1 }}>
                 <Text style={styles.description}>
@@ -42,8 +49,8 @@ const GamePresentation = () => {
             <View style={styles.descriptionRow}>
               <View style={styles.imageBlock}>
                 <Image
-                  source={bonus}
-                  containerStyle={[styles.imageContainer]}
+                  source={IMPORTED_IMAGES_NAMES.insecticide}
+                  style={[styles.imageContainer]}
                 />
               </View>
               <View style={{ flex: 1 }}>
@@ -83,7 +90,7 @@ const GamePresentation = () => {
           </View>
         </View>
       </ScrollView>
-    </Parent>
+    </SafeAreaView>
   );
 };
 

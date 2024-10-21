@@ -14,3 +14,20 @@ const Sounds = {
 };
 export default Images;
 export { Sounds };
+
+export const IMPORTED_IMAGES_NAMES = {
+  icon: "icon",
+  icon512: "icon512",
+  icon1024: "icon1024",
+  mask: "mask",
+  SplashTransparent: "SplashTransparent",
+  SplashTransparentIos: "SplashTransparentIos",
+  target: "target",
+  virus: "target",
+  bug: "targetBug",
+  bonus: "insecticide",
+  insect: "targetInsect",
+  spider: "targetSpider",
+  targetBug: "targetBug",
+  insecticide: "insecticide",
+};

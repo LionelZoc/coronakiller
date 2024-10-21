@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "test/*": ["test/*"],
+      "assets/*": ["src/assets/*"],
+      "screens/*": ["src/screens/*"],
+      "constants/*": ["src/constants/*"],
+      "components/*": ["src/views/components/*"],
+      "containers/*": ["src/views/containers/*"],
+      "utils/*": ["src/utils/*"],
+      "state/*": ["src/state/*"],
+      "translations/*": ["src/translations/*"],
+      "navigation/*": ["src/navigation/*"],
+      "uikit/*": ["src/uikit/*"],
+      "theme/*": ["src/theme/*"],
+      "@/*": ["src/*"],
+    }
+  },
+  "extends": "expo/tsconfig.base"
+}

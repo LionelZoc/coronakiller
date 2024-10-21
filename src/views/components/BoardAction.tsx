@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
 import {
   useBoardContextState,
   useBoardContextDispatcher,
@@ -8,14 +8,14 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   getHighScoreSelector,
   getSoundOnSelector,
+  getLevelSelector,
 } from "state/redux/selectors";
-import { StyleSheet, View, useWindowDimensions } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Button, Icon } from "react-native-elements";
 import { onShare } from "utils";
 import { toggleSound } from "state/redux/actions";
-import { getLevelSelector } from "state/redux/selectors";
 
-const BoarAction = () => {
+const BoarAction: React.FC = () => {
   const boardContext = useBoardContextState();
   const dispatcher = useBoardContextDispatcher();
   const highScore = useSelector(getHighScoreSelector);
@@ -35,11 +35,11 @@ const BoarAction = () => {
       dispatcher({ type: "START" });
     }
   };
+
   const stop = () => {
     dispatcher({ type: "STOP" });
   };
 
-  //// TODO: fix restart
   return (
     <View style={[styles.container]}>
       {!boardContext.started && (
@@ -137,7 +137,6 @@ const BoarAction = () => {
   );
 };
 
-BoarAction.propTypes = {};
 const styles = StyleSheet.create({
   container: {
     justifyContent: "flex-start",

@@ -1,7 +1,7 @@
 import { persistReducer } from "redux-persist";
 import { combineReducers } from "redux";
 import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
-import { AsyncStorage } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   GAME_UPDATE_HIGH_SCORE,
   GAME_SET_TARGET,
@@ -10,10 +10,12 @@ import {
   GAME_UPDGRADE_LEVEL,
   GAME_TOOGLE_SOUND,
   GAME_SEE_PRESENTATION,
+  PURGE_PERSISTED_DATA,
 } from "state/redux/actionTypes";
 import toNumber from "lodash/toNumber";
 import { firebaseReducer } from "react-redux-firebase";
 import { firestoreReducer } from "redux-firestore";
+import { clearPersistedStore } from "utils/store";
 
 const initialLocalState = {
   locale: "en",
@@ -85,6 +87,10 @@ const localeReducer = (state = initialLocalState, action) => {
         ...state,
         seePresentation: true,
       };
+    }
+    case PURGE_PERSISTED_DATA: {
+      clearPersistedStore();
+      return initialLocalState;
     }
 
     default:

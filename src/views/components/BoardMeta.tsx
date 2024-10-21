@@ -5,7 +5,6 @@ import {
 } from "containers/boardContext";
 
 import GameResult from "components/GameResult";
-import PropTypes from "prop-types";
 import {
   StyleSheet,
   View,
@@ -30,7 +29,10 @@ import * as services from "utils/firestoreHelpers";
 import { getRankValue } from "utils";
 import toNumber from "lodash/toNumber";
 
-const Timeout = ({ timeout }) => {
+type TimeoutProps = {
+  timeout: number;
+};
+const Timeout = ({ timeout }: TimeoutProps) => {
   const [countDown, setCountDown] = useState(timeout);
   const dispatcher = useBoardContextDispatcher();
   const boardContext = useBoardContextState();
@@ -80,9 +82,7 @@ const Timeout = ({ timeout }) => {
     </View>
   );
 };
-Timeout.propTypes = {
-  timeout: PropTypes.number,
-};
+
 const BoardMeta = () => {
   //score
   const boardContext = useBoardContextState();
@@ -94,7 +94,7 @@ const BoardMeta = () => {
   const auth = useSelector((state) => state.firebase.auth);
 
   const userCloudScore = useSelector(
-    (state) => state.firestore.data.user_score
+    (state) => state.firestore.data.user_score,
   );
   const connectedHighScore =
     userCloudScore &&
@@ -130,7 +130,7 @@ const BoardMeta = () => {
             username: fbUser.name,
             rank: getRankValue({ score: highScore, totalPlayTime: 80 }),
             force: true,
-          })
+          }),
         );
       }
       return fcbkAuth;

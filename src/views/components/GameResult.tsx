@@ -1,6 +1,5 @@
 import React, { useEffect, useCallback, useState } from "react";
 import { Button, Icon, Overlay } from "react-native-elements";
-//import PropTypes from "prop-types";
 import {
   StyleSheet,
   View,
@@ -78,7 +77,7 @@ const GameResult = () => {
           score: boardContext.score,
           playTime: boardContext.totalPlayTime,
           level,
-        })
+        }),
       );
       if (!isEmpty(auth) && !isEmpty(profile))
         reduxDispatch(
@@ -94,7 +93,7 @@ const GameResult = () => {
               totalPlayTime: boardContext.totalPlayTime,
             }),
             playTime: boardContext.totalPlayTime,
-          })
+          }),
         );
     }
   }, [highScore, boardContext.score, reduxDispatch, auth, profile]);

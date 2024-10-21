@@ -5,7 +5,7 @@ import { reactotronRedux } from "reactotron-redux";
 //https://github.com/infinitered/reactotron/blob/master/docs/troubleshooting.md
 const reactotron = Reactotron.configure({
   name: "viralert dev",
-  host: "192.168.0.20",
+  host: process.env.EXPO_PUBLIC_DEVICE_HOST,
 }) // controls connection & communication settings
   .useReactNative() // add all built-in react native plugins
   //.use(asyncStorage())

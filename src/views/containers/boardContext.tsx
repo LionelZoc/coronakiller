@@ -5,7 +5,7 @@ import React, {
   useRef,
   useCallback,
 } from "react";
-import PropTypes from "prop-types";
+
 import random from "lodash/random";
 import map from "lodash/map";
 import filter from "lodash/filter";
@@ -26,6 +26,7 @@ const BoardContext = React.createContext({
   next: undefined,
   finished: false,
   bonus: -1,
+  started: false,
   cases: {},
 });
 const BoardDispatcherContext = React.createContext({
@@ -281,8 +282,21 @@ const getBonusPosition = (cases) => {
   const list = filter(cases, (cell) => cell.showBonus);
   return map(list, (cell) => cell.index);
 };
-const BoardContextProvider = ({ size, playSound, children, timeout }) => {
-  const handlingBonus = useRef(false);
+
+interface BoardContextProviderProps {
+  size: number;
+  playSound?: () => void;
+  children: React.ReactNode;
+  timeout?: number;
+}
+
+const BoardContextProvider: React.FC<BoardContextProviderProps> = ({
+  size = 16,
+  playSound = () => void 0,
+  children,
+  timeout = 60,
+}) => {
+  const handlingBonus = useRef<boolean>(false);
   const [boardContextState, dispatch] = useReducer(boardContextReducer, {
     size,
     playSound: playSound,
@@ -473,31 +487,21 @@ const BoardContextProvider = ({ size, playSound, children, timeout }) => {
   );
 };
 
-BoardContextProvider.propTypes = {
-  size: PropTypes.number.isRequired,
-  children: PropTypes.node.isRequired,
-  playSound: PropTypes.func,
-  timeout: PropTypes.number,
-};
-BoardContextProvider.defaultProps = {
-  size: 16,
-  timeout: 60,
-  playSound: () => {},
-};
 const useBoardContextState = () => {
   const boardContext = useContext(BoardContext);
   if (boardContext === undefined) {
     throw new Error(
-      " useBoardContextState must be used within a BoardContextProvider"
+      " useBoardContextState must be used within a BoardContextProvider",
     );
   }
   return boardContext;
 };
+//todo improve typing for this component
 const useBoardContextDispatcher = () => {
   const boardContextDispatcher = useContext(BoardDispatcherContext);
   if (boardContextDispatcher === undefined) {
     throw new Error(
-      " boardContextDispatcher must be used within a BoardDispatcherContext"
+      " boardContextDispatcher must be used within a BoardDispatcherContext",
     );
   }
   return boardContextDispatcher;

@@ -1,11 +1,12 @@
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
-//import messages from "../screens/messages";
-//import { FormattedMessage } from "react-intl";
-import PropTypes from "prop-types";
-import { Button, Icon, Overlay } from "react-native-elements";
+import { Button } from "react-native-elements";
 
-const GameHelp = ({ onSkip }) => {
+interface GameHelpProps {
+  onSkip?: () => void;
+}
+
+const GameHelp: React.FC<GameHelpProps> = ({ onSkip }) => {
   return (
     <View style={[styles.container]}>
       <View style={{ flex: 1 }}>
@@ -40,21 +41,17 @@ const GameHelp = ({ onSkip }) => {
     </View>
   );
 };
-GameHelp.propTypes = {
-  onSkip: PropTypes.func,
-};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-
     backgroundColor: "transparent",
     padding: 20,
   },
   description: {
     fontWeight: "bold",
-    //textTransform: "uppercase",
     textAlign: "left",
     textAlignVertical: "center",
     letterSpacing: 0.5,

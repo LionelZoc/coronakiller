@@ -1,8 +1,16 @@
 import { getFirestore } from "redux-firestore";
-import * as Sentry from "sentry-expo";
+import * as Sentry from '@sentry/react-native';
 import isEmpty from "lodash/isEmpty";
 import { database } from "state/firebaseConfig/config";
-import * as Facebook from "expo-facebook";
+//import * as Facebook from "expo-facebook";
+import {
+  AccessToken,
+  GraphRequest,
+  GraphRequestManager,
+  LoginButton,
+  Settings,
+  ShareDialog,
+} from "react-native-fbsdk-next";
 
 const getUserScoreConf = (id) => {
   if (isEmpty(id)) return null;
@@ -19,13 +27,17 @@ export const fetchUserBestScore = (id) => {
     firestore.get(conf);
   }
 };
-export const getFacebookAuth = async () => {
-  await Facebook.initializeAsync({
-    appId: "1256149281508808",
-  });
-  const auth = await Facebook.getAuthenticationCredentialAsync();
 
-  return auth;
+//to change
+export const getFacebookAuth = async () => {
+  // await Facebook.initializeAsync({
+  //   appId: "1256149281508808",
+  // });
+  // const auth = await Facebook.getAuthenticationCredentialAsync();
+
+  // return auth;
+
+  return true;
   // if (!auth) {
   //   // Log in
   //   console.log("not connected");
@@ -37,14 +49,15 @@ export const getFacebookAuth = async () => {
   //   //setConnected(true)
   // }
 };
+//to change
 export const getFacebookUser = async (auth) => {
-  if (!auth) return {};
-  const { token, userId } = auth;
-  const response = await fetch(
-    `https://graph.facebook.com/${userId}?access_token=${token}&fields=id,name,picture.type(large)`
-  );
-  const { picture, name, id } = await response.json();
-  return { picture, name, id };
+  // if (!auth) return {};
+  // const { token, userId } = auth;
+  // const response = await fetch(
+  //   `https://graph.facebook.com/${userId}?access_token=${token}&fields=id,name,picture.type(large)`
+  // );
+  // const { picture, name, id } = await response.json();
+  return { picture: "picture", name: 'test', id: 'id' };
 };
 export const updateScore = async ({
   level,
@@ -75,7 +88,7 @@ export const updateScore = async ({
       firestore.update({ collection: "scores", doc: userId }, scoreData);
     }
   } catch (e) {
-    Sentry.Native.captureException(e);
+    Sentry.captureException(e);
   }
 };
 
@@ -98,9 +111,9 @@ export const createProfile = async ({
     try {
       const profileDoc = await firestore.doc(`users/${firebaseUserId}`).get();
       console.log("able to get profile doc", profileDoc);
-      Sentry.Native.captureException(profileDoc);
+      Sentry.captureException(profileDoc);
     } catch (e) {
-      Sentry.Native.captureException(e);
+      Sentry.captureException(e);
     }
     firestore.set(
       { collection: "users", doc: firebaseUserId },
@@ -108,6 +121,6 @@ export const createProfile = async ({
     );
   } catch (e) {
     console.log(e);
-    Sentry.Native.captureException(e);
+    Sentry.captureException(e);
   }
 };

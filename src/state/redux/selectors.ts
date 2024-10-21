@@ -33,12 +33,12 @@ const getUserSelectedTarget = (state) =>
 
 export const firebaseAuthSelector = createSelector(
   getFirebaseAuth,
-  (auth) => auth
+  (auth) => auth,
 );
 
 export const firebaseUidSelector = createSelector(
   getFirebaseAuth,
-  (auth) => auth.uid
+  (auth) => auth.uid,
 );
 
 export const getLocaleSelector = createSelector(getLocale, (locale) => {
@@ -53,13 +53,13 @@ export const getHighestLevelSelector = createSelector(
   getHighScoreLevel,
   (level) => {
     return level;
-  }
+  },
 );
 export const getHighestScorePlaytimeSelector = createSelector(
   getHighScorePlaytime,
   (playTime) => {
     return playTime || 80;
-  }
+  },
 );
 getHighScorePlaytime;
 export const getRestTimeSelector = createSelector(getRestTime, (time) => {
@@ -76,16 +76,16 @@ export const getSoundOnSelector = createSelector(getSoundOn, (state) => {
 
 export const getSeePresentationSelector = createSelector(
   getSeePresentation,
-  (seeState) => seeState
+  (seeState) => seeState,
 );
 
 export const getTargetSelectedSelector = createSelector(
   getTargetSelected,
-  (target) => target
+  (target) => target,
 );
 export const getIfUserSelectedTargetSelector = createSelector(
   getUserSelectedTarget,
-  (selected) => selected
+  (selected) => selected,
 );
 
 export const getCachedProfileSelector = createCachedSelector(
@@ -103,7 +103,7 @@ export const getCachedProfileSelector = createCachedSelector(
     }
 
     return {};
-  }
+  },
 )((state, id) => `profile_${id}`);
 
 // getHighestLevelSelector,  create those selectors

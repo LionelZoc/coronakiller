@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo } from "react";
-import PropTypes from "prop-types";
 import {
   StyleSheet,
   View,
@@ -7,14 +6,8 @@ import {
   useWindowDimensions,
   TouchableOpacity,
 } from "react-native";
-import { Image } from "react-native-elements";
-import virus from "assets/target.png";
-import bonus from "assets/insecticide.png";
-import mask from "assets/mask.png";
-import bug from "assets/targetBug.png";
-
-import insect from "assets/targetInsect.png";
-import spider from "assets/targetSpider.png";
+import { Image } from "expo-image";
+import { IMPORTED_IMAGES_NAMES } from "@/assets/index";
 
 import {
   useBoardContextState,
@@ -29,31 +22,37 @@ import Colors from "constants/Colors";
 import { useSelector } from "react-redux";
 import { getTargetSelectedSelector } from "state/redux/selectors";
 
-const getSource = (target) => {
+interface BoardCellProps {
+  position: number;
+}
+
+const getSource = (target: string) => {
   switch (target) {
     case "bug":
-      return bug;
+      return IMPORTED_IMAGES_NAMES.bug;
     case "virus":
-      return virus;
+      return IMPORTED_IMAGES_NAMES.virus;
     case "insect":
-      return insect;
+      return IMPORTED_IMAGES_NAMES.insect;
     case "spider":
-      return spider;
+      return IMPORTED_IMAGES_NAMES.spider;
     default:
-      return virus;
+      return IMPORTED_IMAGES_NAMES.virus;
   }
 };
-const getBonusSource = (target) => {
+
+const getBonusSource = (target: string) => {
   switch (target) {
     case "bug":
-      return bonus;
+      return IMPORTED_IMAGES_NAMES.bonus;
     case "virus":
-      return mask;
+      return IMPORTED_IMAGES_NAMES.mask;
     default:
-      return bonus;
+      return IMPORTED_IMAGES_NAMES.bonus;
   }
 };
-const BoardCell = ({ position }) => {
+
+const BoardCell: React.FC<BoardCellProps> = ({ position }) => {
   const boardContext = useBoardContextState();
   const boarCellState = useCellState(position);
   const dispatcher = useBoardContextDispatcher();
@@ -65,7 +64,7 @@ const BoardCell = ({ position }) => {
   const clickBonus = useClickBonus(position);
   const missTarget = useMissTarget(position);
 
-  //height should always be sup to width
+  // Height should always be greater than width
   const customWidthWeb =
     window.width / 2 >= window.height / 2
       ? window.height / 2 - 5
@@ -95,6 +94,7 @@ const BoardCell = ({ position }) => {
     if (boarCellState.show) return clickTarget();
     if (boarCellState.showBonus) return clickBonus();
   };
+
   return useMemo(() => {
     return (
       <View
@@ -124,27 +124,27 @@ const BoardCell = ({ position }) => {
           {boarCellState.show && (
             <Image
               source={getSource(selectedTarget)}
-              containerStyle={[
+              style={[
                 styles.imageContainer,
                 {
                   width: cellSize / 2,
                   height: cellSize / 2,
                 },
               ]}
-              onPress={clickTarget}
+              //onPress={clickTarget}
             />
           )}
           {boarCellState.showBonus && (
             <Image
               source={getBonusSource(selectedTarget)}
-              containerStyle={[
+              style={[
                 styles.imageBonusContainer,
                 {
                   width: cellSize / 2,
                   height: cellSize / 2,
                 },
               ]}
-              onPress={clickBonus}
+              //onPress={clickBonus}
             />
           )}
         </TouchableOpacity>
@@ -157,11 +157,8 @@ const BoardCell = ({ position }) => {
     clickTarget,
     clickBonus,
     missTarget,
+    selectedTarget,
   ]);
-};
-
-BoardCell.propTypes = {
-  position: PropTypes.number,
 };
 
 const styles = StyleSheet.create({

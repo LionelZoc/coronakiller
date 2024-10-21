@@ -1,15 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, FC } from "react";
 import {
   ActivityIndicator,
   View,
   StyleSheet,
   useWindowDimensions,
+  ViewStyle,
+  StyleProp,
 } from "react-native";
 //import messages from "../screens/messages";
 //import { FormattedMessage } from "react-intl";
-import PropTypes from "prop-types";
 
-const GameActivityIndicator = ({
+interface GameActivityIndicatorProps {
+  style?: StyleProp<ViewStyle>;
+  debug?: string;
+  transparent?: boolean;
+  color?: string;
+  timeoutMsg?: string;
+  canTimeout?: boolean;
+  [key: string]: any; // Allow for any other props passed
+}
+
+const GameActivityIndicator: FC<GameActivityIndicatorProps> = ({
   style = {},
   debug,
   transparent,
@@ -17,23 +28,27 @@ const GameActivityIndicator = ({
   canTimeout = false,
   ...rest
 }) => {
+  console.log("in activity indicator", debug);
   const [showTimeout, setShowTimeout] = useState(false);
   const window = useWindowDimensions();
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       setShowTimeout(true);
-      //Alert.alert("dude wtf");
     }, 8000);
+
     return () => {
-      //console.log("clearing getItemLayout");
       clearTimeout(timeout);
     };
   }, []);
+
   if (debug) {
-    //console.log("ActivityIndicator from ", debug);
+    // console.log("ActivityIndicator from ", debug);
   }
+
   if (showTimeout && canTimeout) {
     return null;
+    // Uncomment below if you want to show a timeout message
     // return (
     //   <Text style={{ color: "black", fontWeight: "bold" }}>
     //     {timeoutMsg ? (
@@ -63,17 +78,9 @@ const GameActivityIndicator = ({
     </View>
   );
 };
-GameActivityIndicator.propTypes = {
-  style: PropTypes.object,
-  debug: PropTypes.string,
-  transparent: PropTypes.bool,
-  color: PropTypes.string,
-  timeoutMsg: PropTypes.string,
-  canTimeout: PropTypes.bool,
-};
+
 const styles = StyleSheet.create({
   container: {
-    //flex: 1,
     alignItems: "center",
     justifyContent: "center",
     position: "absolute",

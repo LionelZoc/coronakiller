@@ -9,14 +9,17 @@ import {
   UPDATE_REQUEST_STATUS,
   CREATE_PROFILE,
   UPDATE_BEST_SCORE,
+  PURGE_PERSISTED_DATA,
 } from "state/redux/actionTypes";
+import { targetType } from "constants/game";
 
 export const updateGameHighScore = ({ score, level, playTime }) => ({
   type: GAME_UPDATE_HIGH_SCORE,
   payload: { score, level, playTime },
 });
 
-export const updateGameTarget = (target) => ({
+//todo add typing to specify the allowed targets
+export const updateGameTarget = (target: targetType) => ({
   type: GAME_SET_TARGET,
   payload: target,
 });
@@ -53,5 +56,10 @@ export const createProfile = (payload) => ({
 
 export const updateBestScore = (payload) => ({
   type: UPDATE_BEST_SCORE,
+  payload,
+});
+
+export const purgePersistedData = (payload) => ({
+  type: PURGE_PERSISTED_DATA,
   payload,
 });

@@ -6,6 +6,7 @@ import {
   View,
   Text,
   FlatList,
+  SafeAreaView,
   TouchableHighlight,
   ScrollView,
 } from "react-native";
@@ -13,12 +14,8 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { seePresentation } from "state/redux/actions";
 import { getIfUserSelectedTargetSelector } from "state/redux/selectors";
-import bug from "assets/targetBug.png";
-import bonus from "assets/insecticide.png";
+
 import Colors from "constants/Colors";
-import Parent from "components/ParentView";
-import { useNavigation } from "@react-navigation/native";
-import { DrawerActions } from "@react-navigation/native";
 import { getInitials, getParsedNumber } from "utils";
 
 import { useFirestoreConnect, populate } from "react-redux-firebase";
@@ -139,7 +136,7 @@ const GameLeaderBoard = () => {
   ]);
   //const scores = useSelector(({ firestore: { ordered } }) => ordered.scores);
   let scores = useSelector(({ firestore }) =>
-    populate(firestore, "scores", populates)
+    populate(firestore, "scores", populates),
   );
   forIn(scores, (item, key, bigChunk) => {
     set(bigChunk, `${key}.id`, key);
@@ -148,7 +145,7 @@ const GameLeaderBoard = () => {
 
   console.log("scores", isEmpty(scores), scores);
   return (
-    <Parent>
+    <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
         <View style={styles.header}>
           <Auth />
@@ -167,7 +164,7 @@ const GameLeaderBoard = () => {
           />
         </View>
       </View>
-    </Parent>
+    </SafeAreaView>
   );
 };
 

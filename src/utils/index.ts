@@ -1,5 +1,5 @@
 import { Platform, Share } from "react-native";
-import * as Sentry from "sentry-expo";
+import * as Sentry from '@sentry/react-native';
 import { getLevelStatus } from "components/GameLevel";
 import isEmpty from "lodash/isEmpty";
 import isString from "lodash/isString";

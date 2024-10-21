@@ -1,12 +1,12 @@
-import firebase from "firebase/app";
-import Constants from "expo-constants";
+import firebase from "firebase/compat/app";
+//import Constants from "expo-constants";
 import { Platform } from "react-native";
 //import { config } from "../config/config";
 //import firebase from "firebase/app";
-import "firebase/firestore";
-import "firebase/auth";
-import "firebase/database";
-import "firebase/storage";
+import "firebase/compat/firestore";
+import "firebase/compat/auth";
+import "firebase/compat/database";
+import "firebase/compat/storage";
 //import * as Sentry from "sentry-expo";
 import _ from "lodash";
 
@@ -71,11 +71,13 @@ const ENV = {
     // Add other keys you want here
   },
 };
-export const getEnvVars = (env = Constants.manifest.releaseChannel) => {
+//update realease channel
+//export const getEnvVars = (env = Constants.manifest.releaseChannel)
+export const getEnvVars = (env) => {
   // What is __DEV__ ?
   // This variable is set to true when react-native is running in Dev mode.
   // __DEV__ is true when run locally, but false when published.
-
+  console.log("in get EnvVars");
   if (__DEV__) {
     return ENV.dev;
   } else if (env === "staging") {

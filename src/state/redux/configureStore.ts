@@ -16,6 +16,7 @@ import { composeWithDevTools } from "redux-devtools-extension";
 
 const sagaMiddleware = createSagaMiddleware();
 const env = getEnvVars();
+let persistor = null;
 export default function configureStore(preloadedState) {
   //const middlewares = [apiCallsMiddleware, loggerMiddleware, thunkMiddleware.withExtraArgument(getFirestore), routerMiddleware(history)];
   const middlewares = [
@@ -66,7 +67,7 @@ export default function configureStore(preloadedState) {
   }
   //enhanced store
   //persistStore(store, [config, callback])
-  const persistor = persistStore(store);
+  persistor = persistStore(store);
   //persistor.purge();
   //https://github.com/prescottprue/react-redux-firebase/issues/254
   const rrfConfig = {
@@ -99,3 +100,5 @@ export default function configureStore(preloadedState) {
 
   return { store, persistor, rrfProps };
 }
+
+export { persistor };

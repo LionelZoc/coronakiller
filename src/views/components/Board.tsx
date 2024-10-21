@@ -1,18 +1,22 @@
 import React, { useMemo } from "react";
-import { StyleSheet, View, useWindowDimensions, Platform } from "react-native";
+import {
+  StyleSheet,
+  View,
+  useWindowDimensions,
+  Platform,
+  SafeAreaView,
+} from "react-native";
 
 import BoardCell from "components/BoardCell";
 import BoardMeta from "components/BoardMeta";
 import BoardAction from "components/BoardAction";
 import GameLevel from "components/GameLevel";
-import Parent from "components/ParentView";
 
-const Board = () => {
+const Board: React.FC = () => {
   const boxSize = 16;
-  //const [missSound, setMissSound] = useState();
   const window = useWindowDimensions();
 
-  //height should always be sup to width
+  // Height should always be greater than width
   const customWidthWeb =
     window.width / 2 >= window.height / 2
       ? window.height / 2 - 5
@@ -21,8 +25,8 @@ const Board = () => {
     window.width - 5 >= window.height / 2
       ? window.height / 2 - 5
       : window.width - 5;
-  let cells = [];
-  cells = useMemo(() => {
+
+  const cells = useMemo(() => {
     const localeCells = [];
     for (let i = 0; i < boxSize; i++) {
       const cell = <BoardCell key={i} position={i} />;
@@ -31,16 +35,8 @@ const Board = () => {
     return localeCells;
   }, [boxSize]);
 
-  // useEffect(() => {
-  //   return missSound
-  //     ? () => {
-  //         missSound.unloadAsync();
-  //       }
-  //     : undefined;
-  // }, [missSound]);
-
   return (
-    <Parent>
+    <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
         <View
           style={{
@@ -66,11 +62,12 @@ const Board = () => {
           {cells}
         </View>
       </View>
-    </Parent>
+    </SafeAreaView>
   );
 };
-Board.propTypes = {};
+
 export default Board;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -80,22 +77,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   board: {
-    //width: Platform.OS === "web" ? "50%" : "100%",
-    //maxWidth: Platform.OS === "web" ? "50%" : "100%",
-    //minHeight: "50%",
-    //padding: 5,
-
     height: "50%",
     flexDirection: "row",
     flexWrap: "wrap",
     alignItems: "center",
     justifyContent: "flex-start",
-  },
-  statusBar: {
-    //height: STATUSBAR_HEIGHT
-  },
-  appBar: {
-    // backgroundColor: Colors.tintColor,
-    // height: APPBAR_HEIGHT
   },
 });

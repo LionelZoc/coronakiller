@@ -9,6 +9,7 @@ const defaultColors = {
   black: "black",
   highlightText: "#f7896d",
   darkBlue: "#07698d",
+  primary: "#f4511e",
 };
 
 export default defaultColors;
