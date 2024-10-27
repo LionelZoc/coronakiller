@@ -1,10 +1,12 @@
 {
   "expo": {
+    "owner": "omniventus",
     "name": "viralert",
     "slug": "viralert",
-    "version": "1.0.10",
+    "version": "1.0.12",
     "orientation": "portrait",
     "icon": "./src/assets/icon1024.png",
+    "scheme": "swarmcrush",
     "splash": {
       "image": "./src/assets/SplashTransparent.png",
       "resizeMode": "contain",
@@ -21,10 +23,21 @@
       "bundleIdentifier": "com.amirmuerte.viralert",
       "icon": "./src/assets/iosIcon.png",
       "buildNumber": "1",
-      "splash":{
+      "splash": {
         "image": "./src/assets/SplashTransparentIos.png",
         "resizeMode": "contain",
         "backgroundColor": "#231F20"
+      },
+      "infoPlist": {
+        "NSUserTrackingUsageDescription": "This identifier will be used to deliver personalized ads to you.",
+        "SKAdNetworkItems": [
+          {
+            "SKAdNetworkIdentifier": "v9wttpbfk9.skadnetwork"
+          },
+          {
+            "SKAdNetworkIdentifier": "n38lu8286q.skadnetwork"
+          }
+        ]
       }
     },
     "android": {
@@ -33,11 +46,64 @@
         "foregroundImage": "./src/assets/icon1024.png",
         "backgroundColor": "#FFFFFF"
       },
-      "versionCode": 10,
-      "permissions": []
+      "versionCode": 12,
+      "permissions": [
+        "android.permission.INTERNET",
+        "com.google.android.gms.permission.AD_ID"
+      ]
     },
     "web": {
-      "favicon": "./src/assets/icon.png"
+      "favicon": "./src/assets/icon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      [
+        "react-native-fbsdk-next",
+        {
+          "appID": "1256149281508808",
+          "clientToken": "7b1c48b7c5922145bf43d4db2abd570b",
+          "displayName": "viralert",
+          "scheme": "fb1256149281508808",
+          "advertiserIDCollectionEnabled": false,
+          "autoLogAppEventsEnabled": false,
+          "isAutoInitEnabled": true,
+          "iosUserTrackingPermission": "This identifier will be used to deliver personalized ads to you."
+        }
+      ],
+      "expo-tracking-transparency",
+      [
+        "@sentry/react-native/expo",
+        {
+          "organization": "omniventus",
+          "project": "swarmcrush",
+          "url": "https://sentry.io/"
+        }
+      ],
+      [
+        "expo-asset",
+        {
+          "assets": [
+            "./src/assets/icon.png",
+            "./src/assets/icon512.png",
+            "./src/assets/icon1024.png",
+            "./src/assets/mask.png",
+            "./src/assets/SplashTransparent.png",
+            "./src/assets/SplashTransparentIos.png",
+            "./src/assets/target.png",
+            "./src/assets/targetBug.png",
+            "./src/assets/impact.mp3",
+            "./src/assets/fail.mp3",
+            "./src/assets/targetSpider.png",
+            "./src/assets/targetInsect.png",
+            "./src/assets/insecticide.png"
+          ]
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "47e2ae84-74ea-475b-81c1-0cc64a9f569c"
+      }
     }
   }
 }
