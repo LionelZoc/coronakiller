@@ -1,5 +1,5 @@
 import { persistor } from "state/redux/configureStore";
-
+// todo cyclical dependance here. remove it
 // Function to clear the persisted Redux store
 export const clearPersistedStore = () => {
   persistor

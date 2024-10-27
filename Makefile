@@ -34,12 +34,16 @@ build-sim-android:
 	@eas build --profile development --platform android
 
 build-sim-ios:
-	@echo "Building for ios simulator"
+	@echo "Building for ios simulator with eas"
 	@eas build --profile development-simulator --platform ios
 
 build-local-sim-ios:
-	@echo "Building for ios simulator in local for debug "
+	@echo "Building for ios simulator for debug with eas in local  "
 	@eas build --profile development-simulator --platform ios --local
+
+build-local-eas-ios:
+	@echo "Building for ios for debug with eas in local  "
+	@eas build --profile development --platform ios --local
 
 
 create-ios-device:
@@ -68,3 +72,27 @@ doctor:
 
 env:
 
+configure-eas:
+	@echo "Make project ready for eas build"
+	@eas login
+	@eas build:configure
+
+install-one-build:
+	@echo "Instaling build on the simultaor . add --latest to build the latest build"
+	@eas build:run -p ios
+
+list-registered-devices:
+	@echo "list registered devices for ad hoc provisionning"
+	@eas device:list
+
+eas-secret: 
+	@echo "run eas secret:create --scope project --name SECRET_NAME --value secretvalue --type string"
+	@echo "the --type can also be a file "
+
+eas-secret-list:
+	@echo "list all secrets for this project"
+	@eas secret:list
+
+import-secrets:
+	@echo "will import secrets from env. To force override those secrets, pass the --force flag to the command."
+	@eas secret:push --scope project --env-file ./eas/.env
