@@ -74,6 +74,26 @@ then send the link to devices that should be add to your list
 
   Devices running iOS 16 and above require enabling a special OS-level Developer Mode to install development builds. you can read here https://docs.expo.dev/guides/ios-developer-mode/ but this will come after you install the build.
 
+### run app on devices
+
+if you build your ios archive or app localy
+use this link to install it on a device https://help.apple.com/xcode/mac/current/#/devade83d1d7?sub=dev87a955931
+
+once the app is build for development and installed on the device (ios) you have to do an `npx expo start` to start a local development server
+
+you will see a blue text saying: "using development build", then open the camera and scan QR code
+
+but if the device that want to test is not on your network you have to use tunneling
+https://docs.expo.dev/more/expo-cli/#tunneling
+
+`npx expo start --tunnel`
+
+### make update to app
+
+To publish an update with changes from your project, use the eas update command, and specify a name for the channel and a message to describe the update:
+
+eas update --channel [channel-name] --message "[message]"
+
 ### where to see icons
 
 to see icons: https://oblador.github.io/react-native-vector-icons/

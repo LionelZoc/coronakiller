@@ -45,6 +45,7 @@
     "expo-splash-screen": "~0.27.6",
     "expo-status-bar": "~1.12.1",
     "expo-tracking-transparency": "~4.0.2",
+    "expo-updates": "~0.25.27",
     "firebase": "^10.14.1",
     "lodash": "^4.17.21",
     "modal-react-native-web": "^0.2.0",

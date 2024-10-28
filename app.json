@@ -1,8 +1,8 @@
 {
   "expo": {
     "owner": "omniventus",
-    "name": "viralert",
-    "slug": "viralert",
+    "name": "swarmcrush",
+    "slug": "swarmcrush",
     "version": "1.0.12",
     "orientation": "portrait",
     "icon": "./src/assets/icon1024.png",
@@ -13,14 +13,15 @@
       "backgroundColor": "#231F20"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/4b34fa2c-a869-46fe-a70b-df5b4347ed07"
     },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.amirmuerte.viralert",
+      "bundleIdentifier": "com.omniventus.swarmcrush",
       "icon": "./src/assets/iosIcon.png",
       "buildNumber": "1",
       "splash": {
@@ -41,7 +42,7 @@
       }
     },
     "android": {
-      "package": "com.lazone.covid_killer",
+      "package": "com.omniventus.swarmcrush",
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/icon1024.png",
         "backgroundColor": "#FFFFFF"
@@ -102,8 +103,11 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "47e2ae84-74ea-475b-81c1-0cc64a9f569c"
+        "projectId": "4b34fa2c-a869-46fe-a70b-df5b4347ed07"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
     }
   }
 }

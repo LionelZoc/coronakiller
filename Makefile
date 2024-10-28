@@ -1,4 +1,4 @@
-PROJECT_NAME = viralert
+PROJECT_NAME = swarmcrush
 
 # Define the expo version
 EXPO_VERSION = 51

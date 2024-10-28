@@ -8,23 +8,29 @@
       "developmentClient": true,
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_SENTRY_DSN":"https://49253a872013d1be0f177fcbe257606d@o4508111716024320.ingest.de.sentry.io/4508111754821712",
-        "EXPO_PUBLIC_DEVICE_HOST":"192.168.0.36"
-      }
+        "EXPO_PUBLIC_SENTRY_DSN": "https://49253a872013d1be0f177fcbe257606d@o4508111716024320.ingest.de.sentry.io/4508111754821712",
+        "EXPO_PUBLIC_DEVICE_HOST": "192.168.0.36",
+        "EXPO_PUBLIC_APP_NAME": "swarmcrush"
+      },
+      "channel": "development"
     },
     "preview": {
       "distribution": "internal",
       "env": {
-        "EXPO_PUBLIC_SENTRY_DSN":"https://49253a872013d1be0f177fcbe257606d@o4508111716024320.ingest.de.sentry.io/4508111754821712",
-        "EXPO_PUBLIC_DEVICE_HOST":"192.168.0.36"
-      }
+        "EXPO_PUBLIC_SENTRY_DSN": "https://49253a872013d1be0f177fcbe257606d@o4508111716024320.ingest.de.sentry.io/4508111754821712",
+        "EXPO_PUBLIC_DEVICE_HOST": "192.168.0.36",
+        "EXPO_PUBLIC_APP_NAME": "swarmcrush"
+      },
+      "channel": "preview"
     },
     "production": {
       "autoIncrement": true,
       "env": {
-        "EXPO_PUBLIC_SENTRY_DSN":"https://49253a872013d1be0f177fcbe257606d@o4508111716024320.ingest.de.sentry.io/4508111754821712",
-        "EXPO_PUBLIC_DEVICE_HOST":"192.168.0.36"
-      }
+        "EXPO_PUBLIC_SENTRY_DSN": "https://49253a872013d1be0f177fcbe257606d@o4508111716024320.ingest.de.sentry.io/4508111754821712",
+        "EXPO_PUBLIC_DEVICE_HOST": "192.168.0.36",
+        "EXPO_PUBLIC_APP_NAME": "swarmcrush"
+      },
+      "channel": "production"
     },
     "development-simulator": {
       "developmentClient": true,
@@ -33,9 +39,11 @@
         "simulator": true
       },
       "env": {
-        "EXPO_PUBLIC_SENTRY_DSN":"https://49253a872013d1be0f177fcbe257606d@o4508111716024320.ingest.de.sentry.io/4508111754821712",
-        "EXPO_PUBLIC_DEVICE_HOST":"192.168.0.36"
-      }
+        "EXPO_PUBLIC_SENTRY_DSN": "https://49253a872013d1be0f177fcbe257606d@o4508111716024320.ingest.de.sentry.io/4508111754821712",
+        "EXPO_PUBLIC_DEVICE_HOST": "192.168.0.36",
+        "EXPO_PUBLIC_APP_NAME": "swarmcrush"
+      },
+      "channel": "development-simulator"
     }
   },
   "submit": {

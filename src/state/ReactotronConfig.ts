@@ -4,7 +4,7 @@ import { reactotronRedux } from "reactotron-redux";
 //put your computer ip on the network here, can see on network ui on mac
 //https://github.com/infinitered/reactotron/blob/master/docs/troubleshooting.md
 const reactotron = Reactotron.configure({
-  name: "viralert dev",
+  name: process.env.EXPO_PUBLIC_APP_NAME || "swarmcrush",
   host: process.env.EXPO_PUBLIC_DEVICE_HOST,
 }) // controls connection & communication settings
   .useReactNative() // add all built-in react native plugins
