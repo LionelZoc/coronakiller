@@ -23,7 +23,9 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.omniventus.swarmcrush",
       "icon": "./src/assets/iosIcon.png",
-      "buildNumber": "1",
+      "config": {
+        "usesNonExemptEncryption": false
+      },
       "splash": {
         "image": "./src/assets/SplashTransparentIos.png",
         "resizeMode": "contain",
@@ -47,7 +49,6 @@
         "foregroundImage": "./src/assets/icon1024.png",
         "backgroundColor": "#FFFFFF"
       },
-      "versionCode": 12,
       "permissions": [
         "android.permission.INTERNET",
         "com.google.android.gms.permission.AD_ID"

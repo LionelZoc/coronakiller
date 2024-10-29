@@ -45,10 +45,22 @@ build-local-eas-ios:
 	@echo "Building for ios for debug with eas in local  "
 	@eas build --profile development --platform ios --local
 
+build-ios-preview:
+	@echo "Creating internal distribution build for IOS . add --clear-cache --local --non-interactive if you want"
+	@eas build --profile preview --platform ios
+
+build-ios-prod:
+	@echo "Creating a production build for IOS"
+	@eas build --platform ios
+
 
 create-ios-device:
 	@echo "Register ios device you would like to develop onto"
 	@eas device:create
+
+submit-ios:
+	@echo "submit app to ios"
+	@eas submit --platform ios
 
 clean:
 	@echo "Cleaning project..."

@@ -37,6 +37,8 @@ copy .copy_env to .env.local and provide values to your env file
 
 EXPO_PUBLIC_SENTRY_DSN="your.dsn"
 EXPO_PUBLIC_DEVICE_HOST=""
+add SENTRY_AUTH_TOKEN in eas secrets and local env if you want to build with local (because eas don't use env file. env is only for local)
+set EXPO_APPLE_PASSWORD in your local env. (do not push it)
 
 ## to build the app for expo go in the simulator:
 
@@ -54,7 +56,7 @@ you can also build locally instead of with eas with:
 you can also build the ios/android build in local for your simulator without eas
 `make build-ios-local`
 
-## to build the app for a testor on device: Internal distribution
+## to build the app for a testor on device: development build
 
 create a device : https://docs.expo.dev/build/internal-distribution/#22-configure-app-signing-credentials-for-ios
 
@@ -74,6 +76,24 @@ then send the link to devices that should be add to your list
 
   Devices running iOS 16 and above require enabling a special OS-level Developer Mode to install development builds. you can read here https://docs.expo.dev/guides/ios-developer-mode/ but this will come after you install the build.
 
+### to build app for internal distribution
+
+`make build-ios-preview`
+`eas build --platform ios --profile preview`
+
+### to build app for testflight or production
+
+first create a production build for ios
+https://docs.expo.dev/tutorial/eas/ios-production-build/
+create a distribution provisionning profile
+`eas credentials`
+
+https://github.com/expo/fyi/blob/main/asc-app-id.md
+add ascAppid in submit profile
+
+`make build-ios-prod`
+`eas build --platform ios`
+
 ### run app on devices
 
 if you build your ios archive or app localy
@@ -88,11 +108,20 @@ https://docs.expo.dev/more/expo-cli/#tunneling
 
 `npx expo start --tunnel`
 
+### submit app to store
+
+`make submit-ios`
+
 ### make update to app
 
 To publish an update with changes from your project, use the eas update command, and specify a name for the channel and a message to describe the update:
 
 eas update --channel [channel-name] --message "[message]"
+
+### add facebook login
+
+https://docs.expo.dev/guides/facebook-authentication/
+should push app to store firt
 
 ### where to see icons
 
@@ -224,9 +253,21 @@ i was having issue with eas build in local that was not able to get metadata fro
 
 i was having another issue with Distribution certificate with fingerprint not imported successfully and i followed this and it worked:
 
+29/10: i keep having an issue with building the preview version of my ios app, for internal distribution.
+with the error: iOS build failed:
+The "Run fastlane" step failed with an unknown error. Refer to the "Xcode logs" phase for additional, more detailed logs
+
+i tried to build in local but had the same error. so i first build the app locally with xcode npx expo run:ios and then i remake the local build of the preview with eas: eas build --profile preview --platform ios --local
+
+en regardant encore un peu dans les logs eas , j'ai l'impression que le problème vient de sentry SENTRY_AUTH_TOKEN
+i add SENTRY_AUTH_TOKEN in eas secrets and it fixes the issue
+
 https://github.com/expo/eas-cli/issues/1331
 just downlad the certificate and open it
 
 ## example of expo project
 
 https://github.com/expo/examples
+
+i remove buildnumber(ios) and versionCode (android) from app.json because versionning is automatically handled by eas
+https://docs.expo.dev/tutorial/eas/manage-app-versions/

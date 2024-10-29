@@ -47,6 +47,13 @@
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios":{
+        "appleId": "amirmuerte@gmail.com",
+        "appleTeamId": "GAXUJ2X5NU",
+        "ascAppId": "6737512823",
+        "ascApiKeyId": "7U22Q2AVA8"
+      }
+    }
   }
 }
